@@ -135,7 +135,7 @@ class Grid {
     const points = [x, 0, x, this.height];
     const line = new Line({
       points,
-      stroke: '#9cbbc5',
+      stroke: '#d7e2ee',
       strokeWidth: x % (this.space * 3) === 0 ? 2 : 1,
     });
     this.verticalGridLines[method]({ x, line });
@@ -146,7 +146,7 @@ class Grid {
     const points = [0, y, this.width, y];
     const line = new Line({
       points,
-      stroke: '#9cbbc5',
+      stroke: '#d7e2ee',
       strokeWidth: y % (this.space * 3) === 0 ? 2 : 1,
     });
     this.horizontalGridLines[method]({ y, line });

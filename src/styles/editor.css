@@ -1,0 +1,12 @@
+.editor{
+  display: flex;
+  flex-direction: column;
+  height:100vh;
+}
+.editor__head{
+  border-bottom: 1px solid #dbdce0;
+  padding: 15px 5px;
+}
+.editor__body{
+  flex:1;
+}

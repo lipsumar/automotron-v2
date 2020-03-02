@@ -1,19 +1,18 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Help from './pages/Help';
+import Editor from './pages/Editor';
 
 function App() {
   return (
     <Router>
-      <div>
-        <Link to="/">Home</Link>
-        <Link to="/help">Help</Link>
-      </div>
-
       <Switch>
         <Route path="/help">
           <Help />
+        </Route>
+        <Route path="/editor">
+          <Editor />
         </Route>
         <Route path="/">
           <Home />

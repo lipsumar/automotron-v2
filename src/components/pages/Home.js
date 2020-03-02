@@ -1,13 +1,11 @@
 import React from 'react';
-import GraphUi from '../GraphUi';
+import { Link } from 'react-router-dom';
 
 function Home() {
   return (
     <div>
       <h1>home page</h1>
-      <div style={{ width: '800px', height: '500px' }}>
-        <GraphUi />
-      </div>
+      <Link to="/editor">Editor</Link>
     </div>
   );
 }
