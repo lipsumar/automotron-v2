@@ -1,6 +1,7 @@
-import { Stage, Layer, Rect } from 'konva';
+import { Stage, Layer } from 'konva';
 import throttle from 'lodash.throttle';
 import Grid from './Grid';
+import StartNodeUi from './StartNodeUi';
 
 class GraphUi {
   stage = null;
@@ -9,7 +10,10 @@ class GraphUi {
 
   graphLayer = null;
 
-  constructor(stageEl) {
+  nodes = [];
+
+  constructor(stageEl, graph) {
+    this.graph = graph;
     this.stage = new Stage({
       width: stageEl.offsetWidth,
       height: stageEl.offsetHeight,
@@ -26,19 +30,25 @@ class GraphUi {
     this.graphLayer = new Layer();
     this.stage.add(this.graphLayer);
 
-    this.graphLayer.add(
-      new Rect({
-        x: 0,
-        y: 0,
-        width: 100,
-        height: 100,
-        fill: 'red',
-      }),
-    );
-
     this.setupStageScaling();
 
+    this.setupNodes();
+
+    this.grid.centerOrigin();
+
     this.stage.draw();
+  }
+
+  setupNodes() {
+    this.graph.nodes.forEach(node => {
+      this.createNode(node);
+    });
+  }
+
+  createNode(node) {
+    const uiNode = new StartNodeUi({ pos: { x: node.ui.x, y: node.ui.y } });
+    this.graphLayer.add(uiNode.group);
+    this.nodes.push(uiNode);
   }
 
   setupStageScaling() {

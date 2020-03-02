@@ -1,5 +1,6 @@
 import StartNode from './StartNode';
 import Edge from './Edge';
+import Node from './Node';
 
 class Graph {
   nodes = [];
@@ -12,6 +13,16 @@ class Graph {
 
   constructor() {
     this.startNode = this.addNode(new StartNode());
+  }
+
+  static fromJSON(json) {
+    const graph = new Graph();
+    graph.startNode.setUi(json.nodes.find(node => node.id === 1).ui);
+    json.nodes
+      .filter(node => node.id > 1)
+      .forEach(node => graph.addNode(Node.fromJSON(node)));
+    json.edges.forEach(edge => graph.createEdge(edge.from, edge.to));
+    return graph;
   }
 
   addNode(node) {

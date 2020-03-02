@@ -38,12 +38,17 @@ class Grid {
     }
   }
 
-  reposition() {
+  getNormalizedGeo() {
     const scale = 1 / this.stage.scaleX();
     const x = this.stage.x() * -1 * scale;
     const y = this.stage.y() * -1 * scale;
     const width = this.width * scale;
     const height = this.height * scale;
+    return { scale, x, y, width, height };
+  }
+
+  reposition() {
+    const { scale, x, y, width, height } = this.getNormalizedGeo();
 
     if (this.oldScale < 5 && scale > 5) {
       // reset
@@ -151,6 +156,15 @@ class Grid {
     });
     this.horizontalGridLines[method]({ y, line });
     this.layer.add(line);
+  }
+
+  /**
+   * Brings 0,0 at the center
+   */
+  centerOrigin() {
+    this.stage.x(this.width / 2);
+    this.stage.y(this.height / 2);
+    this.reposition();
   }
 }
 
