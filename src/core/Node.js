@@ -3,8 +3,9 @@ class Node {
 
   ui = null;
 
-  static fromJSON(json) {
-    const node = new Node();
+  type = null;
+
+  static fromJSON(json, node = new Node()) {
     node.setId(json.id);
     node.setUi(json.ui);
     return node;

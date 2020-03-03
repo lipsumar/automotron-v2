@@ -2,6 +2,12 @@ import { Stage, Layer } from 'konva';
 import throttle from 'lodash.throttle';
 import Grid from './Grid';
 import StartNodeUi from './StartNodeUi';
+import TextNodeUi from './TextNodeUi';
+
+const uiNodeTypes = {
+  start: StartNodeUi,
+  text: TextNodeUi,
+};
 
 class GraphUi {
   stage = null;
@@ -46,7 +52,9 @@ class GraphUi {
   }
 
   createNode(node) {
-    const uiNode = new StartNodeUi({ pos: { x: node.ui.x, y: node.ui.y } });
+    const uiNode = new uiNodeTypes[node.type]({
+      pos: { x: node.ui.x, y: node.ui.y },
+    });
     this.graphLayer.add(uiNode.group);
     this.nodes.push(uiNode);
     uiNode.on('draw', () => this.stage.batchDraw());

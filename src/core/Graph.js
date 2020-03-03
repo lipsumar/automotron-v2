@@ -1,6 +1,10 @@
 import StartNode from './StartNode';
 import Edge from './Edge';
-import Node from './Node';
+import TextNode from './TextNode';
+
+const nodeTypes = {
+  text: TextNode,
+};
 
 class Graph {
   nodes = [];
@@ -20,7 +24,7 @@ class Graph {
     graph.startNode.setUi(json.nodes.find(node => node.id === 1).ui);
     json.nodes
       .filter(node => node.id > 1)
-      .forEach(node => graph.addNode(Node.fromJSON(node)));
+      .forEach(node => graph.addNode(nodeTypes[node.type].fromJSON(node)));
     json.edges.forEach(edge => graph.createEdge(edge.from, edge.to));
     return graph;
   }

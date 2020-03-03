@@ -9,9 +9,18 @@ const generator = {
     nodes: [
       {
         id: 1,
+        type: 'start',
         ui: {
           x: -50,
           y: -50,
+        },
+      },
+      {
+        id: 2,
+        type: 'text',
+        ui: {
+          x: 100,
+          y: 100,
         },
       },
     ],
