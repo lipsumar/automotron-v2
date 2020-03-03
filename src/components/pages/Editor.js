@@ -19,7 +19,15 @@ const generator = {
         id: 2,
         type: 'text',
         ui: {
-          x: 100,
+          x: 300,
+          y: -100,
+        },
+      },
+      {
+        id: 2,
+        type: 'text',
+        ui: {
+          x: 300,
           y: 100,
         },
       },

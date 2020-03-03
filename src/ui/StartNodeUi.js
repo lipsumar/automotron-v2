@@ -35,6 +35,14 @@ class StartNodeUi extends NodeUi {
       }),
     );
   }
+
+  outletX() {
+    return this.x() + 100;
+  }
+
+  outletY() {
+    return this.y() + 75 / 2;
+  }
 }
 
 export default StartNodeUi;

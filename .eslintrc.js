@@ -47,5 +47,6 @@ module.exports = {
     'prettier/prettier': 'error',
     'react/jsx-uses-react': 'error',
     'react/jsx-uses-vars': 'error',
+    'class-methods-use-this': 'off',
   },
 };

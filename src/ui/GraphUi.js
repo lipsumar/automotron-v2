@@ -3,6 +3,7 @@ import throttle from 'lodash.throttle';
 import Grid from './Grid';
 import StartNodeUi from './StartNodeUi';
 import TextNodeUi from './TextNodeUi';
+import EdgeUi from './EdgeUi';
 
 const uiNodeTypes = {
   start: StartNodeUi,
@@ -33,12 +34,17 @@ class GraphUi {
     this.stage.add(this.gridLayer);
     this.grid = new Grid(this.stage, this.gridLayer);
 
+    this.linkLayer = new Layer();
+    this.stage.add(this.linkLayer);
+
     this.graphLayer = new Layer();
     this.stage.add(this.graphLayer);
 
     this.setupStageScaling();
 
     this.setupNodes();
+
+    this.setupEdges();
 
     this.grid.centerOrigin();
 
@@ -51,6 +57,15 @@ class GraphUi {
     });
   }
 
+  setupEdges() {
+    const edge = new EdgeUi(this.nodes[0], this.nodes[1]);
+    this.linkLayer.add(edge.line);
+    const edge2 = new EdgeUi(this.nodes[0], this.nodes[2]);
+    this.linkLayer.add(edge2.line);
+    edge.on('draw', () => this.stage.batchDraw());
+    edge2.on('draw', () => this.stage.batchDraw());
+  }
+
   createNode(node) {
     const uiNode = new uiNodeTypes[node.type]({
       pos: { x: node.ui.x, y: node.ui.y },
@@ -58,6 +73,7 @@ class GraphUi {
     this.graphLayer.add(uiNode.group);
     this.nodes.push(uiNode);
     uiNode.on('draw', () => this.stage.batchDraw());
+    uiNode.snapToGrid();
   }
 
   setupStageScaling() {
