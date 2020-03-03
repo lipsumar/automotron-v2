@@ -1,4 +1,5 @@
 import { Line } from 'konva';
+import { GRID_SIZE } from './constants';
 
 class Grid {
   stage = null;
@@ -14,7 +15,7 @@ class Grid {
     this.height = stage.height();
     this.layer = layer;
     this.stage = stage;
-    this.space = 50;
+    this.space = GRID_SIZE;
     this.setup();
     stage.on('dragmove', this.reposition.bind(this));
     stage.on('wheel', this.reposition.bind(this));
@@ -52,11 +53,11 @@ class Grid {
 
     if (this.oldScale < 5 && scale > 5) {
       // reset
-      this.space = 150;
+      this.space *= 3;
       this.setup();
     }
     if (this.oldScale > 5 && scale < 5) {
-      this.space = 50;
+      this.space = GRID_SIZE;
       this.setup();
     }
     this.oldScale = scale;

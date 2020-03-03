@@ -49,6 +49,7 @@ class GraphUi {
     const uiNode = new StartNodeUi({ pos: { x: node.ui.x, y: node.ui.y } });
     this.graphLayer.add(uiNode.group);
     this.nodes.push(uiNode);
+    uiNode.on('draw', () => this.stage.batchDraw());
   }
 
   setupStageScaling() {

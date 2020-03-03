@@ -5,7 +5,7 @@ class StartNodeUi extends NodeUi {
   constructor(opts) {
     super(opts);
     const width = 100;
-    const height = 100;
+    const height = 75;
     this.group.add(
       new Rect({
         x: 0,
