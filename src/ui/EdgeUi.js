@@ -1,6 +1,10 @@
 import { Line } from 'konva';
 import { EventEmitter } from 'events';
 
+function distance(x1, y1, x2, y2) {
+  return Math.hypot(x2 - x1, y2 - y1);
+}
+
 class EdgeUi extends EventEmitter {
   constructor(from, to) {
     super();
@@ -23,22 +27,42 @@ class EdgeUi extends EventEmitter {
 
   getPoints() {
     const { from, to } = this;
-    const points = [from.outletX(), from.outletY()];
+    const fromX = from.outletX();
+    const fromY = from.outletY();
+    const toX = to.inletX();
+    const toY = to.inletY();
+    const points = [fromX, fromY];
 
-    const half = Math.abs(from.outletY() - to.inletY()) / 2;
-    const centerX = (to.inletX() - from.outletX()) / 2;
+    const half = Math.abs(fromY - toY) / 2;
+    const centerX = (toX - fromX) / 2;
+    const dist = distance(fromX, fromY, toX, toY);
+
     if (half < centerX) {
-      points.push(...[from.outletX() + centerX - half, from.outletY()]);
-      points.push(...[from.outletX() + centerX + half, to.inletY()]);
-    } else if (from.outletY() < to.inletY()) {
-      points.push(...[from.outletX() + centerX, from.outletY() + centerX]);
-      points.push(...[from.outletX() + centerX, to.inletY() - centerX]);
+      points.push(...[fromX + centerX - half, fromY]);
+      points.push(...[fromX + centerX + half, toY]);
+    } else if (fromY < toY) {
+      if (centerX < 25 && dist > 100) {
+        points.push(...[fromX + 25, fromY + 25]);
+        points.push(...[fromX + 25, fromY + 25 + 25]);
+
+        points.push(...[toX - 25, toY - 25 - 25]);
+        points.push(...[toX - 25, toY - 25]);
+      } else {
+        points.push(...[fromX + centerX, fromY + centerX]);
+        points.push(...[fromX + centerX, toY - centerX]);
+      }
+    } else if (centerX < 25 && dist > 100) {
+      points.push(...[fromX + 25, fromY - 25]);
+      points.push(...[fromX + 25, fromY - 25 - 25]);
+
+      points.push(...[toX - 25, toY + 25 + 25]);
+      points.push(...[toX - 25, toY + 25]);
     } else {
-      points.push(...[from.outletX() + centerX, from.outletY() - centerX]);
-      points.push(...[from.outletX() + centerX, to.inletY() + centerX]);
+      points.push(...[fromX + centerX, fromY - centerX]);
+      points.push(...[fromX + centerX, toY + centerX]);
     }
 
-    points.push(...[to.inletX(), to.inletY()]);
+    points.push(...[toX, toY]);
     return points;
   }
 }
