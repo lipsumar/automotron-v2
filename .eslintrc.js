@@ -23,7 +23,7 @@ module.exports = {
       env:{
         browser: true
       },
-      files: ['src/index.js', 'src/components/**/*.js']
+      files: ['src/index.js', 'src/components/**/*.js', 'src/ui/**/*.js']
     },
     {
       files: ['prettier.config.js'],
