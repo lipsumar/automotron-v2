@@ -14,6 +14,7 @@ const demoGenerator = {
       {
         id: 2,
         type: 'text',
+        value: 'hello',
         ui: {
           x: 300,
           y: -100,
@@ -22,6 +23,7 @@ const demoGenerator = {
       {
         id: 2,
         type: 'text',
+        value: 'good morning',
         ui: {
           x: 300,
           y: 100,

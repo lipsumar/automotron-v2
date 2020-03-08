@@ -5,11 +5,12 @@ import { GRID_SIZE } from './constants';
 class NodeUi extends EventEmitter {
   group = null;
 
-  constructor(opts) {
+  constructor(node) {
     super();
+    this.node = node;
     this.group = new Group({
-      x: opts.pos.x,
-      y: opts.pos.y,
+      x: node.ui.x,
+      y: node.ui.y,
       draggable: true,
     });
     this.group.on('dragend', () => {

@@ -7,6 +7,7 @@ class TextNode extends Node {
 
   static fromJSON(json) {
     const textNode = new TextNode();
+    textNode.value = json.value;
     return Node.fromJSON(json, textNode);
   }
 }

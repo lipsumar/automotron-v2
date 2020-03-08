@@ -67,9 +67,7 @@ class GraphUi {
   }
 
   createNode(node) {
-    const uiNode = new uiNodeTypes[node.type]({
-      pos: { x: node.ui.x, y: node.ui.y },
-    });
+    const uiNode = new uiNodeTypes[node.type](node);
     this.graphLayer.add(uiNode.group);
     this.nodes.push(uiNode);
     uiNode.on('draw', () => this.stage.batchDraw());
