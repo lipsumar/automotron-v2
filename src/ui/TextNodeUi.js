@@ -1,5 +1,7 @@
 import { Path, Text } from 'konva';
 import NodeUi from './NodeUi';
+import { measureTextHeight } from './utils';
+import { GRID_SIZE } from './constants';
 
 const padding = 10;
 const arrowWidth = 6;
@@ -68,11 +70,13 @@ class TextNodeUi extends NodeUi {
   }
 
   resize() {
-    this.text.width(999);
+    this.text.width(500);
     const textWidth = this.text.getTextWidth();
+    const textHeight = measureTextHeight(this.node.value);
     const width = textWidth + padding * 2;
 
     this.width = width;
+    this.height = Math.ceil(Math.max(50, textHeight) / GRID_SIZE) * GRID_SIZE;
 
     this.text.width(width);
     this.text.height(this.height);
