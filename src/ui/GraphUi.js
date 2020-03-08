@@ -58,12 +58,9 @@ class GraphUi {
   }
 
   setupEdges() {
-    const edge = new EdgeUi(this.nodes[0], this.nodes[1]);
-    this.linkLayer.add(edge.line);
-    const edge2 = new EdgeUi(this.nodes[0], this.nodes[2]);
-    this.linkLayer.add(edge2.line);
-    edge.on('draw', () => this.stage.batchDraw());
-    edge2.on('draw', () => this.stage.batchDraw());
+    this.graph.edges.forEach(edge => {
+      this.createEdge(edge);
+    });
   }
 
   createNode(node) {
@@ -72,6 +69,19 @@ class GraphUi {
     this.nodes.push(uiNode);
     uiNode.on('draw', () => this.stage.batchDraw());
     uiNode.snapToGrid();
+  }
+
+  createEdge(edge) {
+    const uiEdge = new EdgeUi(
+      this.getNode(edge.from.id),
+      this.getNode(edge.to.id),
+    );
+    this.linkLayer.add(uiEdge.line);
+    uiEdge.on('draw', () => this.stage.batchDraw());
+  }
+
+  getNode(id) {
+    return this.nodes.find(uiNode => uiNode.node.id === id);
   }
 
   setupStageScaling() {
