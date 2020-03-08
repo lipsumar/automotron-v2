@@ -1,53 +1,25 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import GraphUiComponent from '../GraphUi';
 import Graph from '../../core/Graph';
-
-// demo generator, as if loaded from server
-const generator = {
-  title: 'My awesome generator',
-  graph: {
-    nodes: [
-      {
-        id: 1,
-        type: 'start',
-        ui: {
-          x: -50,
-          y: -50,
-        },
-      },
-      {
-        id: 2,
-        type: 'text',
-        ui: {
-          x: 300,
-          y: -100,
-        },
-      },
-      {
-        id: 2,
-        type: 'text',
-        ui: {
-          x: 300,
-          y: 100,
-        },
-      },
-    ],
-    edges: [],
-  },
-};
-
-const graph = Graph.fromJSON(generator.graph);
+import { getGenerator } from '../../client';
 
 function Editor() {
+  const [generator, setGenerator] = useState();
   useEffect(() => {
     document.querySelector('html').style.overflow = 'hidden';
     window.document.body.style.overflow = 'hidden';
+    getGenerator().then(generatorData => {
+      setGenerator({
+        ...generatorData,
+        ...{ graph: Graph.fromJSON(generatorData.graph) },
+      });
+    });
   });
   return (
     <div className="editor">
       <div className="editor__head">Automotron</div>
       <div className="editor__body">
-        <GraphUiComponent graph={graph} />
+        {generator && <GraphUiComponent graph={generator.graph} />}
       </div>
     </div>
   );
