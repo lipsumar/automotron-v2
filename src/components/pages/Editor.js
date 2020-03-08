@@ -14,7 +14,7 @@ function Editor() {
         ...{ graph: Graph.fromJSON(generatorData.graph) },
       });
     });
-  });
+  }, []);
   return (
     <div className="editor">
       <div className="editor__head">Automotron</div>
