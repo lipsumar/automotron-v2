@@ -13,8 +13,6 @@ class TextNodeUi extends NodeUi {
       data: this.getPath(),
       x: 0,
       y: 0,
-      // width,
-      // height,
       fill: '#fff',
       shadowColor: 'black',
       shadowBlur: 5,
@@ -34,7 +32,6 @@ class TextNodeUi extends NodeUi {
       verticalAlign: 'middle',
       fontSize: 20,
       fontFamily: 'Open Sans',
-      // stroke: 'magenta',
     });
     this.group.add(this.text);
 
