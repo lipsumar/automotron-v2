@@ -5,8 +5,51 @@
 }
 .editor__head{
   border-bottom: 1px solid #dbdce0;
-  padding: 15px 5px;
+  padding: 10px 5px;
 }
 .editor__body{
   flex:1;
+  position: relative;
+}
+
+
+/* Editor toolbar */
+
+.editor-toolbar{
+  display: flex;
+}
+.editor-toolbar__title{
+  padding-right:2em;
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.editor-toolbar button{
+  border: 1px solid #d7e2ee;
+  padding: 4px 6px;
+  border-radius: 3px;
+  font-size: 14px;
+  outline: none;
+}
+.editor-toolbar button:active{
+  border-color: #7fa4ca;
+}
+
+
+/* Result panel */
+.result-panel{
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  bottom: 20px;
+  width: 23vw;
+  min-width: 350px;
+  max-width: 500px;
+  background-color: #fff;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  padding:18px 20px 20px 20px;
+  font-size: 18px;
+  line-height: 1.4;
 }

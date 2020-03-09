@@ -2,6 +2,7 @@ import Graph from './Graph';
 import StartNode from './StartNode';
 import Node from './Node';
 import Edge from './Edge';
+import TextNode from './TextNode';
 
 describe('Graph', () => {
   it('is a class', () => {

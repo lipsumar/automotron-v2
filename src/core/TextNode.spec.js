@@ -3,19 +3,26 @@ import Node from './Node';
 
 describe('TextNode', () => {
   it('is a class', () => {
-    const startNode = new TextNode();
-    expect(startNode).toBeInstanceOf(TextNode);
+    const text = new TextNode();
+    expect(text).toBeInstanceOf(TextNode);
   });
 
   it('extends Node', () => {
-    const startNode = new TextNode();
-    expect(startNode).toBeInstanceOf(Node);
+    const text = new TextNode();
+    expect(text).toBeInstanceOf(Node);
+  });
+
+  describe('constructor', () => {
+    it('accepts a value', () => {
+      const text = new TextNode('hey');
+      expect(text.value).toBe('hey');
+    });
   });
 
   describe('value', () => {
     it('is empty string by default', () => {
-      const startNode = new TextNode();
-      expect(startNode.value).toBe('');
+      const text = new TextNode();
+      expect(text.value).toBe('');
     });
   });
 });

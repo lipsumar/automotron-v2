@@ -52,7 +52,7 @@ class Graph {
     if (!this.getNode(to.id)) {
       throw new Error('addEdge expects `to` to be part of graph');
     }
-    const edge = new Edge(from, to);
+    const edge = new Edge(this.getNode(from.id), this.getNode(to.id));
     this.edges.push(edge);
     return edge;
   }
@@ -61,6 +61,10 @@ class Graph {
     const nextId = this.nextNodeId;
     this.nextNodeId += 1;
     return nextId;
+  }
+
+  getEdgesFrom(node) {
+    return this.edges.filter(edge => edge.from.id === node.id);
   }
 }
 
