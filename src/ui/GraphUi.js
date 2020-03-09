@@ -1,9 +1,11 @@
 import { Stage, Layer } from 'konva';
 import throttle from 'lodash.throttle';
+import MouseNode from './MouseNode';
 import Grid from './Grid';
 import StartNodeUi from './StartNodeUi';
 import TextNodeUi from './TextNodeUi';
 import EdgeUi from './EdgeUi';
+import TextNode from '../core/TextNode';
 
 const uiNodeTypes = {
   start: StartNodeUi,
@@ -19,7 +21,8 @@ class GraphUi {
 
   nodes = [];
 
-  constructor(stageEl, graph) {
+  constructor(stageEl, graph, opts = {}) {
+    this.opts = opts;
     this.graph = graph;
     this.stage = new Stage({
       width: stageEl.offsetWidth,
@@ -55,6 +58,7 @@ class GraphUi {
     this.graph.nodes.forEach(node => {
       this.createNode(node);
     });
+    this.mouseNode = new MouseNode(this.stage);
   }
 
   setupEdges() {
@@ -64,10 +68,30 @@ class GraphUi {
   }
 
   createNode(node) {
-    const uiNode = new uiNodeTypes[node.type](node);
+    const uiNode = new uiNodeTypes[node.type](node, {
+      editable: this.opts.editable,
+    });
     this.graphLayer.add(uiNode.group);
     this.nodes.push(uiNode);
     uiNode.on('draw', () => this.stage.batchDraw());
+    let edgeToMouse = null;
+    uiNode.on('newEdgeToMouse:start', fromUiNode => {
+      const uiEdge = new EdgeUi(fromUiNode, this.mouseNode);
+      this.setupEdge(uiEdge);
+      edgeToMouse = uiEdge;
+    });
+    uiNode.on('newEdgeToMouse:finish', () => {
+      // obv. to move to a command
+      const textNode = new TextNode('oooh!');
+      textNode.ui = {
+        x: this.mouseNode.inletX(), // vite fait
+        y: this.mouseNode.inletY() - 20,
+      };
+      this.graph.addNode(textNode);
+      this.graph.createEdge(edgeToMouse.from.node, textNode);
+      this.createNode(textNode);
+      edgeToMouse.setTo(this.getNode(textNode.id));
+    });
     uiNode.snapToGrid();
   }
 
@@ -76,6 +100,10 @@ class GraphUi {
       this.getNode(edge.from.id),
       this.getNode(edge.to.id),
     );
+    this.setupEdge(uiEdge);
+  }
+
+  setupEdge(uiEdge) {
     this.linkLayer.add(uiEdge.line);
     uiEdge.on('draw', () => this.stage.batchDraw());
   }

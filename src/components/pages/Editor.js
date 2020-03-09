@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import GraphUiComponent from '../GraphUi';
+import EditorUiComponent from '../EditorUi';
 import Graph from '../../core/Graph';
 import { getGenerator } from '../../client';
 import EditorToolbar from '../EditorToolbar';
@@ -33,7 +33,7 @@ function Editor() {
         <EditorToolbar onRun={() => runGenerator(generator, setResult)} />
       </div>
       <div className="editor__body">
-        {generator && <GraphUiComponent graph={generator.graph} />}
+        {generator && <EditorUiComponent graph={generator.graph} />}
         <ResultPanel output={result} />
       </div>
     </div>

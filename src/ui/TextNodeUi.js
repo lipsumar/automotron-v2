@@ -7,8 +7,8 @@ const padding = 10;
 const arrowWidth = 6;
 
 class TextNodeUi extends NodeUi {
-  constructor(node) {
-    super(node);
+  constructor(node, opts) {
+    super(node, opts);
     this.width = 100;
     this.height = 50;
     this.rect = new Path({
@@ -36,6 +36,10 @@ class TextNodeUi extends NodeUi {
       fontFamily: 'Open Sans',
     });
     this.group.add(this.text);
+
+    if (opts.editable) {
+      this.registerOutlet('right');
+    }
 
     this.resize();
   }
@@ -81,6 +85,7 @@ class TextNodeUi extends NodeUi {
     this.text.width(width);
     this.text.height(this.height);
     this.rect.data(this.getPath(width + arrowWidth, this.height));
+    this.emit('resized');
   }
 
   outletX() {

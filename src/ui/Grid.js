@@ -163,7 +163,7 @@ class Grid {
    * Brings 0,0 at the center
    */
   centerOrigin() {
-    this.stage.x((this.width - 400) / 2);
+    this.stage.x(this.width / 2);
     this.stage.y(this.height / 2);
     this.reposition();
   }

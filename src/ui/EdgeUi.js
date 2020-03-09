@@ -8,16 +8,26 @@ function distance(x1, y1, x2, y2) {
 class EdgeUi extends EventEmitter {
   constructor(from, to) {
     super();
+    this.boundPosition = this.position.bind(this);
     this.from = from;
-    this.to = to;
+    this.setTo(to);
+
     this.line = new Line({
       points: this.getPoints(),
       stroke: '#7791F9',
       strokeWidth: 8,
       lineJoin: 'round',
     });
-    from.on('moved', this.position.bind(this));
-    to.on('moved', this.position.bind(this));
+
+    from.on('moved', this.boundPosition);
+  }
+
+  setTo(to) {
+    if (this.to) {
+      this.to.off('moved', this.boundPosition);
+    }
+    this.to = to;
+    to.on('moved', this.boundPosition);
   }
 
   position() {

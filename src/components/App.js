@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Help from './pages/Help';
 import Editor from './pages/Editor';
+import View from './pages/View';
 import { whenFontLoaded } from './utils';
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
           <Help />
         </Route>
         <Route path="/editor">{loading ? 'Loading...' : <Editor />}</Route>
+        <Route path="/view">{loading ? 'Loading...' : <View />}</Route>
         <Route path="/">
           <Home />
         </Route>

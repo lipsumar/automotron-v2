@@ -2,10 +2,10 @@ import { Path, Text } from 'konva';
 import NodeUi from './NodeUi';
 
 class StartNodeUi extends NodeUi {
-  constructor(opts) {
-    super(opts);
-    const width = 100;
-    const height = 75;
+  constructor(node, opts) {
+    super(node, opts);
+    this.width = 100;
+    this.height = 75;
     this.group.add(
       new Path({
         data:
@@ -26,14 +26,18 @@ class StartNodeUi extends NodeUi {
         text: 'Start',
         x: 0,
         y: 0,
-        width,
-        height,
+        width: this.width,
+        height: this.height,
         align: 'center',
         verticalAlign: 'middle',
         fontSize: 20,
         fontFamily: 'Open Sans',
       }),
     );
+
+    if (opts.editable) {
+      this.registerOutlet('right');
+    }
   }
 
   outletX() {
