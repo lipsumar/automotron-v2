@@ -39,6 +39,7 @@ class TextNodeUi extends NodeUi {
 
     if (opts.editable) {
       this.registerOutlet('right');
+      this.group.on('dblclick', () => this.emit('edit:start'));
     }
 
     this.resize();
@@ -79,12 +80,13 @@ class TextNodeUi extends NodeUi {
     const textHeight = measureTextHeight(this.node.value);
     const width = textWidth + padding * 2;
 
-    this.width = width;
-    this.height = Math.ceil(Math.max(50, textHeight) / GRID_SIZE) * GRID_SIZE;
+    this.width = width + arrowWidth + 2;
+    this.height =
+      Math.ceil(Math.max(50, textHeight) / GRID_SIZE) * GRID_SIZE + 2;
 
     this.text.width(width);
     this.text.height(this.height);
-    this.rect.data(this.getPath(width + arrowWidth, this.height));
+    this.rect.data(this.getPath(this.width - 2, this.height - 2));
     this.emit('resized');
   }
 
@@ -93,7 +95,7 @@ class TextNodeUi extends NodeUi {
   }
 
   outletY() {
-    return this.y() + this.height / 2;
+    return this.y() + this.height / 2 - 1;
   }
 
   inletX() {
@@ -101,7 +103,7 @@ class TextNodeUi extends NodeUi {
   }
 
   inletY() {
-    return this.y() + this.height / 2;
+    return this.y() + this.height / 2 - 1;
   }
 }
 

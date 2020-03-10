@@ -32,7 +32,7 @@ const demoGenerator = {
       {
         id: 4,
         type: 'text',
-        value: 'the brown fox jumps over the lazy dog',
+        value: 'the brown fox jumps over the lazy dog again and again',
         ui: {
           x: 300,
           y: 100,

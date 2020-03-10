@@ -15,13 +15,16 @@ class NodeUi extends EventEmitter {
       y: node.ui.y,
       draggable: opts.editable,
     });
-    this.group.on('dragend', () => {
-      this.snapToGrid();
-    });
-    this.group.on('dragmove', () => {
-      this.emit('moved');
-    });
-    this.on('resized', this.positionOutlets.bind(this));
+
+    if (opts.editable) {
+      this.group.on('dragend', () => {
+        this.snapToGrid();
+      });
+      this.group.on('dragmove', () => {
+        this.emit('moved');
+      });
+      this.on('resized', this.positionOutlets.bind(this));
+    }
   }
 
   registerOutlet(side) {

@@ -1,5 +1,6 @@
 import { Stage, Layer } from 'konva';
 import throttle from 'lodash.throttle';
+import { EventEmitter } from 'events';
 import MouseNode from './MouseNode';
 import Grid from './Grid';
 import StartNodeUi from './StartNodeUi';
@@ -12,7 +13,7 @@ const uiNodeTypes = {
   text: TextNodeUi,
 };
 
-class GraphUi {
+class GraphUi extends EventEmitter {
   stage = null;
 
   gridLayer = null;
@@ -22,6 +23,7 @@ class GraphUi {
   nodes = [];
 
   constructor(stageEl, graph, opts = {}) {
+    super();
     this.opts = opts;
     this.graph = graph;
     this.stage = new Stage({
@@ -92,6 +94,17 @@ class GraphUi {
       this.createNode(textNode);
       edgeToMouse.setTo(this.getNode(textNode.id));
     });
+    let editStarted = false;
+    uiNode.on('edit:start', () => {
+      this.emit('edit:start', uiNode);
+      editStarted = true;
+    });
+    this.stage.on('click', () => {
+      if (editStarted) {
+        this.emit('edit:finish');
+        editStarted = false;
+      }
+    });
     uiNode.snapToGrid();
   }
 
@@ -110,6 +123,14 @@ class GraphUi {
 
   getNode(id) {
     return this.nodes.find(uiNode => uiNode.node.id === id);
+  }
+
+  getNodeBoundingBox(uiNode) {
+    return {
+      ...uiNode.group.absolutePosition(),
+      width: uiNode.width * this.stage.scaleX(),
+      height: uiNode.height * this.stage.scaleY(),
+    };
   }
 
   setupStageScaling() {
