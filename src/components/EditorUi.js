@@ -33,6 +33,7 @@ class EditorUiComponent extends React.Component {
           nodeId: uiNode.node.id,
         },
         graphBlur: true,
+        nodeEditValue: uiNode.node.value,
       });
     });
     graphUi.on('edit:finish', () => {
