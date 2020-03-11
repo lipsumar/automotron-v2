@@ -37,10 +37,12 @@ class EditorUiComponent extends React.Component {
       });
     });
     graphUi.on('edit:finish', () => {
-      commandInvoker.execute('setNodeValue', {
-        nodeId: this.state.nodeEdit.nodeId,
-        value: this.state.nodeEditValue,
-      });
+      if (this.state.nodeEdit.value !== this.state.nodeEditValue) {
+        commandInvoker.execute('setNodeValue', {
+          nodeId: this.state.nodeEdit.nodeId,
+          value: this.state.nodeEditValue,
+        });
+      }
       this.setState({
         nodeEdit: false,
         graphBlur: false,
