@@ -50,6 +50,7 @@ function TextNodeEdit(props) {
         value={value}
         onChange={e => {
           setValue(e.target.value);
+          props.onChange(e.target.value);
         }}
         ref={textareaRef}
       ></textarea>

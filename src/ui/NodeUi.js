@@ -19,6 +19,7 @@ class NodeUi extends EventEmitter {
     if (opts.editable) {
       this.group.on('dragend', () => {
         this.snapToGrid();
+        this.emit('drag:finish');
       });
       this.group.on('dragmove', () => {
         this.emit('moved');
@@ -26,6 +27,8 @@ class NodeUi extends EventEmitter {
       this.on('resized', this.positionOutlets.bind(this));
     }
   }
+
+  refresh() {}
 
   registerOutlet(side) {
     const outlet = this.createOutlet();

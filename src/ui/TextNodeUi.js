@@ -45,6 +45,12 @@ class TextNodeUi extends NodeUi {
     this.resize();
   }
 
+  refresh() {
+    this.text.text(this.node.value);
+    this.resize();
+    this.emit('draw');
+  }
+
   // original path (100x75)
   // 'M4,1 L98,1 C99.6568542,1 101,2.34314575 101,4 L101,29 L101,29 L107,38 L101,47 L101,73 C101,74.6568542 99.6568542,76 98,76 L4,76 C2.34314575,76 1,74.6568542 1,73 L1,47 L1,47 L7,38 L1,29 L1,4 C1,2.34314575 2.34314575,1 4,1 Z'
   getPath(width = 100, height = 75) {
@@ -88,6 +94,7 @@ class TextNodeUi extends NodeUi {
     this.text.height(this.height);
     this.rect.data(this.getPath(this.width - 2, this.height - 2));
     this.emit('resized');
+    this.emit('moved');
   }
 
   outletX() {

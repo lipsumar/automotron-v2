@@ -1,41 +1,70 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 
 import GraphUi from '../ui/GraphUi';
-import EditorUi from '../editor/EditorUi';
 import TextNodeEdit from './TextNodeEdit';
-/**
- * GraphUi is responsible for drawing a Graph
- */
-function EditorUiComponent(props) {
-  const stageRef = useRef(null);
-  const [nodeEdit, setNodeEdit] = useState(false);
-  const [graphBlur, setGraphBlur] = useState(false);
-  useEffect(() => {
-    const graphUi = new GraphUi(stageRef.current, props.graph, {
+import CommandInvoker from '../editor/CommandInvoker';
+
+class EditorUiComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.stageRef = React.createRef();
+    this.state = {
+      graphBlur: false,
+      nodeEdit: false,
+      nodeEditValue: '',
+    };
+  }
+
+  componentDidMount() {
+    const commandInvoker = new CommandInvoker();
+    const graphUi = new GraphUi(this.stageRef.current, this.props.graph, {
       editable: true,
+      executeCommand: (command, options) => {
+        commandInvoker.execute(command, options);
+      },
     });
+    commandInvoker.graph = this.props.graph;
+    commandInvoker.ui = graphUi;
     graphUi.on('edit:start', uiNode => {
-      setNodeEdit({
-        bbox: graphUi.getNodeBoundingBox(uiNode),
-        value: uiNode.node.value,
+      this.setState({
+        nodeEdit: {
+          bbox: graphUi.getNodeBoundingBox(uiNode),
+          value: uiNode.node.value,
+          nodeId: uiNode.node.id,
+        },
+        graphBlur: true,
       });
-      setGraphBlur(true);
     });
     graphUi.on('edit:finish', () => {
-      setNodeEdit(false);
-      setGraphBlur(false);
+      commandInvoker.execute('setNodeValue', {
+        nodeId: this.state.nodeEdit.nodeId,
+        value: this.state.nodeEditValue,
+      });
+      this.setState({
+        nodeEdit: false,
+        graphBlur: false,
+      });
     });
-    // const editor = new EditorUi(graphUi);
-  }, []);
-  return (
-    <>
-      <div
-        ref={stageRef}
-        className={`graph-ui-stage ${graphBlur && 'graph-ui-stage--blur'}`}
-      ></div>
-      {nodeEdit && <TextNodeEdit bbox={nodeEdit.bbox} value={nodeEdit.value} />}
-    </>
-  );
+  }
+
+  render() {
+    const { graphBlur, nodeEdit } = this.state;
+    return (
+      <>
+        <div
+          ref={this.stageRef}
+          className={`graph-ui-stage ${graphBlur && 'graph-ui-stage--blur'}`}
+        ></div>
+        {nodeEdit && (
+          <TextNodeEdit
+            bbox={nodeEdit.bbox}
+            value={nodeEdit.value}
+            onChange={value => this.setState({ nodeEditValue: value })}
+          />
+        )}
+      </>
+    );
+  }
 }
 
 export default EditorUiComponent;

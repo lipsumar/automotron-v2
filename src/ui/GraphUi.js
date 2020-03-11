@@ -6,7 +6,6 @@ import Grid from './Grid';
 import StartNodeUi from './StartNodeUi';
 import TextNodeUi from './TextNodeUi';
 import EdgeUi from './EdgeUi';
-import TextNode from '../core/TextNode';
 
 const uiNodeTypes = {
   start: StartNodeUi,
@@ -26,6 +25,7 @@ class GraphUi extends EventEmitter {
     super();
     this.opts = opts;
     this.graph = graph;
+    this.executeCommand = opts.executeCommand;
     this.stage = new Stage({
       width: stageEl.offsetWidth,
       height: stageEl.offsetHeight,
@@ -70,6 +70,9 @@ class GraphUi extends EventEmitter {
   }
 
   createNode(node) {
+    if (this.getNode(node.id)) {
+      throw new Error('nodeUi already created for node');
+    }
     const uiNode = new uiNodeTypes[node.type](node, {
       editable: this.opts.editable,
     });
@@ -83,16 +86,21 @@ class GraphUi extends EventEmitter {
       edgeToMouse = uiEdge;
     });
     uiNode.on('newEdgeToMouse:finish', () => {
-      // obv. to move to a command
-      const textNode = new TextNode('oooh!');
-      textNode.ui = {
-        x: this.mouseNode.inletX(), // vite fait
-        y: this.mouseNode.inletY() - 20,
-      };
-      this.graph.addNode(textNode);
-      this.graph.createEdge(edgeToMouse.from.node, textNode);
-      this.createNode(textNode);
-      edgeToMouse.setTo(this.getNode(textNode.id));
+      this.executeCommand('createNode', {
+        value: 'aaah!',
+        ui: {
+          x: this.mouseNode.inletX(), // vite fait
+          y: this.mouseNode.inletY() - 20,
+        },
+        fromUiEdge: edgeToMouse,
+      });
+    });
+    uiNode.on('drag:finish', () => {
+      this.executeCommand('moveNode', {
+        nodeId: uiNode.node.id,
+        x: uiNode.group.x(),
+        y: uiNode.group.y(),
+      });
     });
     let editStarted = false;
     uiNode.on('edit:start', () => {
