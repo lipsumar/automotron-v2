@@ -1,0 +1,10 @@
+.alert{
+  padding: 10px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.alert--error{
+  color:#ed4f32
+}

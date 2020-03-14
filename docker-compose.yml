@@ -10,6 +10,17 @@ services:
       - "traefik.docker.network=traefik-external"
     networks:
       - traefik-external
+    depends_on: 
+      - mongo
+
+  mongo:
+    image: mongo
+    volumes:
+      - ./data:/data/db
+    networks: 
+      - internal
+    labels:
+      - "traefik.enable=false"
 
 networks:
   traefik-external:

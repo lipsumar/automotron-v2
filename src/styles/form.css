@@ -1,0 +1,37 @@
+.form input{
+  width:100%;
+  padding:10px 15px;
+  border: 1px solid #d7e2ee;
+  font-size:20px;
+  border-radius: 3px;
+  outline: none;
+}
+.form input:focus{
+  border-color: #7791F9;
+}
+
+.form label{
+  font-size:14px;
+  margin-bottom: 10px;
+  display: block;
+  text-transform: uppercase;
+  
+  color:#788390;
+}
+
+.form .form__field{
+  margin-bottom:30px;
+}
+
+.form button{
+  background-color: #7791F9;
+  color:#FFF;
+  border:none;
+  
+  
+  padding: 15px 30px;
+  text-align: center;
+  font-size: 18px;
+  border-radius: 5px;
+  
+}

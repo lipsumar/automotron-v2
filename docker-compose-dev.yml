@@ -1,0 +1,17 @@
+version: "2"
+services:
+  app:
+    build: .
+    ports:
+      - "80:3000"
+    links:
+      - mongo
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/prod
+      - PUBLIC_DIR=dist
+  mongo:
+    image: mongo
+    volumes:
+      - ./data:/data/db
+    ports:
+      - "27017:27017"

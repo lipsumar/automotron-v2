@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import Modal from 'react-modal';
 import Home from './pages/Home';
 import Help from './pages/Help';
 import Editor from './pages/Editor';
 import View from './pages/View';
 import { whenFontLoaded } from './utils';
 
+Modal.setAppElement('#root');
 function App() {
   const [loading, setLoading] = useState(true);
   useEffect(() => {

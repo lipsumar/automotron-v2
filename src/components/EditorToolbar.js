@@ -6,6 +6,7 @@ function EditorToolbar(props) {
       <div className="editor-toolbar__title">Automotron</div>
       <div className="editor-toolbar__tools">
         <button onClick={props.onRun}>Run</button>
+        <button onClick={props.onSave}>Save</button>
       </div>
     </div>
   );

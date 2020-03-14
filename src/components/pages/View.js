@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getGenerator } from '../../client';
+import client from '../../client';
 import Graph from '../../core/Graph';
 import GraphUiComponent from '../GraphUi';
 
@@ -8,7 +8,7 @@ function View() {
   useEffect(() => {
     document.querySelector('html').style.overflow = 'hidden';
     window.document.body.style.overflow = 'hidden';
-    getGenerator().then(generatorData => {
+    client.getGenerator().then(generatorData => {
       setGenerator({
         ...generatorData,
         ...{ graph: Graph.fromJSON(generatorData.graph) },
