@@ -1,4 +1,6 @@
 // demo generator, as if loaded from server
+import axios from 'axios';
+
 const demoGenerator = {
   title: 'My awesome generator',
   graph: {
@@ -58,6 +60,39 @@ const demoGenerator = {
   },
 };
 
-export async function getGenerator() {
-  return Promise.resolve(demoGenerator);
-}
+const ax = axios.create({
+  baseURL: process.env.REACT_APP_API_BASE_URL, // 'http://localhost:5000',
+  withCredentials: true,
+});
+
+export default {
+  login(username, password) {
+    return ax
+      .post('/api/login', { username, password })
+      .then(resp => resp.data);
+  },
+  register(username, password) {
+    return ax
+      .post('/api/register', { username, password })
+      .then(resp => resp.data);
+  },
+  // loggedIn() {
+  //   return ax.get(`/logged-in?_${Math.random()}`).then(resp => resp.data);
+  // },
+  getGenerators() {
+    return ax.get('/api/generators').then(resp => resp.data);
+  },
+  getGenerator(id) {
+    return Promise.resolve(demoGenerator);
+    // return ax.get(`/api/generators/${id}`).then(resp => resp.data);
+  },
+  saveGenerator(generator) {
+    return ax.post('/api/generators', { generator }).then(resp => resp.data);
+  },
+  // getUsers() {
+  //   return ax.get('/admin/users').then(resp => resp.data);
+  // },
+  // getUserAndGraphs(userId) {
+  //   return ax.get(`/admin/users/${userId}`).then(resp => resp.data);
+  // },
+};

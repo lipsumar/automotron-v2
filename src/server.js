@@ -1,10 +1,18 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const cors = require('cors');
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 const apiRouter = require('./api/router');
 
+app.use(
+  cors({
+    origin: /http(?:s?):\/\/(?:localhost|[a-z-]+\.lipsumar\.io)(?::\d+|)/,
+    credentials: true,
+  }),
+);
 app.use(express.static(path.join(__dirname, '../build')));
 app.use('/api', apiRouter);
 app.get('/*', (req, res) => {
