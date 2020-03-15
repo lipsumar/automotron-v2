@@ -10,6 +10,8 @@ services:
       - "traefik.docker.network=traefik-external"
     volumes:
       - ./previews:/usr/src/app/previews
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/prod
     networks:
       - traefik-external
     depends_on: 
