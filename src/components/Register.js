@@ -76,7 +76,9 @@ class Register extends React.Component {
             />
           </div>
           <div className="form__action flex jc-sb ai-c">
-            <button type="submit">Create account</button>
+            <button type="submit" className="btn btn--primary btn--large">
+              Create account
+            </button>
             <a href="#" onClick={this.login.bind(this)}>
               Login
             </a>

@@ -14,6 +14,7 @@ app.use(
   }),
 );
 app.use(express.static(path.join(__dirname, '../build')));
+app.use('/previews', express.static(path.join(__dirname, '../previews')));
 app.use('/api', apiRouter);
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../build', 'index.html'));

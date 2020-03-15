@@ -5,24 +5,19 @@ import Home from './pages/Home';
 import Help from './pages/Help';
 import Editor from './pages/Editor';
 import View from './pages/View';
-import { whenFontLoaded } from './utils';
 
 Modal.setAppElement('#root');
 function App() {
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    whenFontLoaded('Open Sans').then(() => {
-      setLoading(false);
-    });
-  }, []);
   return (
     <Router>
       <Switch>
         <Route path="/help">
           <Help />
         </Route>
-        <Route path="/editor">{loading ? 'Loading...' : <Editor />}</Route>
-        <Route path="/view">{loading ? 'Loading...' : <View />}</Route>
+        <Route path="/editor/:generatorId" component={Editor} />
+        <Route path="/view">
+          <View />
+        </Route>
         <Route path="/">
           <Home />
         </Route>

@@ -59,7 +59,9 @@ class Login extends React.Component {
             />
           </div>
           <div className="form__action flex jc-sb ai-c">
-            <button type="submit">Login</button>
+            <button type="submit" className="btn btn--primary btn--large">
+              Login
+            </button>
             <a href="#" onClick={this.createAccount.bind(this)}>
               Create an account
             </a>

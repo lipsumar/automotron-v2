@@ -8,6 +8,8 @@ import ResultPanel from '../ResultPanel';
 import GraphEvaluator from '../../core/GraphEvaluator';
 import stringifyGraphResult from '../../core/stringifyGraphResult';
 import LoginModal from '../LoginModal';
+import exportService from '../../editor/services/exportService';
+import { whenFontLoaded } from '../utils';
 
 class Editor extends React.Component {
   constructor(props) {
@@ -17,14 +19,19 @@ class Editor extends React.Component {
       result: null,
       showLogin: false,
       user: null,
+      ready: false,
     };
     this.afterLoginSuccess = null;
   }
 
   componentDidMount() {
+    whenFontLoaded('Open Sans').then(() => {
+      this.setState({ ready: true });
+    });
     document.querySelector('html').style.overflow = 'hidden';
     window.document.body.style.overflow = 'hidden';
-    client.getGenerator().then(generatorData => {
+    const { generatorId } = this.props.match.params;
+    client.getGenerator(generatorId).then(generatorData => {
       this.setState({
         generator: {
           ...generatorData,
@@ -45,9 +52,17 @@ class Editor extends React.Component {
 
   saveGenerator() {
     client
-      .saveGenerator(this.state.generator)
+      .saveGenerator(exportService.exportGenerator(this.state.generator))
       .then(result => {
-        console.log(result);
+        if (!this.state.generator._id) {
+          this.setState({
+            generator: {
+              ...this.state.generator,
+              _id: result._id,
+            },
+          });
+          this.props.history.replace(`/editor/${result._id}`);
+        }
       })
       .catch(err => {
         if (err.response && err.response.status === 401) {
@@ -67,7 +82,7 @@ class Editor extends React.Component {
   }
 
   render() {
-    const { generator, result, showLogin } = this.state;
+    const { generator, result, showLogin, ready } = this.state;
     return (
       <div className="editor">
         <div className="editor__head">
@@ -77,7 +92,7 @@ class Editor extends React.Component {
           />
         </div>
         <div className="editor__body">
-          {generator && <EditorUiComponent graph={generator.graph} />}
+          {generator && ready && <EditorUiComponent graph={generator.graph} />}
           <ResultPanel output={result} />
           <LoginModal
             isOpen={showLogin}

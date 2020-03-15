@@ -1,0 +1,21 @@
+.header{
+  display: flex;
+  padding: 25px 0;
+}
+.header__center{
+  flex-basis: 250px;
+  text-align: center;
+  font-weight: 800;
+  font-size:30px;
+  letter-spacing: -1px;
+  color:#4c4c4c;
+}
+.header__left,.header__right{
+  flex:1;
+  display: flex;
+  align-items: center;
+}
+
+.header__right{
+  justify-content: flex-end;
+}

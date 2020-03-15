@@ -1,0 +1,16 @@
+.generator-card{
+  border-radius: 5px;
+  overflow: hidden;
+  border:1px solid #d7e2ee;
+  text-decoration: none;
+}
+
+.generator-card__image{
+  background-color: #f8f9fa;
+}
+
+.generator-card__title{
+  padding: 20px;
+  color:initial;
+  font-size: 18px;
+}

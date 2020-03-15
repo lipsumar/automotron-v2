@@ -1,6 +1,30 @@
-// demo generator, as if loaded from server
 import axios from 'axios';
 
+const newGenerator = {
+  title: 'New generator',
+  graph: {
+    nodes: [
+      {
+        id: 1,
+        type: 'start',
+        ui: {
+          x: -50,
+          y: -50,
+        },
+      },
+      {
+        id: 2,
+        type: 'text',
+        value: 'Once upon a time',
+        ui: {
+          x: 300,
+          y: -50,
+        },
+      },
+    ],
+    edges: [{ from: { id: 1 }, to: { id: 2 } }],
+  },
+};
 const demoGenerator = {
   title: 'My awesome generator',
   graph: {
@@ -83,8 +107,11 @@ export default {
     return ax.get('/api/generators').then(resp => resp.data);
   },
   getGenerator(id) {
-    return Promise.resolve(demoGenerator);
-    // return ax.get(`/api/generators/${id}`).then(resp => resp.data);
+    if (id === 'new') {
+      return Promise.resolve(newGenerator);
+    }
+
+    return ax.get(`/api/generators/${id}`).then(resp => resp.data);
   },
   saveGenerator(generator) {
     return ax.post('/api/generators', { generator }).then(resp => resp.data);

@@ -113,6 +113,12 @@ class GraphUi extends EventEmitter {
         editStarted = false;
       }
     });
+    uiNode.node.ui.width = uiNode.width;
+    uiNode.node.ui.height = uiNode.height;
+    uiNode.on('resized', () => {
+      uiNode.node.ui.width = uiNode.width;
+      uiNode.node.ui.height = uiNode.height;
+    });
     uiNode.snapToGrid();
   }
 

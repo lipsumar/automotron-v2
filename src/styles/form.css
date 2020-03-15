@@ -23,15 +23,26 @@
   margin-bottom:30px;
 }
 
-.form button{
-  background-color: #7791F9;
-  color:#FFF;
+.btn{
   border:none;
-  
-  
-  padding: 15px 30px;
+  padding: 0.6em 1.6em;
   text-align: center;
-  font-size: 18px;
+  font-size: 14px;
   border-radius: 5px;
-  
+
+  border:1px solid #7791F9;
+  color:#7791F9;
+  text-decoration: none;
+}
+.btn.btn--primary{
+  background-color: #7791F9;
+  color:#FFF;  
+}
+.btn--large{
+  font-size: 18px;
+}
+
+
+.btn+.btn{
+  margin-left:10px
 }
