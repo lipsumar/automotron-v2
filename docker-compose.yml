@@ -8,6 +8,8 @@ services:
       - "traefik.http.routers.automotron-v2.tls.certresolver=le"
       - "traefik.http.routers.automotron-v2.entrypoints=websecure"
       - "traefik.docker.network=traefik-external"
+    volumes:
+      - ./previews:/usr/src/app/previews
     networks:
       - traefik-external
     depends_on: 
