@@ -101,8 +101,8 @@ class TextNodeUi extends NodeUi {
     return this.x() + this.width;
   }
 
-  outletY() {
-    return this.y() + this.height / 2 - 1;
+  outletY(absolute = true) {
+    return (absolute ? this.y() : 0) + this.height / 2 - 1;
   }
 
   inletX() {

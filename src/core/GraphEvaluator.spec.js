@@ -1,8 +1,7 @@
-import random from 'random';
-import seedrandom from 'seedrandom';
 import Graph from './Graph';
 import TextNode from './TextNode';
 import GraphEvaluator from './GraphEvaluator';
+import { seedRandom } from './utils';
 
 describe('GraphEvaluator', () => {
   describe('evaluate()', () => {
@@ -24,7 +23,7 @@ describe('GraphEvaluator', () => {
     });
 
     it('can choose nodes when multiple edges from', async () => {
-      random.use(seedrandom('seed_GraphEvaluator_'));
+      seedRandom('seed_GraphEvaluator_');
       const graph = new Graph();
       const hello = new TextNode('hello');
       const you = new TextNode('you');

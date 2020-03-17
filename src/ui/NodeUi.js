@@ -66,7 +66,7 @@ class NodeUi extends EventEmitter {
   }
 
   getOutletPos() {
-    return { x: this.width + 2, y: this.height / 2 };
+    return { x: this.width + 2, y: this.outletY(false) };
   }
 
   positionOutlets() {

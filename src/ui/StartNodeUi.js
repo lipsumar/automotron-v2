@@ -44,8 +44,8 @@ class StartNodeUi extends NodeUi {
     return this.x() + 100;
   }
 
-  outletY() {
-    return this.y() + 75 / 2;
+  outletY(absolute = true) {
+    return (absolute ? this.y() : 0) + 75 / 2;
   }
 }
 

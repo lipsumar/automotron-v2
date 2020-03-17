@@ -74,6 +74,16 @@ const demoGenerator = {
           y: 175,
         },
       },
+      {
+        id: 6,
+        type: 'text-list',
+        title: 'héro',
+        values: ['hamsters', 'dingo babies', 'various other things'],
+        ui: {
+          x: -400,
+          y: -200,
+        },
+      },
     ],
     edges: [
       { from: { id: 1 }, to: { id: 2 } },
@@ -109,6 +119,7 @@ export default {
   getGenerator(id) {
     if (id === 'new') {
       return Promise.resolve(newGenerator);
+      // return Promise.resolve(demoGenerator);
     }
 
     return ax.get(`/api/generators/${id}`).then(resp => resp.data);

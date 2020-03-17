@@ -25,4 +25,11 @@ describe('TextNode', () => {
       expect(text.value).toBe('');
     });
   });
+
+  describe('evaluate()', () => {
+    it('returns value', async () => {
+      const text = new TextNode('hey');
+      expect(await text.evaluate()).toBe('hey');
+    });
+  });
 });

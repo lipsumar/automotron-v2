@@ -1,8 +1,4 @@
-import random from 'random';
-
-function pickRandom(arr) {
-  return arr[random.int(0, arr.length - 1)];
-}
+import { pickRandom } from './utils';
 
 class GraphEvaluator {
   currentPointer = null;
