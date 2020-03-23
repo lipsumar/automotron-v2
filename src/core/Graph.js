@@ -1,11 +1,9 @@
 import StartNode from './StartNode';
 import Edge from './Edge';
 import TextNode from './TextNode';
-import TextListNode from './TextListNode';
 
 const nodeTypes = {
   text: TextNode,
-  'text-list': TextListNode,
 };
 
 class Graph {

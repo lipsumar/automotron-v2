@@ -15,7 +15,7 @@ const newGenerator = {
       {
         id: 2,
         type: 'text',
-        value: 'Once upon a time',
+        value: ['Once upon a time'],
         ui: {
           x: 300,
           y: -50,
@@ -40,7 +40,7 @@ const demoGenerator = {
       {
         id: 2,
         type: 'text',
-        value: 'hello',
+        value: ['hello'],
         ui: {
           x: 300,
           y: -100,
@@ -49,7 +49,7 @@ const demoGenerator = {
       {
         id: 3,
         type: 'text',
-        value: 'good morning',
+        value: ['good morning'],
         ui: {
           x: 300,
           y: 0,
@@ -58,7 +58,7 @@ const demoGenerator = {
       {
         id: 4,
         type: 'text',
-        value: 'the brown fox jumps over the lazy dog again and again',
+        value: ['the brown fox jumps over the lazy dog again and again'],
         ui: {
           x: 300,
           y: 100,
@@ -67,8 +67,9 @@ const demoGenerator = {
       {
         id: 5,
         type: 'text',
-        value:
+        value: [
           'Sorry losers and haters, but my I.Q. is one of the highest -and you all know it! Please don’t feel so stupid or insecure,it’s not your fault',
+        ],
         ui: {
           x: 300,
           y: 175,
@@ -76,9 +77,9 @@ const demoGenerator = {
       },
       {
         id: 6,
-        type: 'text-list',
+        type: 'text',
         title: 'héro',
-        values: ['hamsters', 'dingo babies', 'various other things'],
+        value: ['hamsters', 'dingo babies', 'various other things'],
         ui: {
           x: -400,
           y: -200,
@@ -118,8 +119,8 @@ export default {
   },
   getGenerator(id) {
     if (id === 'new') {
-      return Promise.resolve(newGenerator);
-      // return Promise.resolve(demoGenerator);
+      // return Promise.resolve(newGenerator);
+      return Promise.resolve(demoGenerator);
     }
 
     return ax.get(`/api/generators/${id}`).then(resp => resp.data);

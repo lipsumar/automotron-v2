@@ -1,4 +1,4 @@
-import { Path, Text } from 'konva';
+import { Path, Text, Rect, Group, Line } from 'konva';
 import NodeUi from './NodeUi';
 import { measureTextHeight } from './utils';
 import { GRID_SIZE } from './constants';
@@ -6,11 +6,14 @@ import { GRID_SIZE } from './constants';
 const padding = 10;
 const arrowWidth = 6;
 
-class TextNodeUi extends NodeUi {
+class TextListNodeUi extends NodeUi {
   constructor(node, opts) {
     super(node, opts);
     this.width = 100;
     this.height = 50;
+    this.titleHeight = 50;
+    this.valuesTexts = [];
+    this.valuesLines = [];
     this.rect = new Path({
       data: this.getPath(),
       x: 0,
@@ -24,31 +27,48 @@ class TextNodeUi extends NodeUi {
     });
     this.group.add(this.rect);
 
-    this.text = new Text({
-      text: node.value,
+    this.titleText = new Text({
       x: arrowWidth,
       y: 2, // visually centered
       width: this.width,
-      height: this.height,
+      height: this.titleHeight,
       align: 'center',
       verticalAlign: 'middle',
       fontSize: 20,
       fontFamily: 'Open Sans',
     });
-    this.group.add(this.text);
+    this.group.add(this.titleText);
+
+    this.listGroup = new Group({
+      y: this.height,
+    });
+    this.group.add(this.listGroup);
+    this.listRect = new Rect({
+      x: 1,
+      y: 0,
+      width: this.width,
+      fill: '#d7e2ee',
+      // opacity: 0.7,
+    });
+    this.listGroup.add(this.listRect);
 
     if (opts.editable) {
       this.registerOutlet('right');
       this.group.on('dblclick', () => this.emit('edit:start'));
     }
 
-    this.resize();
+    this.refresh();
   }
 
   refresh() {
-    this.text.text(this.node.value);
+    this.titleText.text(this.isMulti() ? this.node.title : this.node.value[0]);
+    this.titleText.fontStyle(this.isMulti() ? 'italic' : 'normal');
     this.resize();
     this.emit('draw');
+  }
+
+  isMulti() {
+    return this.node.value.length > 1;
   }
 
   // original path (100x75)
@@ -81,20 +101,90 @@ class TextNodeUi extends NodeUi {
   }
 
   resize() {
-    this.text.width(500);
-    const textWidth = this.text.getTextWidth();
-    const textHeight = measureTextHeight(this.node.value);
+    // calculate title width & height
+    this.titleText.width(500);
+    const textWidth = this.titleText.getTextWidth();
+    const textHeight = measureTextHeight(this.titleText.text());
     const width = textWidth + padding * 2;
 
     this.width = width + arrowWidth + 2;
-    this.height =
+    const titleHeight =
       Math.ceil(Math.max(50, textHeight) / GRID_SIZE) * GRID_SIZE + 2;
+    this.height = titleHeight;
+    this.titleHeight = titleHeight;
+    this.titleText.width(width);
+    this.titleText.height(this.height);
 
-    this.text.width(width);
-    this.text.height(this.height);
-    this.rect.data(this.getPath(this.width - 2, this.height - 2));
+    if (this.isMulti()) {
+      // calculate values width & height
+      const valuesSize = this.resizeValues(width);
+
+      if (valuesSize.width > width) {
+        this.width = valuesSize.width + arrowWidth + 2;
+        this.titleText.width(valuesSize.width);
+      }
+      this.height += valuesSize.height;
+
+      this.listRect.width(this.width - 2);
+    }
+
+    this.rect.data(this.getPath(this.width - 2, titleHeight - 2));
+
     this.emit('resized');
     this.emit('moved');
+  }
+
+  resizeValues(minWidth) {
+    this.valuesTexts.forEach(text => text.destroy());
+    this.valuesLines.forEach(line => line.destroy());
+    this.valuesTexts = [];
+    this.valuesLines = [];
+    const sizes = [];
+    let y = padding / 2;
+    this.node.value.forEach(value => {
+      const text = new Text({
+        text: value,
+        x: arrowWidth,
+        y,
+        width: 500,
+        height: 25,
+        align: 'center',
+        verticalAlign: 'middle',
+        fontSize: 20,
+        fontFamily: 'Open Sans',
+      });
+
+      this.listGroup.add(text);
+      this.valuesTexts.push(text);
+
+      const textWidth = text.getTextWidth();
+      const textHeight = measureTextHeight(value);
+      const width = textWidth + padding * 2;
+
+      const height = textHeight + padding;
+      text.height(height);
+      sizes.push({ width, height });
+
+      y += height;
+    });
+
+    const largest = Math.max(minWidth, ...sizes.map(size => size.width));
+    let height = padding / 2;
+    sizes.forEach((size, i) => {
+      this.valuesTexts[i].width(largest);
+
+      if (i > 0) {
+        const line = new Line({
+          points: [arrowWidth, height, largest + 2, height],
+          stroke: '#d7e2ee',
+        });
+        this.valuesLines.push(line);
+        this.listGroup.add(line);
+      }
+      height += size.height;
+    });
+    this.listRect.height(height + padding / 2);
+    return { width: largest, height };
   }
 
   outletX() {
@@ -102,7 +192,7 @@ class TextNodeUi extends NodeUi {
   }
 
   outletY(absolute = true) {
-    return (absolute ? this.y() : 0) + this.height / 2 - 1;
+    return (absolute ? this.y() : 0) + this.titleHeight / 2 - 1;
   }
 
   inletX() {
@@ -110,8 +200,8 @@ class TextNodeUi extends NodeUi {
   }
 
   inletY() {
-    return this.y() + this.height / 2 - 1;
+    return this.y() + this.titleHeight / 2 - 1;
   }
 }
 
-export default TextNodeUi;
+export default TextListNodeUi;

@@ -1,23 +1,26 @@
 import Node from './Node';
+import { pickRandom } from './utils';
 
 class TextNode extends Node {
   type = 'text';
 
   value;
 
-  constructor(value = '') {
+  title;
+
+  constructor(value = [], opts = {}) {
     super();
-    this.value = value;
+    this.value = typeof value === 'string' ? [value] : value;
+    this.title = opts.title;
   }
 
   static fromJSON(json) {
-    const textNode = new TextNode();
-    textNode.value = json.value;
+    const textNode = new TextNode(json.value, { title: json.title });
     return Node.fromJSON(json, textNode);
   }
 
   async evaluate() {
-    return this.value;
+    return pickRandom(this.value);
   }
 }
 

@@ -58,16 +58,27 @@
 /* TextNode edit */
 .text-node-edit{
   position: absolute;
-  width: 50px;
-  height: 50px;
   background-color: #fff;
   box-shadow: 0 0 13px rgba(0, 0, 0, 0.2);
   border:4px solid #65a8f0;
   border-radius: 5px;
+  
+}
+
+.text-node-edit__line{
+  width: 50px;
+  height: 50px;
   display: flex;
   align-items: center;
-  padding:0px 2px;
+  padding:4px 6px;
 }
+.text-node-edit--multi .text-node-edit__line{
+  border-bottom:4px solid #65a8f0;
+}
+.text-node-edit--multi .text-node-edit__line:last-child{
+  border-bottom: none;
+}
+
 .text-node-edit__textarea{
   width: 100%;
   resize: none;

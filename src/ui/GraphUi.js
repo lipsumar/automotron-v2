@@ -6,12 +6,10 @@ import Grid from './Grid';
 import StartNodeUi from './StartNodeUi';
 import TextNodeUi from './TextNodeUi';
 import EdgeUi from './EdgeUi';
-import TextListNodeUi from './TextListNodeUi';
 
 const uiNodeTypes = {
   start: StartNodeUi,
   text: TextNodeUi,
-  'text-list': TextListNodeUi,
 };
 
 class GraphUi extends EventEmitter {

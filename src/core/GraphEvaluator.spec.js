@@ -7,8 +7,7 @@ describe('GraphEvaluator', () => {
   describe('evaluate()', () => {
     it('runs the simplest graph', async () => {
       const graph = new Graph();
-      const textNode = new TextNode();
-      textNode.value = 'hello';
+      const textNode = new TextNode('hello');
       graph.addNode(textNode);
       graph.createEdge(graph.startNode, textNode);
 

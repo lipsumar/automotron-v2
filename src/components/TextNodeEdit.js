@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { createRef } from 'react';
 import { measureTextHeight, measureTextWidth } from '../ui/utils';
 
 function getTopLeft(bbox, size) {
@@ -10,52 +10,112 @@ function getTopLeft(bbox, size) {
   };
 }
 
-function TextNodeEdit(props) {
-  const [size, setSize] = useState({
-    width: 175,
-    height: 50,
-    textHeight: 20,
-  });
-  const [value, setValue] = useState(props.value);
-  const textareaRef = useRef();
+class TextNodeEdit extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: [...props.value],
+      size: props.value.map(() => {
+        return {
+          width: 175,
+          height: 50,
+          textHeight: 20,
+        };
+      }),
+    };
+    this.focusRef = createRef();
+  }
 
-  useEffect(() => {
-    textareaRef.current.focus();
-  });
-
-  useEffect(() => {
-    const textWidth = measureTextWidth(value);
-    const width = Math.min(Math.max(175, textWidth), 500);
-    const textHeight = measureTextHeight(value, width + 6);
-    setSize({
-      width: width + 20,
-      height: Math.max(50, textHeight + 12),
-      textHeight,
+  componentDidMount() {
+    const size = [];
+    const dimensions = this.state.value.map(val => {
+      return this.measure(val);
     });
-  }, [props.bbox, value]);
+    this.widths = dimensions.map(d => d.width);
+    this.heights = dimensions.map(d => d.textHeight);
+    this.setState({ size });
 
-  useEffect(() => {
-    setValue(props.value);
-  }, [props.value]);
+    this.state.value.forEach((val, i) => {
+      this.resize(val, i);
+    });
 
-  return (
-    <div
-      className="text-node-edit"
-      style={{ ...getTopLeft(props.bbox, size), ...size }}
-    >
-      <textarea
-        className={`text-node-edit__textarea ${
-          size.textHeight > 20 ? '' : 'text-node-edit__textarea--single-line'
+    this.focusRef.current.focus();
+  }
+
+  setOneValue(val, index, cb) {
+    const value = [...this.state.value];
+    value[index] = val;
+    this.setState({ value }, cb);
+    this.resize(val, index);
+  }
+
+  measure(val) {
+    const textWidth = measureTextWidth(val);
+    const width = Math.min(Math.max(175, textWidth), 500);
+    const textHeight = measureTextHeight(val, width + 6);
+    return { width, textHeight };
+  }
+
+  resize(val, index) {
+    const { width, textHeight } = this.measure(val);
+    this.widths[index] = width;
+    const height = Math.max(50, textHeight + 12);
+    this.heights[index] = height;
+    const size = [...this.state.size];
+
+    size[index] = {
+      height,
+      textHeight,
+    };
+    this.setState({
+      width: Math.max(...this.widths) + 20,
+      size,
+      fullSize: {
+        width: Math.max(...this.widths) + 20,
+        height: this.heights.reduce((acc, h) => acc + h, 0),
+      },
+    });
+  }
+
+  render() {
+    return (
+      <div
+        className={`text-node-edit ${
+          this.state.value.length > 1 ? 'text-node-edit--multi' : ''
         }`}
-        value={value}
-        onChange={e => {
-          setValue(e.target.value);
-          props.onChange(e.target.value);
-        }}
-        ref={textareaRef}
-      ></textarea>
-    </div>
-  );
+        style={
+          this.state.fullSize
+            ? getTopLeft(this.props.bbox, this.state.fullSize)
+            : {}
+        }
+      >
+        {this.state.value.map((oneValue, i) => {
+          return (
+            <div
+              className="text-node-edit__line"
+              style={{ ...this.state.size[i], width: this.state.width }}
+              key={i}
+            >
+              <textarea
+                ref={i === 0 ? this.focusRef : null}
+                className={`text-node-edit__textarea ${
+                  this.state.size[i].textHeight > 20
+                    ? ''
+                    : 'text-node-edit__textarea--single-line'
+                }`}
+                value={oneValue}
+                onChange={e => {
+                  this.setOneValue(e.target.value, i, () => {
+                    this.props.onChange(this.state.value);
+                  });
+                }}
+              ></textarea>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
 }
 
 export default TextNodeEdit;
