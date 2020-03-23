@@ -1,6 +1,12 @@
 import React, { createRef } from 'react';
 import { measureTextHeight, measureTextWidth } from '../ui/utils';
 
+const DEFAULT_SIZE = {
+  width: 175,
+  height: 50,
+  textHeight: 20,
+};
+
 function getTopLeft(bbox, size) {
   const bboxCenterX = bbox.x + bbox.width / 2;
   const bboxCenterY = bbox.y + bbox.height / 2;
@@ -16,11 +22,7 @@ class TextNodeEdit extends React.Component {
     this.state = {
       value: [...props.value],
       size: props.value.map(() => {
-        return {
-          width: 175,
-          height: 50,
-          textHeight: 20,
-        };
+        return { ...DEFAULT_SIZE };
       }),
     };
     this.focusRef = createRef();
@@ -77,6 +79,26 @@ class TextNodeEdit extends React.Component {
     });
   }
 
+  addValue(index) {
+    const value = [...this.state.value];
+    value.splice(index, 0, '');
+    const size = [...this.state.size];
+    size.splice(index, 0, { ...DEFAULT_SIZE });
+    const dimensions = this.measure('');
+    this.widths.splice(index, 0, dimensions.width);
+    this.heights.splice(index, 0, dimensions.textHeight);
+    this.setState({ value, size }, () => {
+      this.resize('', index);
+    });
+  }
+
+  onKeyDown(e, index) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      this.addValue(index);
+    }
+  }
+
   render() {
     return (
       <div
@@ -109,6 +131,7 @@ class TextNodeEdit extends React.Component {
                     this.props.onChange(this.state.value);
                   });
                 }}
+                onKeyDown={e => this.onKeyDown(e, i + 1)}
               ></textarea>
             </div>
           );
