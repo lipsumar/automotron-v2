@@ -119,7 +119,9 @@ export default {
   },
   getGenerator(id) {
     if (id === 'new') {
-      // return Promise.resolve(newGenerator);
+      return Promise.resolve(newGenerator);
+    }
+    if (id === 'demo') {
       return Promise.resolve(demoGenerator);
     }
 
