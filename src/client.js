@@ -43,16 +43,16 @@ const demoGenerator = {
         value: ['hello'],
         ui: {
           x: 300,
-          y: -100,
+          y: -150,
         },
       },
       {
         id: 3,
         type: 'text',
-        value: ['good morning'],
+        value: ['good morning', 'goodbye my friends', 'oh thats nice'],
         ui: {
           x: 300,
-          y: 0,
+          y: -50,
         },
       },
       {

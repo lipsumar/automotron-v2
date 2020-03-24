@@ -39,9 +39,7 @@ class TextListNodeUi extends NodeUi {
     });
     this.group.add(this.titleText);
 
-    this.listGroup = new Group({
-      y: this.height,
-    });
+    this.listGroup = new Group({});
     this.group.add(this.listGroup);
     this.listRect = new Rect({
       x: 1,
@@ -61,8 +59,18 @@ class TextListNodeUi extends NodeUi {
   }
 
   refresh() {
-    this.titleText.text(this.isMulti() ? this.node.title : this.node.value[0]);
-    this.titleText.fontStyle(this.isMulti() ? 'italic' : 'normal');
+    if (this.isMulti() && this.node.title) {
+      this.titleText.text(this.node.title);
+      this.titleText.fontStyle('italic');
+      this.listRect.visible(true);
+    } else if (this.isMulti() && !this.node.title) {
+      this.titleText.visible(false);
+    } else if (!this.isMulti()) {
+      this.titleText.text(this.node.value[0]);
+      this.titleText.fontStyle('normal');
+      this.listRect.visible(false);
+    }
+
     this.resize();
     this.emit('draw');
   }
@@ -101,19 +109,28 @@ class TextListNodeUi extends NodeUi {
   }
 
   resize() {
-    // calculate title width & height
-    this.titleText.width(500);
-    const textWidth = this.titleText.getTextWidth();
-    const textHeight = measureTextHeight(this.titleText.text());
-    const width = textWidth + padding * 2;
+    let width = 0;
 
-    this.width = width + arrowWidth + 2;
-    const titleHeight =
-      Math.ceil(Math.max(50, textHeight) / GRID_SIZE) * GRID_SIZE + 2;
-    this.height = titleHeight;
-    this.titleHeight = titleHeight;
-    this.titleText.width(width);
-    this.titleText.height(this.height);
+    if ((this.isMulti() && this.node.title) || !this.isMulti()) {
+      // calculate title width & height
+      this.titleText.width(500);
+      const textWidth = this.titleText.getTextWidth();
+      const textHeight = measureTextHeight(this.titleText.text());
+      width = textWidth + padding * 2;
+
+      this.width = width + arrowWidth + 2;
+      const titleHeight =
+        Math.ceil(Math.max(50, textHeight) / GRID_SIZE) * GRID_SIZE + 2;
+      this.height = titleHeight;
+      this.titleHeight = titleHeight;
+      this.titleText.width(width);
+      this.titleText.height(this.height);
+      this.listGroup.y(this.height);
+    } else {
+      this.height = 0;
+      this.listGroup.y(0);
+      this.listRect.visible(false);
+    }
 
     if (this.isMulti()) {
       // calculate values width & height
@@ -128,7 +145,14 @@ class TextListNodeUi extends NodeUi {
       this.listRect.width(this.width - 2);
     }
 
-    this.rect.data(this.getPath(this.width - 2, titleHeight - 2));
+    this.rect.data(
+      this.getPath(
+        this.width - 2,
+        this.isMulti() && this.node.title
+          ? this.titleHeight - 2
+          : this.height - 2,
+      ),
+    );
 
     this.emit('resized');
     this.emit('moved');
@@ -161,7 +185,9 @@ class TextListNodeUi extends NodeUi {
       const textHeight = measureTextHeight(value);
       const width = textWidth + padding * 2;
 
-      const height = textHeight + padding;
+      const height =
+        textHeight +
+        (this.isMulti() && !this.node.title ? padding * 2 : padding);
       text.height(height);
       sizes.push({ width, height });
 
@@ -169,13 +195,13 @@ class TextListNodeUi extends NodeUi {
     });
 
     const largest = Math.max(minWidth, ...sizes.map(size => size.width));
-    let height = padding / 2;
+    let height = padding / 2 - 2;
     sizes.forEach((size, i) => {
       this.valuesTexts[i].width(largest);
 
       if (i > 0) {
         const line = new Line({
-          points: [arrowWidth, height, largest + 2, height],
+          points: [arrowWidth + 4, height, largest + 2, height],
           stroke: '#d7e2ee',
         });
         this.valuesLines.push(line);
@@ -183,7 +209,8 @@ class TextListNodeUi extends NodeUi {
       }
       height += size.height;
     });
-    this.listRect.height(height + padding / 2);
+    height += padding / 2;
+    this.listRect.height(height);
     return { width: largest, height };
   }
 
@@ -192,6 +219,10 @@ class TextListNodeUi extends NodeUi {
   }
 
   outletY(absolute = true) {
+    if (this.isMulti() && !this.node.title) {
+      return (absolute ? this.y() : 0) + this.height / 2 - 1;
+    }
+
     return (absolute ? this.y() : 0) + this.titleHeight / 2 - 1;
   }
 
@@ -200,6 +231,9 @@ class TextListNodeUi extends NodeUi {
   }
 
   inletY() {
+    if (this.isMulti() && !this.node.title) {
+      return this.y() + this.height / 2 - 1;
+    }
     return this.y() + this.titleHeight / 2 - 1;
   }
 }
