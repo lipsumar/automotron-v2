@@ -119,8 +119,8 @@ export default {
   },
   getGenerator(id) {
     if (id === 'new') {
-      // return Promise.resolve(newGenerator);
-      return Promise.resolve(demoGenerator);
+      return Promise.resolve(newGenerator);
+      // return Promise.resolve(demoGenerator);
     }
 
     return ax.get(`/api/generators/${id}`).then(resp => resp.data);
