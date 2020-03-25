@@ -57,6 +57,9 @@ class NodeUi extends EventEmitter {
       circle.opacity(0);
       this.emit('newEdgeToMouse:start', this);
     });
+    circle.on('dragmove', () => {
+      this.emit('newEdgeToMouse:move');
+    });
     circle.on('dragend', () => {
       this.positionOutlets();
       this.emit('newEdgeToMouse:finish');

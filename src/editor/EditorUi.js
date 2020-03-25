@@ -1,22 +1,19 @@
 import CommandInvoker from './CommandInvoker';
 import GraphUi from '../ui/GraphUi';
 import EdgeUi from '../ui/EdgeUi';
+import { hasIntersection } from '../ui/utils';
+import MouseNode from '../ui/MouseNode';
 
 class EditorUi {
   constructor(graphUiEl, graph, actions) {
-    const commandInvoker = new CommandInvoker();
     const graphUi = new GraphUi(graphUiEl, graph, {
       editable: true,
-      executeCommand: (command, options) => {
-        commandInvoker.execute(command, options);
-      },
     });
+    this.mouseNode = new MouseNode(graphUi.stage);
 
     this.graphUi = graphUi;
     this.actions = actions;
-    this.commandInvoker = commandInvoker;
-    commandInvoker.graph = graph;
-    commandInvoker.ui = graphUi;
+    this.commandInvoker = new CommandInvoker(graph, graphUi);
 
     this.activeNodeEditId = null;
 
@@ -28,11 +25,30 @@ class EditorUi {
     let edgeToMouse = null;
     uiNode.on('newEdgeToMouse:start', fromUiNode => {
       const uiEdge = new EdgeUi(fromUiNode, this.mouseNode);
-      this.setupEdge(uiEdge);
+      this.graphUi.setupEdge(uiEdge);
       edgeToMouse = uiEdge;
     });
+    uiNode.on('newEdgeToMouse:move', () => {
+      const onUiNode = this.mouseOnInlet();
+      if (onUiNode) {
+        edgeToMouse.setTo(onUiNode);
+      } else {
+        edgeToMouse.setTo(this.mouseNode);
+      }
+      this.graphUi.draw();
+    });
     uiNode.on('newEdgeToMouse:finish', () => {
-      this.executeCommand('createNode', {
+      const onUiNode = this.mouseOnInlet();
+      if (onUiNode) {
+        this.commandInvoker.execute('linkNode', {
+          fromNodeId: uiNode.node.id,
+          toNodeId: onUiNode.node.id,
+          uiEdge: edgeToMouse,
+        });
+        console.log('connect', onUiNode.node);
+        return;
+      }
+      this.commandInvoker.execute('createNode', {
         value: 'aaah!',
         ui: {
           x: this.mouseNode.inletX(), // vite fait
@@ -42,7 +58,7 @@ class EditorUi {
       });
     });
     uiNode.on('drag:finish', () => {
-      this.executeCommand('moveNode', {
+      this.commandInvoker.execute('moveNode', {
         nodeId: uiNode.node.id,
         x: uiNode.group.x(),
         y: uiNode.group.y(),
@@ -78,6 +94,27 @@ class EditorUi {
         width: uiNode.width,
         height: uiNode.height,
       });
+    });
+  }
+
+  mouseOnInlet() {
+    const mouseRect = {
+      x: this.mouseNode.inletX() - 2,
+      y: this.mouseNode.inletY() - 2,
+      width: 4,
+      height: 4,
+    };
+    return this.graphUi.nodes.find(uiNode => {
+      if (!uiNode.inletX) return false;
+
+      const inletRect = {
+        x: uiNode.inletX() - 20,
+        y: uiNode.inletY() - 10,
+        width: 20,
+        height: 20,
+      };
+
+      return hasIntersection(mouseRect, inletRect);
     });
   }
 }

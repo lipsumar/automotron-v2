@@ -1,7 +1,6 @@
 import { Stage, Layer } from 'konva';
 import throttle from 'lodash.throttle';
 import { EventEmitter } from 'events';
-import MouseNode from './MouseNode';
 import Grid from './Grid';
 import StartNodeUi from './StartNodeUi';
 import TextNodeUi from './TextNodeUi';
@@ -25,7 +24,6 @@ class GraphUi extends EventEmitter {
     super();
     this.opts = opts;
     this.graph = graph;
-    this.executeCommand = opts.executeCommand;
     this.stage = new Stage({
       width: stageEl.offsetWidth,
       height: stageEl.offsetHeight,
@@ -60,7 +58,6 @@ class GraphUi extends EventEmitter {
     this.graph.nodes.forEach(node => {
       this.createNode(node);
     });
-    this.mouseNode = new MouseNode(this.stage);
   }
 
   setupEdges() {
@@ -79,9 +76,7 @@ class GraphUi extends EventEmitter {
     this.graphLayer.add(uiNode.group);
     this.nodes.push(uiNode);
     uiNode.on('draw', () => this.stage.batchDraw());
-
     uiNode.snapToGrid();
-    console.log('emit');
     this.emit('node:created', uiNode);
   }
 
@@ -108,6 +103,10 @@ class GraphUi extends EventEmitter {
       width: uiNode.width * this.stage.scaleX(),
       height: uiNode.height * this.stage.scaleY(),
     };
+  }
+
+  draw() {
+    this.stage.batchDraw();
   }
 
   setupStageScaling() {

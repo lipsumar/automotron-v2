@@ -1,11 +1,13 @@
 import CreateNodeCommand from './commands/CreateNode';
 import MoveNodeCommand from './commands/MoveNode';
 import SetNodeValueCommand from './commands/SetNodeValue';
+import LinkNodeCommand from './commands/LinkNode';
 
 const commands = {
   createNode: CreateNodeCommand,
   moveNode: MoveNodeCommand,
   setNodeValue: SetNodeValueCommand,
+  linkNode: LinkNodeCommand,
 };
 
 class CommandInvoker {
