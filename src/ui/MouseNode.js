@@ -4,17 +4,7 @@ class MouseNode extends EventEmitter {
   constructor(stage) {
     super();
     this.stage = stage;
-    stage.on('dragmove', this.setPoint.bind(this));
-
-    // initialize pointer position, so this.point is set without
-    // need to dragmove the stage
-    const self = this;
-    function onMouseMove(e) {
-      stage.setPointersPositions(e);
-      self.setPoint();
-      window.removeEventListener('mousemove', onMouseMove);
-    }
-    window.addEventListener('mousemove', onMouseMove);
+    stage.on('dragmove mousemove', this.setPoint.bind(this));
   }
 
   setPoint() {

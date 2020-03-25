@@ -19,6 +19,15 @@ class EditorUi {
 
     graphUi.nodes.forEach(this.setupNode.bind(this));
     graphUi.on('node:created', this.setupNode.bind(this));
+    this.graphUi.stage.on('dblclick', () => {
+      this.commandInvoker.execute('createNode', {
+        value: 'oooh!',
+        ui: {
+          x: this.mouseNode.inletX(), // vite fait
+          y: this.mouseNode.inletY() - 20,
+        },
+      });
+    });
   }
 
   setupNode(uiNode) {
@@ -108,7 +117,7 @@ class EditorUi {
       if (!uiNode.inletX) return false;
 
       const inletRect = {
-        x: uiNode.inletX() - 20,
+        x: uiNode.inletX() - 15,
         y: uiNode.inletY() - 10,
         width: 20,
         height: 20,
