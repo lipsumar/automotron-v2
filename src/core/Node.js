@@ -18,6 +18,10 @@ class Node {
   setUi(ui) {
     this.ui = ui;
   }
+
+  patchUi(partialUi) {
+    this.ui = { ...this.ui, ...partialUi };
+  }
 }
 
 export default Node;

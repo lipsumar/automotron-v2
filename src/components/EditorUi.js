@@ -1,8 +1,7 @@
 import React from 'react';
 
-import GraphUi from '../ui/GraphUi';
 import TextNodeEdit from './TextNodeEdit';
-import CommandInvoker from '../editor/CommandInvoker';
+import EditorUi from '../editor/EditorUi';
 
 class EditorUiComponent extends React.Component {
   constructor(props) {
@@ -16,37 +15,26 @@ class EditorUiComponent extends React.Component {
   }
 
   componentDidMount() {
-    const commandInvoker = new CommandInvoker();
-    const graphUi = new GraphUi(this.stageRef.current, this.props.graph, {
-      editable: true,
-      executeCommand: (command, options) => {
-        commandInvoker.execute(command, options);
-      },
-    });
-    commandInvoker.graph = this.props.graph;
-    commandInvoker.ui = graphUi;
-    graphUi.on('edit:start', uiNode => {
-      this.setState({
-        nodeEdit: {
-          bbox: graphUi.getNodeBoundingBox(uiNode),
-          value: uiNode.node.value,
-          nodeId: uiNode.node.id,
-        },
-        graphBlur: true,
-        nodeEditValue: uiNode.node.value,
-      });
-    });
-    graphUi.on('edit:finish', () => {
-      if (this.state.nodeEdit.value !== this.state.nodeEditValue) {
-        commandInvoker.execute('setNodeValue', {
-          nodeId: this.state.nodeEdit.nodeId,
-          value: this.state.nodeEditValue,
+    const editorUi = new EditorUi(this.stageRef.current, this.props.graph, {
+      openNodeEditor: (bbox, value) => {
+        this.setState({
+          nodeEdit: {
+            bbox,
+            value,
+          },
+          graphBlur: true,
+          nodeEditValue: value,
         });
-      }
-      this.setState({
-        nodeEdit: false,
-        graphBlur: false,
-      });
+      },
+      closeNodeEditor: () => {
+        this.setState({
+          nodeEdit: false,
+          graphBlur: false,
+        });
+      },
+      getNodeEditorValue: () => {
+        return this.state.nodeEditValue;
+      },
     });
   }
 

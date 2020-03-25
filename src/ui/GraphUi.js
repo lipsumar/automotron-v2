@@ -79,47 +79,10 @@ class GraphUi extends EventEmitter {
     this.graphLayer.add(uiNode.group);
     this.nodes.push(uiNode);
     uiNode.on('draw', () => this.stage.batchDraw());
-    let edgeToMouse = null;
-    uiNode.on('newEdgeToMouse:start', fromUiNode => {
-      const uiEdge = new EdgeUi(fromUiNode, this.mouseNode);
-      this.setupEdge(uiEdge);
-      edgeToMouse = uiEdge;
-    });
-    uiNode.on('newEdgeToMouse:finish', () => {
-      this.executeCommand('createNode', {
-        value: 'aaah!',
-        ui: {
-          x: this.mouseNode.inletX(), // vite fait
-          y: this.mouseNode.inletY() - 20,
-        },
-        fromUiEdge: edgeToMouse,
-      });
-    });
-    uiNode.on('drag:finish', () => {
-      this.executeCommand('moveNode', {
-        nodeId: uiNode.node.id,
-        x: uiNode.group.x(),
-        y: uiNode.group.y(),
-      });
-    });
-    let editStarted = false;
-    uiNode.on('edit:start', () => {
-      this.emit('edit:start', uiNode);
-      editStarted = true;
-    });
-    this.stage.on('click', () => {
-      if (editStarted) {
-        this.emit('edit:finish');
-        editStarted = false;
-      }
-    });
-    uiNode.node.ui.width = uiNode.width;
-    uiNode.node.ui.height = uiNode.height;
-    uiNode.on('resized', () => {
-      uiNode.node.ui.width = uiNode.width;
-      uiNode.node.ui.height = uiNode.height;
-    });
+
     uiNode.snapToGrid();
+    console.log('emit');
+    this.emit('node:created', uiNode);
   }
 
   createEdge(edge) {
