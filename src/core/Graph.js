@@ -26,12 +26,17 @@ class Graph {
     graph.startNode.setUi(json.nodes.find(node => node.id === 1).ui);
     json.nodes
       .filter(node => node.id > 1)
-      .forEach(node => graph.addNode(nodeTypes[node.type].fromJSON(node)));
+      .forEach(node =>
+        graph.addNode(nodeTypes[node.type].fromJSON(node), node.id),
+      );
     json.edges.forEach(edge => graph.createEdge(edge.from, edge.to));
     return graph;
   }
 
   addNode(node, id = null) {
+    if (id && id >= this.nextNodeId) {
+      this.nextNodeId = id + 1;
+    }
     node.setId(id || this.getNextNodeId());
     this.nodes.push(node);
     return node;
@@ -62,6 +67,9 @@ class Graph {
       throw new Error('addEdge expects `to` to be part of graph');
     }
     const edge = new Edge(this.getNode(from.id), this.getNode(to.id));
+    if (id && id >= this.nextEdgeId) {
+      this.nextEdgeId = id + 1;
+    }
     edge.setId(id || this.getNextEdgeId());
     this.edges.push(edge);
     return edge;

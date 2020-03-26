@@ -70,6 +70,7 @@ class TextListNodeUi extends NodeUi {
     } else if (this.isMulti() && !this.node.title) {
       this.titleText.visible(false);
     } else if (!this.isMulti()) {
+      this.titleText.visible(true);
       this.titleText.text(this.node.value[0]);
       this.titleText.fontStyle('normal');
       this.listRect.visible(false);
@@ -137,6 +138,7 @@ class TextListNodeUi extends NodeUi {
     }
 
     if (this.isMulti()) {
+      this.listGroup.visible(true);
       // calculate values width & height
       const valuesSize = this.resizeValues(width);
 
@@ -147,6 +149,9 @@ class TextListNodeUi extends NodeUi {
       this.height += valuesSize.height;
 
       this.listRect.width(this.width - 2);
+    } else {
+      this.listGroup.visible(false);
+      this.listRect.visible(false);
     }
 
     this.rect.data(
