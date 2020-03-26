@@ -67,4 +67,39 @@ describe('Graph', () => {
       expect(edge.to).toEqual(node);
     });
   });
+
+  describe('removeNode', () => {
+    it('removes a node and the edges its connected to', () => {
+      const graph = new Graph();
+      const nodeA = new Node();
+      const nodeB = new Node();
+
+      graph.addNode(nodeA);
+      graph.createEdge(graph.startNode, nodeA);
+      graph.addNode(nodeB);
+      graph.createEdge(nodeA, nodeB);
+      expect(graph.nodes).toHaveLength(3);
+      expect(graph.edges).toHaveLength(2);
+      graph.removeNode(nodeA);
+      expect(graph.nodes).toHaveLength(2);
+      expect(graph.edges).toHaveLength(0);
+    });
+  });
+
+  describe('removeEdge', () => {
+    it('removes the edge', () => {
+      const graph = new Graph();
+      const node = new Node();
+      graph.addNode(node);
+      const edge = graph.createEdge(graph.startNode, node);
+
+      expect(graph.nodes).toHaveLength(2);
+      expect(graph.edges).toHaveLength(1);
+
+      graph.removeEdge(edge);
+
+      expect(graph.nodes).toHaveLength(2);
+      expect(graph.edges).toHaveLength(0);
+    });
+  });
 });

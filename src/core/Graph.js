@@ -15,6 +15,8 @@ class Graph {
 
   nextNodeId = 1;
 
+  nextEdgeId = 1;
+
   constructor() {
     this.startNode = this.addNode(new StartNode());
   }
@@ -29,17 +31,24 @@ class Graph {
     return graph;
   }
 
-  addNode(node) {
-    node.setId(this.getNextNodeId());
+  addNode(node, id = null) {
+    node.setId(id || this.getNextNodeId());
     this.nodes.push(node);
     return node;
+  }
+
+  removeNode(node) {
+    this.edges = this.edges.filter(edge => {
+      return edge.from.id !== node.id && edge.to.id !== node.id;
+    });
+    this.nodes = this.nodes.filter(n => n.id !== node.id);
   }
 
   getNode(id) {
     return this.nodes.find(n => n.id === id);
   }
 
-  createEdge(from, to) {
+  createEdge(from, to, id) {
     if (!from.id) {
       throw new Error('addEdge expects `from` to have an id');
     }
@@ -53,13 +62,24 @@ class Graph {
       throw new Error('addEdge expects `to` to be part of graph');
     }
     const edge = new Edge(this.getNode(from.id), this.getNode(to.id));
+    edge.setId(id || this.getNextEdgeId());
     this.edges.push(edge);
     return edge;
+  }
+
+  removeEdge(edge) {
+    this.edges = this.edges.filter(e => e.id !== edge.id);
   }
 
   getNextNodeId() {
     const nextId = this.nextNodeId;
     this.nextNodeId += 1;
+    return nextId;
+  }
+
+  getNextEdgeId() {
+    const nextId = this.nextEdgeId;
+    this.nextEdgeId += 1;
     return nextId;
   }
 

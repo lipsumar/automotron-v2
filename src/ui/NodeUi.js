@@ -28,7 +28,14 @@ class NodeUi extends EventEmitter {
     }
   }
 
-  refresh() {}
+  destroy() {
+    this.group.destroy();
+  }
+
+  refresh() {
+    this.group.x(this.node.ui.x);
+    this.group.y(this.node.ui.y);
+  }
 
   registerOutlet(side) {
     const outlet = this.createOutlet();
@@ -60,7 +67,8 @@ class NodeUi extends EventEmitter {
     circle.on('dragmove', () => {
       this.emit('newEdgeToMouse:move');
     });
-    circle.on('dragend', () => {
+    circle.on('dragend', e => {
+      e.cancelBubble = true;
       this.positionOutlets();
       this.emit('newEdgeToMouse:finish');
       this.emit('draw');

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createRef } from 'react';
 
 import EditorUiComponent from '../EditorUi';
 import Graph from '../../core/Graph';
@@ -22,6 +22,7 @@ class Editor extends React.Component {
       ready: false,
     };
     this.afterLoginSuccess = null;
+    this.editorUiRef = createRef();
   }
 
   componentDidMount() {
@@ -81,6 +82,14 @@ class Editor extends React.Component {
     }
   }
 
+  undo() {
+    this.editorUiRef.current.undo();
+  }
+
+  redo() {
+    this.editorUiRef.current.redo();
+  }
+
   render() {
     const { generator, result, showLogin, ready } = this.state;
     return (
@@ -89,10 +98,14 @@ class Editor extends React.Component {
           <EditorToolbar
             onRun={() => this.runGenerator()}
             onSave={() => this.saveGenerator()}
+            onUndo={() => this.undo()}
+            onRedo={() => this.redo()}
           />
         </div>
         <div className="editor__body">
-          {generator && ready && <EditorUiComponent graph={generator.graph} />}
+          {generator && ready && (
+            <EditorUiComponent ref={this.editorUiRef} graph={generator.graph} />
+          )}
           <ResultPanel output={result} />
           <LoginModal
             isOpen={showLogin}

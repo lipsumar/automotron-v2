@@ -28,6 +28,23 @@ class EditorUi {
         },
       });
     });
+
+    this.graphUi.stage.on('click', () => {
+      if (this.activeNodeEditId) {
+        const uiNode = this.graphUi.getNode(this.activeNodeEditId);
+        const newValue = this.actions.getNodeEditorValue();
+
+        if (JSON.stringify(uiNode.node.value) !== JSON.stringify(newValue)) {
+          this.commandInvoker.execute('setNodeValue', {
+            nodeId: this.activeNodeEditId,
+            value: newValue,
+          });
+        }
+
+        this.actions.closeNodeEditor();
+        this.activeNodeEditId = null;
+      }
+    });
   }
 
   setupNode(uiNode) {
@@ -47,14 +64,13 @@ class EditorUi {
       this.graphUi.draw();
     });
     uiNode.on('newEdgeToMouse:finish', () => {
+      edgeToMouse.destroy();
       const onUiNode = this.mouseOnInlet();
       if (onUiNode) {
         this.commandInvoker.execute('linkNode', {
           fromNodeId: uiNode.node.id,
           toNodeId: onUiNode.node.id,
-          uiEdge: edgeToMouse,
         });
-        console.log('connect', onUiNode.node);
         return;
       }
       this.commandInvoker.execute('createNode', {
@@ -63,7 +79,7 @@ class EditorUi {
           x: this.mouseNode.inletX(), // vite fait
           y: this.mouseNode.inletY() - 20,
         },
-        fromUiEdge: edgeToMouse,
+        fromNodeId: uiNode.node.id,
       });
     });
     uiNode.on('drag:finish', () => {
@@ -81,17 +97,6 @@ class EditorUi {
         uiNode.node.value,
       );
     });
-    this.graphUi.stage.on('click', () => {
-      if (this.activeNodeEditId) {
-        const newValue = this.actions.getNodeEditorValue();
-        this.commandInvoker.execute('setNodeValue', {
-          nodeId: this.activeNodeEditId,
-          value: newValue,
-        });
-        this.actions.closeNodeEditor();
-        this.activeNodeEditId = null;
-      }
-    });
 
     uiNode.node.patchUi({
       width: uiNode.width,
@@ -104,6 +109,14 @@ class EditorUi {
         height: uiNode.height,
       });
     });
+  }
+
+  undo() {
+    this.commandInvoker.undo();
+  }
+
+  redo() {
+    this.commandInvoker.redo();
   }
 
   mouseOnInlet() {

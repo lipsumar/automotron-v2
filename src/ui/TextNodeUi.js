@@ -62,6 +62,7 @@ class TextListNodeUi extends NodeUi {
   }
 
   refresh() {
+    NodeUi.prototype.refresh.call(this);
     if (this.isMulti() && this.node.title) {
       this.titleText.text(this.node.title);
       this.titleText.fontStyle('italic');

@@ -4,6 +4,10 @@ class Command {
     this.ui = ui;
     this.options = options;
   }
+
+  redo() {
+    this.execute();
+  }
 }
 
 export default Command;

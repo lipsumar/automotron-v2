@@ -20,6 +20,8 @@ class GraphUi extends EventEmitter {
 
   nodes = [];
 
+  edges = [];
+
   constructor(stageEl, graph, opts = {}) {
     super();
     this.opts = opts;
@@ -80,12 +82,33 @@ class GraphUi extends EventEmitter {
     this.emit('node:created', uiNode);
   }
 
+  removeNode(nodeId) {
+    const edges = this.getEdgesConnectedTo(nodeId);
+    edges.forEach(uiEdge => this.removeEdge(uiEdge.edge));
+    // edges.forEach(edge => edge.destroy());
+    // this.edges = this.edges.filter(uiEdge => {
+    //   return uiEdge.from.node.id !== nodeId && uiEdge.to.node.id !== nodeId;
+    // });
+    this.getNode(nodeId).destroy();
+    this.nodes = this.nodes.filter(uiNode => uiNode.node.id !== nodeId);
+    this.draw();
+  }
+
   createEdge(edge) {
     const uiEdge = new EdgeUi(
       this.getNode(edge.from.id),
       this.getNode(edge.to.id),
     );
+    uiEdge.edge = edge;
+    this.edges.push(uiEdge);
     this.setupEdge(uiEdge);
+  }
+
+  removeEdge(edge) {
+    this.getEdge(edge.id).destroy();
+    this.edges = this.edges.filter(uiEdge => {
+      return uiEdge.edge.id !== edge.id;
+    });
   }
 
   setupEdge(uiEdge) {
@@ -95,6 +118,16 @@ class GraphUi extends EventEmitter {
 
   getNode(id) {
     return this.nodes.find(uiNode => uiNode.node.id === id);
+  }
+
+  getEdge(id) {
+    return this.edges.find(uiEdge => uiEdge.edge.id === id);
+  }
+
+  getEdgesConnectedTo(nodeId) {
+    return this.edges.filter(uiEdge => {
+      return uiEdge.from.node.id === nodeId || uiEdge.to.node.id === nodeId;
+    });
   }
 
   getNodeBoundingBox(uiNode) {

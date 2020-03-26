@@ -15,7 +15,7 @@ class EditorUiComponent extends React.Component {
   }
 
   componentDidMount() {
-    const editorUi = new EditorUi(this.stageRef.current, this.props.graph, {
+    this.editorUi = new EditorUi(this.stageRef.current, this.props.graph, {
       openNodeEditor: (bbox, value) => {
         this.setState({
           nodeEdit: {
@@ -36,6 +36,14 @@ class EditorUiComponent extends React.Component {
         return this.state.nodeEditValue;
       },
     });
+  }
+
+  undo() {
+    this.editorUi.undo();
+  }
+
+  redo() {
+    this.editorUi.redo();
   }
 
   render() {

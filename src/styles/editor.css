@@ -25,16 +25,26 @@
   font-size: 20px;
   font-weight: 500;
 }
-
+.editor-toolbar__tools{
+  display: flex;
+}
 .editor-toolbar button{
   border: 1px solid #d7e2ee;
   padding: 4px 6px;
   border-radius: 3px;
   font-size: 14px;
   outline: none;
+  margin-right: 0.6em;
 }
 .editor-toolbar button:active{
   border-color: #7fa4ca;
+}
+
+.editor-toolbar__separator{
+  width:1px;
+  background-color: #d7e2ee;
+  height:100%;
+  margin-right: 0.6em;
 }
 
 

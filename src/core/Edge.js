@@ -3,9 +3,15 @@ class Edge {
 
   to = null;
 
+  id;
+
   constructor(from, to) {
     this.from = from;
     this.to = to;
+  }
+
+  setId(id) {
+    this.id = id;
   }
 }
 

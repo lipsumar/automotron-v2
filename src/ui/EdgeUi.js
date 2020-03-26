@@ -75,6 +75,10 @@ class EdgeUi extends EventEmitter {
     points.push(...[toX, toY]);
     return points;
   }
+
+  destroy() {
+    this.line.destroy();
+  }
 }
 
 export default EdgeUi;

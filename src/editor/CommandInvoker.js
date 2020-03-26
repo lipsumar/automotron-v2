@@ -18,6 +18,8 @@ class CommandInvoker {
   constructor(graph, ui) {
     this.graph = graph;
     this.ui = ui;
+    this.undoStack = [];
+    this.redoStack = [];
   }
 
   execute(commandKey, options) {
@@ -27,6 +29,26 @@ class CommandInvoker {
     console.log(`[COMMAND] ${commandKey}`, options);
     const command = new commands[commandKey](this.graph, this.ui, options);
     command.execute();
+    this.ui.draw();
+    this.redoStack = [];
+    this.undoStack.push(command);
+  }
+
+  undo() {
+    if (this.undoStack.length === 0) return;
+    const command = this.undoStack.pop();
+    console.log(`[UNDO COMMAND] `, command.options);
+    command.undo();
+    this.ui.draw();
+    this.redoStack.push(command);
+  }
+
+  redo() {
+    if (this.redoStack.length === 0) return;
+    const command = this.redoStack.pop();
+    command.redo();
+    this.ui.draw();
+    this.undoStack.push(command);
   }
 }
 

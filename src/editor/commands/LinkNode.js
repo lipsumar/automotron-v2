@@ -4,11 +4,20 @@ class LinkNodeCommand extends Command {
   execute() {
     const { graph, ui, options } = this;
 
-    graph.createEdge(
+    const edge = graph.createEdge(
       graph.getNode(options.fromNodeId),
       graph.getNode(options.toNodeId),
+      this.previousId,
     );
-    options.uiEdge.setTo(ui.getNode(options.toNodeId));
+    this.previousId = edge.id;
+    ui.createEdge(edge);
+    this.edge = edge;
+  }
+
+  undo() {
+    const { graph, ui } = this;
+    ui.removeEdge(this.edge);
+    graph.removeEdge(this.edge);
   }
 }
 

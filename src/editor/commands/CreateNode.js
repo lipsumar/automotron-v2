@@ -6,16 +6,22 @@ class CreateNodeCommand extends Command {
     const { graph, ui, options } = this;
     const node = new TextNode(options.value);
     node.ui = { ...options.ui };
-    graph.addNode(node);
+    graph.addNode(node, this.previousId);
+    this.previousId = node.id;
     ui.createNode(node);
 
-    if (options.fromUiEdge) {
-      const edge = options.fromUiEdge;
-      graph.createEdge(edge.from.node, node);
-      edge.setTo(ui.getNode(node.id));
+    if (options.fromNodeId) {
+      const edge = graph.createEdge(graph.getNode(options.fromNodeId), node);
+      ui.createEdge(edge);
     }
 
     this.node = node;
+  }
+
+  undo() {
+    const { graph, ui } = this;
+    graph.removeNode(this.node);
+    ui.removeNode(this.node.id);
   }
 }
 
