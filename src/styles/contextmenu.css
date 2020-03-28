@@ -1,0 +1,20 @@
+.react-contextmenu{
+  background-color: #fff;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+  padding:10px 0;
+  border-radius: 5px;
+}
+
+.react-contextmenu-item{
+  padding:6px 10px;
+  cursor: default;
+}
+
+.react-contextmenu-item:hover{
+  background-color: #65a8f0;
+  color:#fff;
+}
+
+.react-contextmenu-item:active{
+  outline: none;
+}

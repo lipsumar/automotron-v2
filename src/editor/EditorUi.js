@@ -1,11 +1,13 @@
+import { EventEmitter } from 'events';
 import CommandInvoker from './CommandInvoker';
 import GraphUi from '../ui/GraphUi';
 import EdgeUi from '../ui/EdgeUi';
 import { hasIntersection } from '../ui/utils';
 import MouseNode from '../ui/MouseNode';
 
-class EditorUi {
+class EditorUi extends EventEmitter {
   constructor(graphUiEl, graph, actions) {
+    super();
     const graphUi = new GraphUi(graphUiEl, graph, {
       editable: true,
     });
@@ -19,6 +21,8 @@ class EditorUi {
 
     graphUi.nodes.forEach(this.setupNode.bind(this));
     graphUi.on('node:created', this.setupNode.bind(this));
+    graphUi.edges.forEach(this.setupEdge.bind(this));
+    graphUi.on('edge:created', this.setupEdge.bind(this));
     this.graphUi.stage.on('dblclick', () => {
       this.commandInvoker.execute('createNode', {
         value: 'oooh!',
@@ -45,6 +49,24 @@ class EditorUi {
         this.activeNodeEditId = null;
       }
     });
+  }
+
+  createNode() {
+    this.commandInvoker.execute('createNode', {
+      value: 'wow!',
+      ui: {
+        x: this.mouseNode.inletX(), // vite fait
+        y: this.mouseNode.inletY() - 20,
+      },
+    });
+  }
+
+  removeNode(nodeId) {
+    this.commandInvoker.execute('removeNode', { nodeId });
+  }
+
+  removeEdge(edgeId) {
+    this.commandInvoker.execute('removeEdge', { edgeId });
   }
 
   setupNode(uiNode) {
@@ -98,6 +120,10 @@ class EditorUi {
       );
     });
 
+    uiNode.on('contextmenu', () => {
+      this.emit('node:contextmenu', uiNode);
+    });
+
     uiNode.node.patchUi({
       width: uiNode.width,
       height: uiNode.height,
@@ -108,6 +134,12 @@ class EditorUi {
         width: uiNode.width,
         height: uiNode.height,
       });
+    });
+  }
+
+  setupEdge(uiEdge) {
+    uiEdge.on('contextmenu', () => {
+      this.emit('edge:contextmenu', uiEdge);
     });
   }
 

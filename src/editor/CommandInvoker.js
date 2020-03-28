@@ -2,12 +2,16 @@ import CreateNodeCommand from './commands/CreateNode';
 import MoveNodeCommand from './commands/MoveNode';
 import SetNodeValueCommand from './commands/SetNodeValue';
 import LinkNodeCommand from './commands/LinkNode';
+import RemoveNodeCommand from './commands/RemoveNode';
+import RemoveEdgeCommand from './commands/RemoveEdge';
 
 const commands = {
   createNode: CreateNodeCommand,
   moveNode: MoveNodeCommand,
   setNodeValue: SetNodeValueCommand,
   linkNode: LinkNodeCommand,
+  removeNode: RemoveNodeCommand,
+  removeEdge: RemoveEdgeCommand,
 };
 
 class CommandInvoker {

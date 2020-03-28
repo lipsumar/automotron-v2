@@ -98,10 +98,13 @@ class GraphUi extends EventEmitter {
     const uiEdge = new EdgeUi(
       this.getNode(edge.from.id),
       this.getNode(edge.to.id),
+      edge,
+      { editable: this.opts.editable },
     );
     uiEdge.edge = edge;
     this.edges.push(uiEdge);
     this.setupEdge(uiEdge);
+    this.emit('edge:created', uiEdge);
   }
 
   removeEdge(edge) {

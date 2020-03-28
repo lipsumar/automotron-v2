@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { ContextMenuTrigger } from 'react-contextmenu';
+import ContextMenu from './ContextMenu';
 import TextNodeEdit from './TextNodeEdit';
 import EditorUi from '../editor/EditorUi';
 
@@ -11,6 +13,7 @@ class EditorUiComponent extends React.Component {
       graphBlur: false,
       nodeEdit: false,
       nodeEditValue: '',
+      contextMenuSubject: null,
     };
   }
 
@@ -36,6 +39,29 @@ class EditorUiComponent extends React.Component {
         return this.state.nodeEditValue;
       },
     });
+
+    this.editorUi.on('node:contextmenu', uiNode => {
+      this.setState({ contextMenuSubject: uiNode });
+    });
+    this.editorUi.on('edge:contextmenu', uiEdge => {
+      this.setState({ contextMenuSubject: uiEdge });
+    });
+  }
+
+  onContextMenuHide() {
+    this.setState({ contextMenuSubject: null });
+  }
+
+  createNode() {
+    this.editorUi.createNode();
+  }
+
+  removeNode() {
+    this.editorUi.removeNode(this.state.contextMenuSubject.node.id);
+  }
+
+  removeEdge() {
+    this.editorUi.removeEdge(this.state.contextMenuSubject.edge.id);
   }
 
   undo() {
@@ -50,10 +76,12 @@ class EditorUiComponent extends React.Component {
     const { graphBlur, nodeEdit } = this.state;
     return (
       <>
-        <div
-          ref={this.stageRef}
-          className={`graph-ui-stage ${graphBlur && 'graph-ui-stage--blur'}`}
-        ></div>
+        <ContextMenuTrigger id="canvas-context-menu" holdToDisplay={-1}>
+          <div
+            ref={this.stageRef}
+            className={`graph-ui-stage ${graphBlur && 'graph-ui-stage--blur'}`}
+          ></div>
+        </ContextMenuTrigger>
         {nodeEdit && (
           <TextNodeEdit
             bbox={nodeEdit.bbox}
@@ -61,6 +89,13 @@ class EditorUiComponent extends React.Component {
             onChange={value => this.setState({ nodeEditValue: value })}
           />
         )}
+        <ContextMenu
+          subject={this.state.contextMenuSubject}
+          onHide={this.onContextMenuHide.bind(this)}
+          onCreateNode={this.createNode.bind(this)}
+          onDeleteNode={this.removeNode.bind(this)}
+          onDeleteEdge={this.removeEdge.bind(this)}
+        />
       </>
     );
   }

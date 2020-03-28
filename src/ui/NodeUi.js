@@ -24,6 +24,11 @@ class NodeUi extends EventEmitter {
       this.group.on('dragmove', () => {
         this.emit('moved');
       });
+      this.group.on('mousedown', e => {
+        if (e.evt.button === 2) {
+          this.emit('contextmenu');
+        }
+      });
       this.on('resized', this.positionOutlets.bind(this));
     }
   }
@@ -35,6 +40,7 @@ class NodeUi extends EventEmitter {
   refresh() {
     this.group.x(this.node.ui.x);
     this.group.y(this.node.ui.y);
+    this.emit('moved');
   }
 
   registerOutlet(side) {

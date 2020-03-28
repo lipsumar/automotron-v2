@@ -43,14 +43,24 @@ class Graph {
   }
 
   removeNode(node) {
+    const removedEdges = [];
     this.edges = this.edges.filter(edge => {
-      return edge.from.id !== node.id && edge.to.id !== node.id;
+      const keep = edge.from.id !== node.id && edge.to.id !== node.id;
+      if (!keep) {
+        removedEdges.push(edge);
+      }
+      return keep;
     });
     this.nodes = this.nodes.filter(n => n.id !== node.id);
+    return removedEdges;
   }
 
   getNode(id) {
     return this.nodes.find(n => n.id === id);
+  }
+
+  getEdge(id) {
+    return this.edges.find(edge => edge.id === id);
   }
 
   createEdge(from, to, id) {

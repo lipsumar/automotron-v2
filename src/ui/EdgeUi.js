@@ -6,8 +6,9 @@ function distance(x1, y1, x2, y2) {
 }
 
 class EdgeUi extends EventEmitter {
-  constructor(from, to) {
+  constructor(from, to, edge, opts = {}) {
     super();
+    this.edge = edge;
     this.boundPosition = this.position.bind(this);
     this.from = from;
     this.setTo(to);
@@ -18,6 +19,14 @@ class EdgeUi extends EventEmitter {
       strokeWidth: 8,
       lineJoin: 'round',
     });
+
+    if (opts.editable) {
+      this.line.on('mousedown', e => {
+        if (e.evt.button === 2) {
+          this.emit('contextmenu');
+        }
+      });
+    }
 
     from.on('moved', this.boundPosition);
   }
