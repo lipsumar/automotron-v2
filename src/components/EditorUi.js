@@ -64,6 +64,10 @@ class EditorUiComponent extends React.Component {
     this.editorUi.removeEdge(this.state.contextMenuSubject.edge.id);
   }
 
+  insertNode() {
+    this.editorUi.insertNode(this.state.contextMenuSubject.edge.id);
+  }
+
   undo() {
     this.editorUi.undo();
   }
@@ -95,6 +99,7 @@ class EditorUiComponent extends React.Component {
           onCreateNode={this.createNode.bind(this)}
           onDeleteNode={this.removeNode.bind(this)}
           onDeleteEdge={this.removeEdge.bind(this)}
+          onInsertNode={this.insertNode.bind(this)}
         />
       </>
     );

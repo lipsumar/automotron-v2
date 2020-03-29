@@ -6,9 +6,8 @@ function renderItems(props) {
     // edge
     return (
       <>
-        <MenuItem data={{ foo: 'bar' }} onClick={props.onDeleteEdge}>
-          Delete
-        </MenuItem>
+        <MenuItem onClick={props.onInsertNode}>Insert node</MenuItem>
+        <MenuItem onClick={props.onDeleteEdge}>Delete</MenuItem>
       </>
     );
   }
@@ -16,18 +15,14 @@ function renderItems(props) {
     // node
     return (
       <>
-        <MenuItem data={{ foo: 'bar' }} onClick={props.onDeleteNode}>
-          Delete
-        </MenuItem>
+        <MenuItem onClick={props.onDeleteNode}>Delete</MenuItem>
       </>
     );
   }
   // stage
   return (
     <>
-      <MenuItem data={{ foo: 'bar' }} onClick={props.onCreateNode}>
-        New
-      </MenuItem>
+      <MenuItem onClick={props.onCreateNode}>New</MenuItem>
     </>
   );
 }

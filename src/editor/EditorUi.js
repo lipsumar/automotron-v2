@@ -69,6 +69,17 @@ class EditorUi extends EventEmitter {
     this.commandInvoker.execute('removeEdge', { edgeId });
   }
 
+  insertNode(edgeId) {
+    this.commandInvoker.execute('insertNode', {
+      edgeId,
+      value: 'paf!',
+      ui: {
+        x: this.mouseNode.inletX(), // vite fait
+        y: this.mouseNode.inletY() - 20,
+      },
+    });
+  }
+
   setupNode(uiNode) {
     let edgeToMouse = null;
     uiNode.on('newEdgeToMouse:start', fromUiNode => {
