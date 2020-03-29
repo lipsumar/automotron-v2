@@ -76,7 +76,8 @@ class Editor extends React.Component {
   }
 
   onLoginSuccess(user) {
-    this.setState({ user });
+    this.props.onLogin(user);
+    this.setState({ showLoginModal: false });
     if (this.afterLoginSuccess) {
       this.afterLoginSuccess();
     }

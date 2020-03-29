@@ -45,6 +45,7 @@ class App extends React.Component {
                 {...props}
                 user={user}
                 onLogout={this.logout.bind(this)}
+                onLogin={theUser => this.setState({ user: theUser })}
               />
             )}
           />
