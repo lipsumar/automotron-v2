@@ -34,6 +34,7 @@
   "scripts": {
     "watch": "react-scripts start",
     "server:watch": "nodemon src/server.js",
+    "start-dev-db": "docker-compose -f docker-compose-dev.yml up -d mongo",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
