@@ -13,6 +13,18 @@ router.post('/login', passport.authenticate('local'), (req, res) => {
   });
 });
 
+router.post('/logged-in', (req, res) => {
+  if (req.user) {
+    res.send({
+      _id: req.user._id,
+      username: req.user.username,
+      role: req.user.role,
+    });
+    return;
+  }
+  res.send(false);
+});
+
 router.post('/register', (req, res) => {
   const { username, password } = req.body;
   User.findOne({ username }).then(existingUser => {
@@ -33,6 +45,11 @@ router.post('/register', (req, res) => {
       });
     });
   });
+});
+
+router.post('/logout', (req, res) => {
+  req.logout();
+  res.send('ok');
 });
 
 module.exports = router;

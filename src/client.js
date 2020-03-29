@@ -111,9 +111,12 @@ export default {
       .post('/api/register', { username, password })
       .then(resp => resp.data);
   },
-  // loggedIn() {
-  //   return ax.get(`/logged-in?_${Math.random()}`).then(resp => resp.data);
-  // },
+  loggedIn() {
+    return ax.post(`/api/logged-in`).then(resp => resp.data);
+  },
+  logout() {
+    return ax.post(`/api/logout`).then(resp => resp.data);
+  },
   getGenerators() {
     return ax.get('/api/generators').then(resp => resp.data);
   },

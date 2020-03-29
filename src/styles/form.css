@@ -33,6 +33,7 @@
   border:1px solid #7791F9;
   color:#7791F9;
   text-decoration: none;
+  cursor: pointer;
 }
 .btn:active, .btn:focus{
   outline:none;

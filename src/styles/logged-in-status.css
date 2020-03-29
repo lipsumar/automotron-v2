@@ -1,0 +1,27 @@
+.logged-in-status{
+  display: flex;
+  align-items: center;
+  position: relative;
+  height:30px;
+  cursor: pointer;
+}
+.logged-in-status__username{
+  padding-right:0.5em;
+}
+
+.logged-in-status__dropdown{
+  position: absolute;
+  top:35px;
+  right:0;
+  background-color: #fff;
+  border-radius: 4px;
+  
+  box-shadow: 0 2px 10px rgba(0,0,0,.2);
+  width:150px;
+  z-index:100;
+}
+
+.logged-in-status-dropdown{
+  padding:15px 10px;
+  text-align: center;
+}

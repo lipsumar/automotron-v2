@@ -96,10 +96,12 @@ class Editor extends React.Component {
       <div className="editor">
         <div className="editor__head">
           <EditorToolbar
+            user={this.props.user}
             onRun={() => this.runGenerator()}
             onSave={() => this.saveGenerator()}
             onUndo={() => this.undo()}
             onRedo={() => this.redo()}
+            onLogout={this.props.onLogout}
           />
         </div>
         <div className="editor__body">

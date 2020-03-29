@@ -21,6 +21,7 @@
 
 .editor-toolbar{
   display: flex;
+  padding:0 10px;
 }
 .editor-toolbar__title{
   padding-right:2em;
@@ -49,6 +50,10 @@
   background-color: #d7e2ee;
   height:100%;
   margin-right: 0.6em;
+}
+
+.editor-toolbar__user{
+  margin-left:auto;
 }
 
 

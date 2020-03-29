@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import LoggedInStatus from './LoggedInStatus';
 
 function Header(props) {
   return (
@@ -12,12 +13,18 @@ function Header(props) {
         <h1>automotron</h1>
       </div>
       <div className="header__right">
-        <button className="btn" onClick={props.onLoginClicked}>
-          Login
-        </button>
-        <button className="btn" onClick={props.onRegisterClicked}>
-          Register
-        </button>
+        {!props.user ? (
+          <>
+            <button className="btn" onClick={props.onLoginClicked}>
+              Login
+            </button>
+            <button className="btn" onClick={props.onRegisterClicked}>
+              Register
+            </button>
+          </>
+        ) : (
+          <LoggedInStatus user={props.user} onLogout={props.onLogout} />
+        )}
       </div>
     </div>
   );

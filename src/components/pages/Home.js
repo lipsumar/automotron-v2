@@ -40,8 +40,10 @@ class Home extends React.Component {
     return (
       <div className="container">
         <Header
+          user={this.props.user}
           onLoginClicked={this.showLogin.bind(this)}
           onRegisterClicked={this.showRegister.bind(this)}
+          onLogout={this.props.onLogout}
         />
         <div
           style={{
