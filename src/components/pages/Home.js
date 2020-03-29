@@ -62,7 +62,11 @@ class Home extends React.Component {
         <div className="grid">
           {this.state.generators.map(generator => {
             return (
-              <Link to={`/editor/${generator._id}`} className="generator-card">
+              <Link
+                to={`/editor/${generator._id}`}
+                className="generator-card"
+                key={generator._id}
+              >
                 <div className="generator-card__image">
                   <img src={generator.preview} alt={generator.title} />
                 </div>
