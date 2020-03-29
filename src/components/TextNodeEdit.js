@@ -26,6 +26,7 @@ class TextNodeEdit extends React.Component {
       }),
     };
     this.focusRef = createRef();
+    this.linesParentRef = createRef();
   }
 
   componentDidMount() {
@@ -87,16 +88,27 @@ class TextNodeEdit extends React.Component {
     const dimensions = this.measure('');
     this.widths.splice(index, 0, dimensions.width);
     this.heights.splice(index, 0, dimensions.textHeight);
-    this.setState({ value, size }, () => {
-      this.resize('', index);
+    return new Promise(resolve => {
+      this.setState({ value, size }, () => {
+        this.resize('', index);
+        resolve();
+      });
     });
   }
 
   onKeyDown(e, index) {
     if (e.key === 'Enter') {
       e.preventDefault();
-      this.addValue(index);
+      this.addValue(index).then(() => {
+        this.focusIndex(index);
+      });
     }
+  }
+
+  focusIndex(index) {
+    this.linesParentRef.current.children[index]
+      .querySelector('textarea')
+      .focus();
   }
 
   render() {
@@ -110,6 +122,7 @@ class TextNodeEdit extends React.Component {
             ? getTopLeft(this.props.bbox, this.state.fullSize)
             : {}
         }
+        ref={this.linesParentRef}
       >
         {this.state.value.map((oneValue, i) => {
           return (
