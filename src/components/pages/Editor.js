@@ -17,7 +17,7 @@ class Editor extends React.Component {
     this.state = {
       generator: null,
       result: null,
-      showLogin: false,
+      showLoginModal: false,
       user: null,
       ready: false,
     };
@@ -68,7 +68,7 @@ class Editor extends React.Component {
       .catch(err => {
         if (err.response && err.response.status === 401) {
           this.afterLoginSuccess = this.saveGenerator.bind(this);
-          this.setState({ showLogin: true });
+          this.setState({ showLoginModal: true });
           return;
         }
         console.log('error!', err);
@@ -91,7 +91,7 @@ class Editor extends React.Component {
   }
 
   render() {
-    const { generator, result, showLogin, ready } = this.state;
+    const { generator, result, showLoginModal, ready } = this.state;
     return (
       <div className="editor">
         <div className="editor__head">
@@ -108,7 +108,8 @@ class Editor extends React.Component {
           )}
           <ResultPanel output={result} />
           <LoginModal
-            isOpen={showLogin}
+            isOpen={showLoginModal}
+            onCloseRequest={() => this.setState({ showLoginModal: false })}
             onLoginSuccess={this.onLoginSuccess.bind(this)}
           />
         </div>

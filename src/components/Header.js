@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-function Header() {
+function Header(props) {
   return (
     <div className="header">
       <div className="header__left">
@@ -12,8 +12,12 @@ function Header() {
         <h1>automotron</h1>
       </div>
       <div className="header__right">
-        <button class="btn">Login</button>
-        <button class="btn">Register</button>
+        <button className="btn" onClick={props.onLoginClicked}>
+          Login
+        </button>
+        <button className="btn" onClick={props.onRegisterClicked}>
+          Register
+        </button>
       </div>
     </div>
   );

@@ -20,11 +20,11 @@ class LoginModal extends React.Component {
   }
 
   render() {
-    const { isOpen, onLoginSuccess } = this.props;
+    const { isOpen, onLoginSuccess, onCloseRequest } = this.props;
     const { showRegister } = this.state;
 
     return (
-      <Modal isOpen={isOpen} className="modal">
+      <Modal isOpen={isOpen} className="modal" onRequestClose={onCloseRequest}>
         <div className="modal__header">
           {showRegister ? 'Create an account' : 'Login'}
         </div>

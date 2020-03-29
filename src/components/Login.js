@@ -18,7 +18,7 @@ class Login extends React.Component {
     client
       .login(this.state.username, this.state.password)
       .then(user => {
-        this.props.loginSuccess(user);
+        this.props.onLoginSuccess(user);
       })
       .catch(err => {
         let error = 'An error occured';
@@ -62,9 +62,12 @@ class Login extends React.Component {
             <button type="submit" className="btn btn--primary btn--large">
               Login
             </button>
-            <a href="#" onClick={this.createAccount.bind(this)}>
+            <button
+              className="btn btn--link"
+              onClick={this.createAccount.bind(this)}
+            >
               Create an account
-            </a>
+            </button>
           </div>
         </form>
       </div>

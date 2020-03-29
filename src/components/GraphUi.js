@@ -10,7 +10,7 @@ function GraphUiComponent(props) {
   const stageRef = useRef(null);
   useEffect(() => {
     graphUi.current = new GraphUi(stageRef.current, props.graph);
-  }, []);
+  }, [props.graph]);
   return <div ref={stageRef} className="graph-ui-stage"></div>;
 }
 

@@ -34,6 +34,9 @@
   color:#7791F9;
   text-decoration: none;
 }
+.btn:active, .btn:focus{
+  outline:none;
+}
 .btn.btn--primary{
   background-color: #7791F9;
   color:#FFF;  
@@ -41,7 +44,12 @@
 .btn--large{
   font-size: 18px;
 }
-
+.btn--link{
+  border:none;
+  color:#7791F9;
+  text-decoration: underline;
+  padding:0;
+}
 
 .btn+.btn{
   margin-left:10px

@@ -1,26 +1,48 @@
-import React from 'react';
+import React, { createRef } from 'react';
 import { Link } from 'react-router-dom';
 import client from '../../client';
 import Header from '../Header';
+import LoginModal from '../LoginModal';
 
 class Home extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { generators: [] };
+    this.state = { generators: [], showLoginModal: false };
+    this.loginModalRef = createRef();
   }
 
   componentDidMount() {
-    client.getGenerators().then(generators => {
-      this.setState({ generators });
-    });
+    client
+      .getGenerators()
+      .then(generators => {
+        this.setState({ generators });
+      })
+      .catch(err => {});
     document.querySelector('html').style.overflow = '';
     window.document.body.style.overflow = '';
+  }
+
+  showLogin() {
+    this.loginModalRef.current.switchToLogin();
+    this.setState({ showLoginModal: true });
+  }
+
+  showRegister() {
+    this.loginModalRef.current.switchToRegister();
+    this.setState({ showLoginModal: true });
+  }
+
+  refreshPage() {
+    window.location.reload();
   }
 
   render() {
     return (
       <div className="container">
-        <Header />
+        <Header
+          onLoginClicked={this.showLogin.bind(this)}
+          onRegisterClicked={this.showRegister.bind(this)}
+        />
         <div
           style={{
             padding: '140px 0',
@@ -40,13 +62,20 @@ class Home extends React.Component {
             return (
               <Link to={`/editor/${generator._id}`} className="generator-card">
                 <div className="generator-card__image">
-                  <img src={generator.preview} />
+                  <img src={generator.preview} alt={generator.title} />
                 </div>
                 <div className="generator-card__title">{generator.title}</div>
               </Link>
             );
           })}
         </div>
+
+        <LoginModal
+          ref={this.loginModalRef}
+          isOpen={this.state.showLoginModal}
+          onCloseRequest={() => this.setState({ showLoginModal: false })}
+          onLoginSuccess={this.refreshPage.bind(this)}
+        />
       </div>
     );
   }
