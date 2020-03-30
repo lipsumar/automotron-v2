@@ -87,14 +87,14 @@ class TextListNodeUi extends NodeUi {
   // original path (100x75)
   // 'M4,1 L98,1 C99.6568542,1 101,2.34314575 101,4 L101,29 L101,29 L107,38 L101,47 L101,73 C101,74.6568542 99.6568542,76 98,76 L4,76 C2.34314575,76 1,74.6568542 1,73 L1,47 L1,47 L7,38 L1,29 L1,4 C1,2.34314575 2.34314575,1 4,1 Z'
   getPath(width = 100, height = 75) {
+    const middle = this.outletY(false);
     const path = ['M4,1']; // start top-left, after corner
     path.push(`L${width - 2},1`); // line to top-right
     path.push(`C${width - 0.3431},1 ${width + 1},2.34314575 ${width + 1},4`); // top-right corner
     path.push(
-      `L${width + 1},${height / 2 - 8.5} L${width + 1},${height / 2 -
-        8.5} L${width + arrowWidth + 1},${height / 2} L${width + 1},${height /
-        2 +
-        8.5} L${width + 1},${height - 2}`,
+      `L${width + 1},${middle - 8.5} L${width + 1},${middle - 8.5} L${width +
+        arrowWidth +
+        1},${middle} L${width + 1},${middle + 8.5} L${width + 1},${height - 2}`,
     ); // right side
     path.push(
       `C${width + 1},${height - 0.3431} ${width - 0.3431},${height +
@@ -104,8 +104,8 @@ class TextListNodeUi extends NodeUi {
 
     path.push(`C2.34314575,${height + 1} 1,${height - 0.3431} 1,${height - 2}`); // bottom-left corner
     path.push(
-      `L1,${height / 2 + 8.5} L1,${height / 2 + 8.5} L${arrowWidth +
-        1},${height / 2} L1,${height / 2 - 8.5} L1,4`,
+      `L1,${middle + 8.5} L1,${middle + 8.5} L${arrowWidth +
+        1},${middle} L1,${middle - 8.5} L1,4`,
     ); // left side
     path.push('C1,2.34314575 2.34314575,1 4,1'); // top-left corner
     path.push('Z'); // end
@@ -228,9 +228,9 @@ class TextListNodeUi extends NodeUi {
   }
 
   outletY(absolute = true) {
-    if (this.isMulti() && !this.node.title) {
-      return (absolute ? this.y() : 0) + this.height / 2 - 1;
-    }
+    // if (this.isMulti() && !this.node.title) {
+    //   return (absolute ? this.y() : 0) + this.height / 2 - 1;
+    // }
 
     return (absolute ? this.y() : 0) + this.titleHeight / 2 - 1;
   }
@@ -240,9 +240,9 @@ class TextListNodeUi extends NodeUi {
   }
 
   inletY() {
-    if (this.isMulti() && !this.node.title) {
-      return this.y() + this.height / 2 - 1;
-    }
+    // if (this.isMulti() && !this.node.title) {
+    //   return this.y() + this.height / 2 - 1;
+    // }
     return this.y() + this.titleHeight / 2 - 1;
   }
 }
