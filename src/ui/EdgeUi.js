@@ -18,6 +18,7 @@ class EdgeUi extends EventEmitter {
       stroke: '#7791F9',
       strokeWidth: 8,
       lineJoin: 'round',
+      bezier: true,
     });
 
     if (opts.editable) {
@@ -45,6 +46,21 @@ class EdgeUi extends EventEmitter {
   }
 
   getPoints() {
+    const { from, to } = this;
+    const fromX = from.outletX();
+    const fromY = from.outletY();
+    const toX = to.inletX();
+    const toY = to.inletY();
+    const points = [fromX, fromY];
+
+    points.push(...[fromX + (toX - fromX) / 2, fromY]);
+    points.push(...[fromX + (toX - fromX) / 2, toY]);
+
+    points.push(...[toX, toY]);
+    return points;
+  }
+
+  getPointsMetro() {
     const { from, to } = this;
     const fromX = from.outletX();
     const fromY = from.outletY();
