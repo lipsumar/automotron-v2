@@ -3,6 +3,18 @@ import StartNode from './StartNode';
 import Node from './Node';
 import Edge from './Edge';
 
+function createGraphWith3Nodes() {
+  const graph = new Graph();
+  const nodeA = new Node();
+  const nodeB = new Node();
+
+  graph.addNode(nodeA);
+  graph.createEdge(graph.startNode, nodeA);
+  graph.addNode(nodeB);
+  graph.createEdge(nodeA, nodeB);
+  return { graph, nodeA, nodeB };
+}
+
 describe('Graph', () => {
   it('is a class', () => {
     const graph = new Graph();
@@ -68,16 +80,24 @@ describe('Graph', () => {
     });
   });
 
+  describe('createGeneratorEdge', () => {
+    it('creates an edge between a node and a generator', () => {
+      const graph = new Graph();
+      const node = new Node();
+      graph.addNode(node);
+      const generator = new Node();
+      graph.addNode(generator);
+      const edge = graph.createGeneratorEdge(node, generator);
+      expect(edge.from).toEqual(node);
+      expect(edge.to).toEqual(generator);
+      expect(edge.type).toBe('generator');
+    });
+  });
+
   describe('removeNode', () => {
     it('removes a node and the edges its connected to', () => {
-      const graph = new Graph();
-      const nodeA = new Node();
-      const nodeB = new Node();
+      const { graph, nodeA } = createGraphWith3Nodes();
 
-      graph.addNode(nodeA);
-      graph.createEdge(graph.startNode, nodeA);
-      graph.addNode(nodeB);
-      graph.createEdge(nodeA, nodeB);
       expect(graph.nodes).toHaveLength(3);
       expect(graph.edges).toHaveLength(2);
       graph.removeNode(nodeA);
@@ -100,6 +120,25 @@ describe('Graph', () => {
 
       expect(graph.nodes).toHaveLength(2);
       expect(graph.edges).toHaveLength(0);
+    });
+  });
+
+  describe('getEdgesFrom', () => {
+    it('returns all edges connected to a node', () => {
+      const { graph, nodeA } = createGraphWith3Nodes();
+      const generator = new Node();
+      graph.addNode(generator);
+      graph.createGeneratorEdge(nodeA, generator);
+      const linksFromA = graph.getEdgesFrom(nodeA);
+      expect(linksFromA).toHaveLength(2);
+    });
+    it('returns edges of a given type connected to a node', () => {
+      const { graph, nodeA } = createGraphWith3Nodes();
+      const generator = new Node();
+      graph.addNode(generator);
+      graph.createGeneratorEdge(nodeA, generator);
+      expect(graph.getEdgesFrom(nodeA, 'default')).toHaveLength(1);
+      expect(graph.getEdgesFrom(nodeA, 'generator')).toHaveLength(1);
     });
   });
 });

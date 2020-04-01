@@ -36,15 +36,26 @@ class GraphEvaluator {
   }
 
   async evaluateNode(node) {
+    const generatorNode = this.graph.getGeneratorFrom(node);
     const element = {
       nodeId: node.id,
-      result: await node.evaluate(),
     };
+
+    if (generatorNode) {
+      element.fromGenerator = true;
+      element.result = {
+        result: await generatorNode.evaluate(),
+        nodeId: generatorNode.id,
+      };
+    } else {
+      element.result = await node.evaluate();
+    }
+
     return element;
   }
 
   findNextNode() {
-    const edges = this.graph.getEdgesFrom(this.currentPointer);
+    const edges = this.graph.getEdgesFrom(this.currentPointer, 'default');
     if (edges.length === 0) {
       return null;
     }

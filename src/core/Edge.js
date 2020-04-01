@@ -3,6 +3,8 @@ class Edge {
 
   to = null;
 
+  type = 'default';
+
   id;
 
   constructor(from, to) {

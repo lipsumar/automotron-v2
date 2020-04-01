@@ -11,4 +11,20 @@ describe('stringifyGraphResult()', () => {
     ];
     expect(stringifyGraphResult({ elements })).toBe('hello world');
   });
+
+  it('flattens generators', () => {
+    const elements = [
+      { result: 'nope' },
+      { result: 'nope' },
+      { result: 'hello' },
+      { result: ' ' },
+      {
+        result: {
+          result: 'doh',
+        },
+        fromGenerator: true,
+      },
+    ];
+    expect(stringifyGraphResult({ elements })).toBe('hello doh');
+  });
 });

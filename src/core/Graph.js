@@ -85,6 +85,12 @@ class Graph {
     return edge;
   }
 
+  createGeneratorEdge(from, to, id) {
+    const edge = this.createEdge(from, to, id);
+    edge.type = 'generator';
+    return edge;
+  }
+
   removeEdge(edge) {
     this.edges = this.edges.filter(e => e.id !== edge.id);
   }
@@ -101,8 +107,18 @@ class Graph {
     return nextId;
   }
 
-  getEdgesFrom(node) {
-    return this.edges.filter(edge => edge.from.id === node.id);
+  getEdgesFrom(node, type = null) {
+    return this.edges.filter(
+      edge => edge.from.id === node.id && (type ? edge.type === type : true),
+    );
+  }
+
+  getGeneratorFrom(node) {
+    const generatorEdge = this.getEdgesFrom(node, 'generator')[0];
+    if (!generatorEdge) {
+      return null;
+    }
+    return generatorEdge.to;
   }
 }
 
