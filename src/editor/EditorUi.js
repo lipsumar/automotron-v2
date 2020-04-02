@@ -4,6 +4,7 @@ import GraphUi from '../ui/GraphUi';
 import EdgeUi from '../ui/EdgeUi';
 import { hasIntersection } from '../ui/utils';
 import MouseNode from '../ui/MouseNode';
+import GeneratorEdgeUi from '../ui/GeneratorEdgeUi';
 
 class EditorUi extends EventEmitter {
   constructor(graphUiEl, graph, actions) {
@@ -12,6 +13,7 @@ class EditorUi extends EventEmitter {
       editable: true,
     });
     this.mouseNode = new MouseNode(graphUi.stage);
+    this.generatorEdgeToMouse = null;
 
     this.graphUi = graphUi;
     this.actions = actions;
@@ -48,6 +50,10 @@ class EditorUi extends EventEmitter {
         this.actions.closeNodeEditor();
         this.activeNodeEditId = null;
       }
+
+      if (this.generatorEdgeToMouse) {
+        this.abortEdgeToGenerator();
+      }
     });
   }
 
@@ -66,7 +72,9 @@ class EditorUi extends EventEmitter {
   }
 
   removeEdge(edgeId) {
+    const fromUiNode = this.graphUi.getEdge(edgeId).from;
     this.commandInvoker.execute('removeEdge', { edgeId });
+    this.graphUi.refreshNode(fromUiNode);
   }
 
   insertNode(edgeId) {
@@ -77,6 +85,28 @@ class EditorUi extends EventEmitter {
         x: this.mouseNode.inletX(), // vite fait
         y: this.mouseNode.inletY() - 20,
       },
+    });
+  }
+
+  initiateEdgeToGenerator(nodeId) {
+    this.generatorEdgeToMouse = new GeneratorEdgeUi(
+      this.graphUi.getNode(nodeId),
+      this.mouseNode,
+    );
+    this.graphUi.setupEdge(this.generatorEdgeToMouse);
+  }
+
+  abortEdgeToGenerator() {
+    this.generatorEdgeToMouse.destroy();
+    this.generatorEdgeToMouse = null;
+    this.graphUi.draw();
+  }
+
+  finishEdgeToGenerator(toNodeUi) {
+    this.commandInvoker.execute('linkNode', {
+      fromNodeId: this.generatorEdgeToMouse.from.node.id,
+      toNodeId: toNodeUi.node.id,
+      type: 'generator',
     });
   }
 
@@ -133,6 +163,12 @@ class EditorUi extends EventEmitter {
 
     uiNode.on('contextmenu', () => {
       this.emit('node:contextmenu', uiNode);
+    });
+
+    uiNode.on('click', () => {
+      if (this.generatorEdgeToMouse) {
+        this.finishEdgeToGenerator(uiNode);
+      }
     });
 
     uiNode.node.patchUi({

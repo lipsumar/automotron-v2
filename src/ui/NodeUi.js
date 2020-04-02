@@ -29,6 +29,9 @@ class NodeUi extends EventEmitter {
           this.emit('contextmenu');
         }
       });
+      this.group.on('click', () => {
+        this.emit('click');
+      });
       this.on('resized', this.positionOutlets.bind(this));
     }
   }
@@ -107,6 +110,14 @@ class NodeUi extends EventEmitter {
 
   y() {
     return this.group.y();
+  }
+
+  centerX() {
+    return this.x() + this.width / 2;
+  }
+
+  centerY() {
+    return this.y() + this.height / 2;
   }
 }
 

@@ -22,6 +22,14 @@ class MouseNode extends EventEmitter {
   inletY() {
     return this.point.y;
   }
+
+  centerX() {
+    return this.inletX();
+  }
+
+  centerY() {
+    return this.inletY();
+  }
 }
 
 export default MouseNode;

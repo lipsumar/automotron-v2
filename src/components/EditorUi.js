@@ -68,6 +68,12 @@ class EditorUiComponent extends React.Component {
     this.editorUi.insertNode(this.state.contextMenuSubject.edge.id);
   }
 
+  linkToGenerator() {
+    this.editorUi.initiateEdgeToGenerator(
+      this.state.contextMenuSubject.node.id,
+    );
+  }
+
   undo() {
     this.editorUi.undo();
   }
@@ -100,6 +106,7 @@ class EditorUiComponent extends React.Component {
           onDeleteNode={this.removeNode.bind(this)}
           onDeleteEdge={this.removeEdge.bind(this)}
           onInsertNode={this.insertNode.bind(this)}
+          onLinkToGenerator={this.linkToGenerator.bind(this)}
         />
       </>
     );

@@ -11,6 +11,7 @@ class TextListNodeUi extends NodeUi {
     super(node, opts);
     this.width = 100;
     this.height = 50;
+    this.isGenerated = false;
     this.titleHeight = 50;
     this.valuesTexts = [];
     this.valuesLines = [];
@@ -75,6 +76,8 @@ class TextListNodeUi extends NodeUi {
       this.titleText.fontStyle('normal');
       this.listRect.visible(false);
     }
+
+    this.rect.fill(this.isGenerated ? '#e5d4f5' : '#fff');
 
     this.resize();
     this.emit('draw');

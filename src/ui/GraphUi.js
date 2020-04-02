@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { Stage, Layer } from 'konva';
 import throttle from 'lodash.throttle';
 import { EventEmitter } from 'events';
@@ -5,6 +6,7 @@ import Grid from './Grid';
 import StartNodeUi from './StartNodeUi';
 import TextNodeUi from './TextNodeUi';
 import EdgeUi from './EdgeUi';
+import GeneratorEdgeUi from './GeneratorEdgeUi';
 
 const uiNodeTypes = {
   start: StartNodeUi,
@@ -48,8 +50,8 @@ class GraphUi extends EventEmitter {
     this.setupStageScaling();
 
     this.setupNodes();
-
     this.setupEdges();
+    this.postSetup();
 
     this.grid.centerOrigin();
 
@@ -66,6 +68,17 @@ class GraphUi extends EventEmitter {
     this.graph.edges.forEach(edge => {
       this.createEdge(edge);
     });
+  }
+
+  postSetup() {
+    this.nodes.forEach(uiNode => {
+      this.refreshNode(uiNode);
+    });
+  }
+
+  refreshNode(uiNode) {
+    uiNode.isGenerated = this.graph.isNodeGenerated(uiNode.node);
+    uiNode.refresh();
   }
 
   createNode(node) {
@@ -95,7 +108,8 @@ class GraphUi extends EventEmitter {
   }
 
   createEdge(edge) {
-    const uiEdge = new EdgeUi(
+    const AbstractUiEdge = edge.type === 'generator' ? GeneratorEdgeUi : EdgeUi;
+    const uiEdge = new AbstractUiEdge(
       this.getNode(edge.from.id),
       this.getNode(edge.to.id),
       edge,

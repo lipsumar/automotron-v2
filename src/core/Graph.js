@@ -29,7 +29,13 @@ class Graph {
       .forEach(node =>
         graph.addNode(nodeTypes[node.type].fromJSON(node), node.id),
       );
-    json.edges.forEach(edge => graph.createEdge(edge.from, edge.to));
+    json.edges.forEach(edge => {
+      if (edge.type === 'generator') {
+        graph.createGeneratorEdge(edge.from, edge.to);
+      } else {
+        graph.createEdge(edge.from, edge.to);
+      }
+    });
     return graph;
   }
 
@@ -119,6 +125,10 @@ class Graph {
       return null;
     }
     return generatorEdge.to;
+  }
+
+  isNodeGenerated(node) {
+    return this.getEdgesFrom(node, 'generator').length > 0;
   }
 }
 
