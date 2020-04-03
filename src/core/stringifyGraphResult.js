@@ -4,17 +4,22 @@ function stringifyElement(element) {
   }
 
   if (element.fromGenerator) {
-    return element.result.result;
+    // eslint-disable-next-line no-use-before-define
+    return stringifyElements(element.result);
   }
 
   throw new Error('stringifyElement error');
 }
 
+function stringifyElements(elements) {
+  return elements.map(el => stringifyElement(el)).join('');
+}
+
 function stringifyGraphResult(result) {
   // eslint-disable-next-line no-unused-vars
-  const [startNode, firstEdge, ...elements] = result.elements;
+  const [startNode, firstEdge, ...elements] = result;
 
-  return elements.map(el => stringifyElement(el)).join('');
+  return stringifyElements(elements);
 }
 
 export default stringifyGraphResult;

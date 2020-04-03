@@ -1,38 +1,29 @@
 import { pickRandom } from './utils';
 
 class GraphEvaluator {
-  currentPointer = null;
-
   constructor(graph) {
     this.graph = graph;
   }
 
-  async run() {
-    this.currentPointer = this.graph.startNode;
-    this.result = {
-      elements: [],
-    };
-    await this.nextStep();
-    return this.result;
+  async play() {
+    const result = await this.run(this.graph.startNode);
+    return result;
   }
 
-  /**
-   * Recursive function calling step() as long as it's possible,
-   * filling this.result at each step
-   */
-  async nextStep() {
-    if (this.currentPointer) {
-      await this.step();
-      return this.nextStep();
+  async run(currentPointer, result = []) {
+    if (currentPointer) {
+      const element = await this.evaluateNode(currentPointer);
+      result.push(element);
+      const nextEdge = this.findNextEdge(currentPointer);
+      if (nextEdge) {
+        result.push({
+          edge: true,
+          result: ' ',
+        });
+        return this.run(nextEdge.to, result);
+      }
     }
-    return this.result;
-  }
-
-  async step() {
-    const element = await this.evaluateNode(this.currentPointer);
-    this.result.elements.push(element);
-    this.currentPointer = this.findNextNode(this.currentPointer);
-    return element;
+    return result;
   }
 
   async evaluateNode(node) {
@@ -43,10 +34,7 @@ class GraphEvaluator {
 
     if (generatorNode) {
       element.fromGenerator = true;
-      element.result = {
-        result: await generatorNode.evaluate(),
-        nodeId: generatorNode.id,
-      };
+      element.result = await this.run(generatorNode);
     } else {
       element.result = await node.evaluate();
     }
@@ -54,17 +42,14 @@ class GraphEvaluator {
     return element;
   }
 
-  findNextNode() {
-    const edges = this.graph.getEdgesFrom(this.currentPointer, 'default');
+  findNextEdge(currentPointer) {
+    const edges = this.graph.getEdgesFrom(currentPointer, 'default');
     if (edges.length === 0) {
       return null;
     }
     const edge = pickRandom(edges);
-    this.result.elements.push({
-      edge: true,
-      result: ' ',
-    });
-    return edge.to;
+
+    return edge;
   }
 }
 

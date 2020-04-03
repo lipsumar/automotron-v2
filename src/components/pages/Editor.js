@@ -44,7 +44,7 @@ class Editor extends React.Component {
 
   runGenerator() {
     const evaluator = new GraphEvaluator(this.state.generator.graph);
-    evaluator.run().then(result => {
+    evaluator.play().then(result => {
       this.setState({
         result: stringifyGraphResult(result),
       });

@@ -78,6 +78,7 @@ class GraphUi extends EventEmitter {
 
   refreshNode(uiNode) {
     uiNode.isGenerated = this.graph.isNodeGenerated(uiNode.node);
+    uiNode.node.patchUi({ isGenerated: uiNode.isGenerated });
     uiNode.refresh();
   }
 

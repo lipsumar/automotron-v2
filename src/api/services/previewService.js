@@ -34,21 +34,52 @@ module.exports = {
       return [(x + offsetX) * scale + padding, (y + offsetY) * scale + padding];
     }
 
-    ctx.strokeStyle = '#7791F9';
-    ctx.lineWidth = 8;
     generator.graph.edges.forEach(edge => {
-      ctx.beginPath();
+      ctx.strokeStyle = '#7791F9';
+      ctx.lineWidth = 8 * scale;
+      ctx.setLineDash([]);
+
       const from = generator.graph.nodes.find(node => node.id === edge.from.id);
       const to = generator.graph.nodes.find(node => node.id === edge.to.id);
-      const points = this.edgePoints(
-        ...adjust(from.ui.x + from.ui.width, from.ui.y + from.ui.height / 2),
-        ...adjust(to.ui.x, to.ui.y + to.ui.height / 2),
-      );
+
+      /* metro
       points.forEach((point, i) => {
         if (i % 2 === 1) return;
         ctx.lineTo(point, points[i + 1]);
-      });
-      ctx.stroke();
+      }); */
+
+      if (edge.type === 'generator') {
+        ctx.lineWidth = 4 * scale;
+        ctx.strokeStyle = '#b35fff';
+        ctx.setLineDash([15 * scale, 10 * scale]);
+        ctx.beginPath();
+        ctx.moveTo(
+          ...adjust(
+            from.ui.x + from.ui.width / 2,
+            from.ui.y + from.ui.height / 2,
+          ),
+        );
+        ctx.lineTo(
+          ...adjust(to.ui.x + to.ui.width / 2, to.ui.y + to.ui.height / 2),
+        );
+        ctx.stroke();
+      } else {
+        const points = this.edgePoints(
+          ...adjust(from.ui.x + from.ui.width, from.ui.y + 25),
+          ...adjust(to.ui.x, to.ui.y + 25),
+        );
+        ctx.beginPath();
+        ctx.moveTo(points[0], points[1]);
+        ctx.bezierCurveTo(
+          points[2],
+          points[3],
+          points[4],
+          points[5],
+          points[6],
+          points[7],
+        );
+        ctx.stroke();
+      }
     });
 
     ctx.shadowOffsetX = 0;
@@ -59,6 +90,9 @@ module.exports = {
       ctx.fillStyle = '#fff';
       if (node.type === 'start') {
         ctx.fillStyle = '#91fbcf';
+      }
+      if (node.ui.isGenerated) {
+        ctx.fillStyle = '#e5d4f5';
       }
       ctx.fillRect(
         ...adjust(node.ui.x, node.ui.y),
@@ -96,6 +130,15 @@ module.exports = {
   },
 
   edgePoints(fromX, fromY, toX, toY) {
+    const points = [fromX, fromY];
+    points.push(...[fromX + (toX - fromX) / 2, fromY]);
+    points.push(...[fromX + (toX - fromX) / 2, toY]);
+
+    points.push(...[toX, toY]);
+    return points;
+  },
+
+  edgePointsMetro(fromX, fromY, toX, toY) {
     const points = [fromX, fromY];
 
     const half = Math.abs(fromY - toY) / 2;

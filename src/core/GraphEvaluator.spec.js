@@ -13,13 +13,13 @@ describe('GraphEvaluator', () => {
       graph.createEdge(graph.startNode, textNode);
 
       const evaluator = new GraphEvaluator(graph);
-      const result = await evaluator.run();
+      const result = await evaluator.play();
 
-      expect(result.elements).toBeInstanceOf(Array);
-      expect(result.elements).toHaveLength(3);
-      expect(result.elements[0]).toEqual({ nodeId: 1, result: null });
-      expect(result.elements[1]).toEqual({ edge: true, result: ' ' });
-      expect(result.elements[2]).toEqual({ nodeId: 2, result: 'hello' });
+      expect(result).toBeInstanceOf(Array);
+      expect(result).toHaveLength(3);
+      expect(result[0]).toEqual({ nodeId: 1, result: null });
+      expect(result[1]).toEqual({ edge: true, result: ' ' });
+      expect(result[2]).toEqual({ nodeId: 2, result: 'hello' });
     });
 
     it('randomly chooses nodes when multiple edges from', async () => {
@@ -36,12 +36,12 @@ describe('GraphEvaluator', () => {
       graph.createEdge(hello, there);
 
       const evaluator = new GraphEvaluator(graph);
-      const result = await evaluator.run();
+      const result = await evaluator.play();
 
-      expect(result.elements).toHaveLength(5);
-      expect(result.elements[2].result).toBe('hello');
-      expect(result.elements[3].result).toBe(' ');
-      expect(result.elements[4].result).toBe('you');
+      expect(result).toHaveLength(5);
+      expect(result[2].result).toBe('hello');
+      expect(result[3].result).toBe(' ');
+      expect(result[4].result).toBe('you');
     });
 
     it('uses generators', async () => {
@@ -54,17 +54,18 @@ describe('GraphEvaluator', () => {
       graph.createGeneratorEdge(textNode, generator);
 
       const evaluator = new GraphEvaluator(graph);
-      const result = await evaluator.run();
-
-      expect(result.elements).toHaveLength(3);
-      expect(result.elements[0]).toEqual({ nodeId: 1, result: null });
-      expect(result.elements[1]).toEqual({ edge: true, result: ' ' });
-      expect(result.elements[2]).toEqual({
+      const result = await evaluator.play();
+      expect(result).toHaveLength(3);
+      expect(result[0]).toEqual({ nodeId: 1, result: null });
+      expect(result[1]).toEqual({ edge: true, result: ' ' });
+      expect(result[2]).toEqual({
         nodeId: 2,
-        result: {
-          nodeId: 3,
-          result: 'generator speaking',
-        },
+        result: [
+          {
+            nodeId: 3,
+            result: 'generator speaking',
+          },
+        ],
         fromGenerator: true,
       });
     });
