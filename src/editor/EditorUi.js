@@ -1,4 +1,5 @@
 import { EventEmitter } from 'events';
+import { Rect } from 'konva';
 import CommandInvoker from './CommandInvoker';
 import GraphUi from '../ui/GraphUi';
 import EdgeUi from '../ui/EdgeUi';
@@ -37,6 +38,12 @@ class EditorUi extends EventEmitter {
       });
     });
 
+    this.graphUi.stage.on('mousedown', e => {
+      if (e.evt.shiftKey) {
+        this.initiateSelectZone();
+      }
+    });
+
     this.graphUi.stage.on('click', () => {
       if (this.activeNodeEditId) {
         const uiNode = this.graphUi.getNode(this.activeNodeEditId);
@@ -60,6 +67,18 @@ class EditorUi extends EventEmitter {
       }
 
       this.cancelSelection();
+    });
+
+    this.graphUi.stage.on('mousemove', () => {
+      if (this.selectZone) {
+        this.updateSelectZone();
+      }
+    });
+
+    this.graphUi.stage.on('mouseup', () => {
+      if (this.selectZone) {
+        this.finishSelectZone();
+      }
     });
   }
 
@@ -114,6 +133,45 @@ class EditorUi extends EventEmitter {
       toNodeId: toNodeUi.node.id,
       type: 'generator',
     });
+  }
+
+  initiateSelectZone() {
+    const { stage } = this.graphUi;
+    stage.draggable(false);
+    this.selectZone = new Rect({
+      x: this.mouseNode.centerX(),
+      y: this.mouseNode.centerY(),
+      width: 0,
+      height: 0,
+      fill: 'rgba(101, 168, 240, 0.21)',
+    });
+    this.graphUi.graphLayer.add(this.selectZone);
+  }
+
+  updateSelectZone() {
+    this.selectZone.width(this.mouseNode.centerX() - this.selectZone.x());
+    this.selectZone.height(this.mouseNode.centerY() - this.selectZone.y());
+    this.graphUi.draw();
+    const selectZoneBBox = this.selectZone.getClientRect();
+    if (selectZoneBBox.width * selectZoneBBox.height < 100) {
+      // prevent from unselecting everything with a tiny selection.
+      // tiny selections happen by mistake when user moves a tiny bit between mousedown and mouseup
+      return;
+    }
+    this.graphUi.nodes.forEach(uiNode => {
+      if (hasIntersection(selectZoneBBox, uiNode.rect.getClientRect())) {
+        this.addNodeToSelection(uiNode);
+      } else {
+        this.removeNodeFromSelection(uiNode);
+      }
+    });
+  }
+
+  finishSelectZone() {
+    this.graphUi.stage.draggable(true);
+    this.selectZone.destroy();
+    this.selectZone = null;
+    this.graphUi.draw();
   }
 
   setNodeTitle(nodeId, title) {
@@ -222,7 +280,11 @@ class EditorUi extends EventEmitter {
       }
 
       if (e.evt.shiftKey) {
-        this.addNodeToSelection(uiNode);
+        if (!uiNode.selected) {
+          this.addNodeToSelection(uiNode);
+        } else {
+          this.removeNodeFromSelection(uiNode);
+        }
       } else {
         this.selectNode(uiNode);
       }
@@ -263,8 +325,26 @@ class EditorUi extends EventEmitter {
   }
 
   addNodeToSelection(uiNode) {
-    uiNode.setSelected(true);
-    this.selection.push(uiNode);
+    const nodeInSelection = this.selection.find(
+      item => item.isNode() && item.node.id === uiNode.node.id,
+    );
+
+    if (!nodeInSelection) {
+      uiNode.setSelected(true);
+      this.selection.push(uiNode);
+    }
+  }
+
+  removeNodeFromSelection(uiNode) {
+    const newSelection = [];
+    this.selection.forEach(item => {
+      if (item.isNode() && item.node.id === uiNode.node.id) {
+        uiNode.setSelected(false);
+        return;
+      }
+      newSelection.push(item);
+    });
+    this.selection = newSelection;
   }
 
   cancelSelection() {
