@@ -3,7 +3,7 @@ import { Rect } from 'konva';
 import CommandInvoker from './CommandInvoker';
 import GraphUi from '../ui/GraphUi';
 import EdgeUi from '../ui/EdgeUi';
-import { hasIntersection } from '../ui/utils';
+import { hasIntersection, distance } from '../ui/utils';
 import MouseNode from '../ui/MouseNode';
 import GeneratorEdgeUi from '../ui/GeneratorEdgeUi';
 
@@ -38,10 +38,15 @@ class EditorUi extends EventEmitter {
       });
     });
 
+    let posAtMouseDown = null;
     this.graphUi.stage.on('mousedown', e => {
       if (e.evt.shiftKey) {
         this.initiateSelectZone();
       }
+      posAtMouseDown = {
+        x: this.mouseNode.centerX(),
+        y: this.mouseNode.centerY(),
+      };
     });
 
     this.graphUi.stage.on('click', () => {
@@ -63,10 +68,7 @@ class EditorUi extends EventEmitter {
 
       if (this.generatorEdgeToMouse) {
         this.abortEdgeToGenerator();
-        return;
       }
-
-      this.cancelSelection();
     });
 
     this.graphUi.stage.on('mousemove', () => {
@@ -77,7 +79,22 @@ class EditorUi extends EventEmitter {
 
     this.graphUi.stage.on('mouseup', () => {
       if (this.selectZone) {
+        this.preventClick = true;
         this.finishSelectZone();
+        return;
+      }
+
+      // real click is click where user doesn't move too much
+      // between mousdown and mouseup
+      if (
+        distance(
+          posAtMouseDown.x,
+          posAtMouseDown.y,
+          this.mouseNode.centerX(),
+          this.mouseNode.centerY(),
+        ) < 10
+      ) {
+        this.cancelSelection();
       }
     });
   }
@@ -249,6 +266,7 @@ class EditorUi extends EventEmitter {
       if (otherNodes) {
         otherNodes.forEach(otherUiNode => {
           otherUiNode.snapToGrid();
+          // eslint-disable-next-line no-param-reassign
           otherUiNode.posBeforeDrag = null;
         });
       }

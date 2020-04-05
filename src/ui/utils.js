@@ -37,3 +37,7 @@ export function hasIntersection(r1, r2) {
     r2.y + r2.height < r1.y
   );
 }
+
+export function distance(x1, y1, x2, y2) {
+  return Math.hypot(x2 - x1, y2 - y1);
+}
