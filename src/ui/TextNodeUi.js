@@ -1,6 +1,6 @@
 import { Path, Text, Rect, Group, Line } from 'konva';
 import NodeUi from './NodeUi';
-import { measureTextHeight } from './utils';
+import { measureTextHeight, measureTextWidth } from './utils';
 import { GRID_SIZE } from './constants';
 
 const padding = 10;
@@ -11,10 +11,30 @@ class TextListNodeUi extends NodeUi {
     super(node, opts);
     this.width = 100;
     this.height = 50;
-    this.isGenerated = false;
-    this.titleHeight = 50;
     this.valuesTexts = [];
     this.valuesLines = [];
+
+    this.titleGroup = new Group({
+      y: -14,
+      x: 1,
+    });
+    this.group.add(this.titleGroup);
+    this.titleRect = new Rect({
+      fill: '#F3D31C',
+      cornerRadius: 3,
+      height: 17,
+      // width: 25,
+    });
+    this.titleGroup.add(this.titleRect);
+    this.titleText = new Text({
+      // text: 'label',
+      fontSize: 12,
+      y: 2,
+      x: 3,
+      opacity: 0.6,
+    });
+    this.titleGroup.add(this.titleText);
+
     this.rect = new Path({
       data: this.getPath(),
       x: 0,
@@ -28,26 +48,12 @@ class TextListNodeUi extends NodeUi {
     });
     this.group.add(this.rect);
 
-    this.titleText = new Text({
-      x: arrowWidth,
-      y: 2, // visually centered
-      width: this.width,
-      height: this.titleHeight,
-      align: 'center',
-      verticalAlign: 'middle',
-      fontSize: 20,
-      fontFamily: 'Open Sans',
-    });
-    this.group.add(this.titleText);
-
     this.listGroup = new Group({});
     this.group.add(this.listGroup);
     this.listRect = new Rect({
       x: 1,
       y: 0,
       width: this.width,
-      fill: '#d7e2ee',
-      // opacity: 0.7,
     });
     this.listGroup.add(this.listRect);
 
@@ -64,26 +70,23 @@ class TextListNodeUi extends NodeUi {
 
   refresh() {
     NodeUi.prototype.refresh.call(this);
-    if (this.isMulti() && this.node.title) {
-      this.titleText.text(this.node.title);
-      this.titleText.fontStyle('italic');
-      this.listRect.visible(true);
-    } else if (this.isMulti() && !this.node.title) {
-      this.titleText.visible(false);
-    } else if (!this.isMulti()) {
-      this.titleText.visible(true);
-      this.titleText.text(this.node.value[0]);
-      this.titleText.fontStyle('normal');
-      this.listRect.visible(false);
-    }
 
-    this.rect.fill(this.isGenerated ? '#e5d4f5' : '#fff');
+    this.rect.fill(this.isGenerated() ? '#e5d4f5' : '#fff');
+
+    this.titleGroup.visible(!!this.node.title);
+    if (this.node.title) {
+      this.titleText.text(this.node.title);
+      this.titleRect.width(measureTextWidth(this.node.title, 12) + 4);
+    }
 
     this.resize();
     this.emit('draw');
   }
 
   isMulti() {
+    if (this.isGenerated()) {
+      return false;
+    }
     return this.node.value.length > 1;
   }
 
@@ -117,57 +120,29 @@ class TextListNodeUi extends NodeUi {
   }
 
   resize() {
-    let width = 0;
+    const valuesSize = this.resizeValues(50 - arrowWidth);
 
-    if ((this.isMulti() && this.node.title) || !this.isMulti()) {
-      // calculate title width & height
-      this.titleText.width(500);
-      const textWidth = this.titleText.getTextWidth();
-      const textHeight = measureTextHeight(this.titleText.text());
-      width = textWidth + padding * 2;
+    this.width = valuesSize.width + arrowWidth + 2;
+    this.height = Math.max(52, valuesSize.height);
 
-      this.width = width + arrowWidth + 2;
-      const titleHeight =
-        Math.ceil(Math.max(50, textHeight) / GRID_SIZE) * GRID_SIZE + 2;
-      this.height = titleHeight;
-      this.titleHeight = titleHeight;
-      this.titleText.width(width);
-      this.titleText.height(this.height);
-      this.listGroup.y(this.height);
-    } else {
-      this.height = 0;
-      this.listGroup.y(0);
-      this.listRect.visible(false);
-    }
+    this.listRect.width(this.width - 2);
+    this.listGroup.y(this.isMulti() ? 0 : 2);
 
-    if (this.isMulti()) {
-      this.listGroup.visible(true);
-      // calculate values width & height
-      const valuesSize = this.resizeValues(width);
-
-      if (valuesSize.width > width) {
-        this.width = valuesSize.width + arrowWidth + 2;
-        this.titleText.width(valuesSize.width);
-      }
-      this.height += valuesSize.height;
-
-      this.listRect.width(this.width - 2);
-    } else {
-      this.listGroup.visible(false);
-      this.listRect.visible(false);
-    }
-
-    this.rect.data(
-      this.getPath(
-        this.width - 2,
-        this.isMulti() && this.node.title
-          ? this.titleHeight - 2
-          : this.height - 2,
-      ),
-    );
+    this.rect.data(this.getPath(this.width - 2, this.height - 2));
 
     this.emit('resized');
     this.emit('moved');
+  }
+
+  getValueToShow() {
+    if (this.isGenerated()) {
+      return [this.node.ui.generatorValue];
+    }
+    return this.node.value;
+  }
+
+  isGenerated() {
+    return !!this.node.ui.generatorValue;
   }
 
   resizeValues(minWidth) {
@@ -177,7 +152,8 @@ class TextListNodeUi extends NodeUi {
     this.valuesLines = [];
     const sizes = [];
     let y = padding / 2;
-    this.node.value.forEach(value => {
+
+    this.getValueToShow().forEach(value => {
       const text = new Text({
         text: value,
         x: arrowWidth,
@@ -188,6 +164,7 @@ class TextListNodeUi extends NodeUi {
         verticalAlign: 'middle',
         fontSize: 20,
         fontFamily: 'Open Sans',
+        fontStyle: this.isGenerated() ? 'italic' : 'normal',
       });
 
       this.listGroup.add(text);
@@ -197,9 +174,7 @@ class TextListNodeUi extends NodeUi {
       const textHeight = measureTextHeight(value);
       const width = textWidth + padding * 2;
 
-      const height =
-        textHeight +
-        (this.isMulti() && !this.node.title ? padding * 2 : padding);
+      const height = textHeight + padding * 2;
       text.height(height);
       sizes.push({ width, height });
 
@@ -231,11 +206,7 @@ class TextListNodeUi extends NodeUi {
   }
 
   outletY(absolute = true) {
-    // if (this.isMulti() && !this.node.title) {
-    //   return (absolute ? this.y() : 0) + this.height / 2 - 1;
-    // }
-
-    return (absolute ? this.y() : 0) + this.titleHeight / 2 - 1;
+    return (absolute ? this.y() : 0) + 50 / 2 - 1;
   }
 
   inletX() {
@@ -243,10 +214,7 @@ class TextListNodeUi extends NodeUi {
   }
 
   inletY() {
-    // if (this.isMulti() && !this.node.title) {
-    //   return this.y() + this.height / 2 - 1;
-    // }
-    return this.y() + this.titleHeight / 2 - 1;
+    return this.y() + 50 / 2 - 1;
   }
 }
 

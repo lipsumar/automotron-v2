@@ -91,7 +91,7 @@ module.exports = {
       if (node.type === 'start') {
         ctx.fillStyle = '#91fbcf';
       }
-      if (node.ui.isGenerated) {
+      if (node.ui.generatorValue) {
         ctx.fillStyle = '#e5d4f5';
       }
       ctx.fillRect(

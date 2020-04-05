@@ -74,6 +74,11 @@ class EditorUiComponent extends React.Component {
     );
   }
 
+  setNodeTitle() {
+    const title = window.prompt('Title');
+    this.editorUi.setNodeTitle(this.state.contextMenuSubject.node.id, title);
+  }
+
   undo() {
     this.editorUi.undo();
   }
@@ -107,6 +112,7 @@ class EditorUiComponent extends React.Component {
           onDeleteEdge={this.removeEdge.bind(this)}
           onInsertNode={this.insertNode.bind(this)}
           onLinkToGenerator={this.linkToGenerator.bind(this)}
+          onSetNodeTitle={this.setNodeTitle.bind(this)}
         />
       </>
     );

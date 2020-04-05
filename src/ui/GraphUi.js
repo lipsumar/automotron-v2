@@ -77,8 +77,13 @@ class GraphUi extends EventEmitter {
   }
 
   refreshNode(uiNode) {
-    uiNode.isGenerated = this.graph.isNodeGenerated(uiNode.node);
-    uiNode.node.patchUi({ isGenerated: uiNode.isGenerated });
+    const generator = this.graph.getGeneratorFrom(uiNode.node);
+    let generatorValue = null;
+    if (generator) {
+      generatorValue = generator.title || generator.value[0] || ' ';
+    }
+
+    uiNode.node.patchUi({ generatorValue });
     uiNode.refresh();
   }
 

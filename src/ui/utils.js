@@ -14,9 +14,9 @@ export function measureTextHeight(text, width = 500) {
   return height;
 }
 
-export function measureTextWidth(text) {
+export function measureTextWidth(text, fontSize = 20) {
   const div = document.createElement('div');
-  div.style.fontSize = '20px';
+  div.style.fontSize = `${fontSize}px`;
   div.style.lineHeight = '1';
   div.style.position = 'absolute';
   div.style.top = '-900px';

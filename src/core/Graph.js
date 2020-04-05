@@ -119,6 +119,12 @@ class Graph {
     );
   }
 
+  getEdgesTo(node, type = null) {
+    return this.edges.filter(
+      edge => edge.to.id === node.id && (type ? edge.type === type : true),
+    );
+  }
+
   getGeneratorFrom(node) {
     const generatorEdge = this.getEdgesFrom(node, 'generator')[0];
     if (!generatorEdge) {
@@ -129,6 +135,10 @@ class Graph {
 
   isNodeGenerated(node) {
     return this.getEdgesFrom(node, 'generator').length > 0;
+  }
+
+  getNodesGeneratedBy(generator) {
+    return this.getEdgesTo(generator, 'generator').map(edge => edge.from);
   }
 }
 

@@ -110,6 +110,13 @@ class EditorUi extends EventEmitter {
     });
   }
 
+  setNodeTitle(nodeId, title) {
+    this.commandInvoker.execute('setNodeTitle', {
+      nodeId,
+      title,
+    });
+  }
+
   setupNode(uiNode) {
     let edgeToMouse = null;
     uiNode.on('newEdgeToMouse:start', fromUiNode => {
