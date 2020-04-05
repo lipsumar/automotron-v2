@@ -141,7 +141,9 @@ class TextNodeEdit extends React.Component {
                 value={oneValue}
                 onChange={e => {
                   this.setOneValue(e.target.value, i, () => {
-                    this.props.onChange(this.state.value);
+                    this.props.onChange(
+                      this.state.value.filter(v => v.trim() !== ''),
+                    );
                   });
                 }}
                 onKeyDown={e => this.onKeyDown(e, i + 1)}
