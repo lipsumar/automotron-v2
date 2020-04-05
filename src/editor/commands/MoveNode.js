@@ -2,25 +2,28 @@ import Command from './Command';
 
 class MoveNodeCommand extends Command {
   execute() {
-    const { graph, ui } = this;
-    const node = graph.getNode(this.options.nodeId);
-    this.previousPos = {
-      x: node.ui.x,
-      y: node.ui.y,
-    };
+    const { graph, ui, options } = this;
+    const nodes = graph.getNodes(this.options.nodeIds);
 
-    node.patchUi({
-      x: this.options.x,
-      y: this.options.y,
+    nodes.forEach(node => {
+      node.patchUi({
+        x: node.ui.x + options.delta.x,
+        y: node.ui.y + options.delta.y,
+      });
+      ui.getNode(node.id).refresh();
     });
-    ui.getNode(this.options.nodeId).refresh();
+    this.nodes = nodes;
   }
 
   undo() {
-    const { graph, ui } = this;
-    const node = graph.getNode(this.options.nodeId);
-    node.patchUi(this.previousPos);
-    ui.getNode(this.options.nodeId).refresh();
+    const { ui, options } = this;
+    this.nodes.forEach(node => {
+      node.patchUi({
+        x: node.ui.x - options.delta.x,
+        y: node.ui.y - options.delta.y,
+      });
+      ui.getNode(node.id).refresh();
+    });
   }
 }
 

@@ -104,6 +104,10 @@ class EdgeUi extends EventEmitter {
   destroy() {
     this.line.destroy();
   }
+
+  isNode() {
+    return false;
+  }
 }
 
 export default EdgeUi;

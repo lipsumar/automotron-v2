@@ -19,6 +19,8 @@ class EditorUi extends EventEmitter {
     this.actions = actions;
     this.commandInvoker = new CommandInvoker(graph, graphUi);
 
+    this.selection = [];
+
     this.activeNodeEditId = null;
 
     graphUi.nodes.forEach(this.setupNode.bind(this));
@@ -49,11 +51,15 @@ class EditorUi extends EventEmitter {
 
         this.actions.closeNodeEditor();
         this.activeNodeEditId = null;
+        return;
       }
 
       if (this.generatorEdgeToMouse) {
         this.abortEdgeToGenerator();
+        return;
       }
+
+      this.cancelSelection();
     });
   }
 
@@ -152,11 +158,48 @@ class EditorUi extends EventEmitter {
         fromNodeId: uiNode.node.id,
       });
     });
+
+    uiNode.on('drag:move', () => {
+      const moveDelta = {
+        x: uiNode.x() - uiNode.dragStartedAt.x,
+        y: uiNode.y() - uiNode.dragStartedAt.y,
+      };
+      const otherNodes = this.selection.filter(
+        item => item.isNode() && item.node.id !== uiNode.node.id,
+      );
+      if (otherNodes.length > 0) {
+        otherNodes.forEach(otherUiNode => {
+          if (!otherUiNode.posBeforeDrag) {
+            // eslint-disable-next-line no-param-reassign
+            otherUiNode.posBeforeDrag = {
+              x: otherUiNode.x(),
+              y: otherUiNode.y(),
+            };
+          }
+          otherUiNode.move({
+            x: otherUiNode.posBeforeDrag.x + moveDelta.x,
+            y: otherUiNode.posBeforeDrag.y + moveDelta.y,
+          });
+        });
+      }
+    });
+
     uiNode.on('drag:finish', () => {
+      const otherNodes = this.selection.filter(
+        item => item.isNode() && item.node.id !== uiNode.node.id,
+      );
+      if (otherNodes) {
+        otherNodes.forEach(otherUiNode => {
+          otherUiNode.snapToGrid();
+          otherUiNode.posBeforeDrag = null;
+        });
+      }
       this.commandInvoker.execute('moveNode', {
-        nodeId: uiNode.node.id,
-        x: uiNode.group.x(),
-        y: uiNode.group.y(),
+        nodeIds: [uiNode.node.id, ...otherNodes.map(uin => uin.node.id)],
+        delta: {
+          x: uiNode.x() - uiNode.dragStartedAt.x,
+          y: uiNode.y() - uiNode.dragStartedAt.y,
+        },
       });
     });
 
@@ -172,10 +215,19 @@ class EditorUi extends EventEmitter {
       this.emit('node:contextmenu', uiNode);
     });
 
-    uiNode.on('click', () => {
+    uiNode.on('click', e => {
       if (this.generatorEdgeToMouse) {
         this.finishEdgeToGenerator(uiNode);
+        return;
       }
+
+      if (e.evt.shiftKey) {
+        this.addNodeToSelection(uiNode);
+      } else {
+        this.selectNode(uiNode);
+      }
+
+      e.cancelBubble = true;
     });
 
     uiNode.node.patchUi({
@@ -203,6 +255,23 @@ class EditorUi extends EventEmitter {
 
   redo() {
     this.commandInvoker.redo();
+  }
+
+  selectNode(uiNode) {
+    this.cancelSelection();
+    this.addNodeToSelection(uiNode);
+  }
+
+  addNodeToSelection(uiNode) {
+    uiNode.setSelected(true);
+    this.selection.push(uiNode);
+  }
+
+  cancelSelection() {
+    this.selection.forEach(item => {
+      item.setSelected(false);
+    });
+    this.selection = [];
   }
 
   mouseOnInlet() {

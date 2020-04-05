@@ -65,6 +65,10 @@ class Graph {
     return this.nodes.find(n => n.id === id);
   }
 
+  getNodes(ids) {
+    return this.nodes.filter(n => ids.includes(n.id));
+  }
+
   getEdge(id) {
     return this.edges.find(edge => edge.id === id);
   }

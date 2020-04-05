@@ -17,20 +17,27 @@ class NodeUi extends EventEmitter {
     });
 
     if (opts.editable) {
+      this.group.on('dragstart', () => {
+        this.dragStartedAt = {
+          x: this.x(),
+          y: this.y(),
+        };
+      });
       this.group.on('dragend', () => {
         this.snapToGrid();
         this.emit('drag:finish');
       });
       this.group.on('dragmove', () => {
         this.emit('moved');
+        this.emit('drag:move');
       });
       this.group.on('mousedown', e => {
         if (e.evt.button === 2) {
           this.emit('contextmenu');
         }
       });
-      this.group.on('click', () => {
-        this.emit('click');
+      this.group.on('click', e => {
+        this.emit('click', e);
       });
       this.on('resized', this.positionOutlets.bind(this));
     }
@@ -44,6 +51,10 @@ class NodeUi extends EventEmitter {
     this.group.x(this.node.ui.x);
     this.group.y(this.node.ui.y);
     this.emit('moved');
+  }
+
+  draw() {
+    this.emit('draw');
   }
 
   registerOutlet(side) {
@@ -85,6 +96,16 @@ class NodeUi extends EventEmitter {
     return circle;
   }
 
+  setSelected(selected) {
+    this.selected = selected;
+    if (selected) {
+      this.rect.stroke('#65a8f0');
+    } else {
+      this.rect.stroke('transparent');
+    }
+    this.draw();
+  }
+
   getOutletPos() {
     return { x: this.width + 2, y: this.outletY(false) };
   }
@@ -118,6 +139,16 @@ class NodeUi extends EventEmitter {
 
   centerY() {
     return this.y() + this.height / 2;
+  }
+
+  isNode() {
+    return true;
+  }
+
+  move(pos) {
+    this.group.x(pos.x);
+    this.group.y(pos.y);
+    this.emit('moved');
   }
 }
 

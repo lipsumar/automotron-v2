@@ -44,7 +44,7 @@ class TextListNodeUi extends NodeUi {
       shadowBlur: 5,
       shadowOffset: { x: 0, y: 0 },
       shadowOpacity: 0.2,
-      // stroke: '#7791F9',
+      strokeWidth: 3,
     });
     this.group.add(this.rect);
 
