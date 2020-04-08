@@ -3,11 +3,16 @@ function stringifyElement(element) {
     return element.result;
   }
 
+  if (typeof element.result.text === 'string') {
+    return element.result.text;
+  }
+
   if (element.fromGenerator) {
     // eslint-disable-next-line no-use-before-define
     return stringifyElements(element.result);
   }
 
+  console.error(element);
   throw new Error('stringifyElement error');
 }
 
@@ -16,6 +21,7 @@ function stringifyElements(elements) {
 }
 
 function stringifyGraphResult(result) {
+  console.log(result);
   // eslint-disable-next-line no-unused-vars
   const [startNode, firstEdge, ...elements] = result;
 

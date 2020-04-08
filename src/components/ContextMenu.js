@@ -17,6 +17,7 @@ function renderItems(props) {
       <>
         <MenuItem onClick={props.onSetNodeTitle}>Set title</MenuItem>
         <MenuItem onClick={props.onLinkToGenerator}>Link to generator</MenuItem>
+        <MenuItem onClick={props.onAgreementLink}>Agreement link</MenuItem>
         <MenuItem onClick={props.onDeleteNode}>Delete</MenuItem>
       </>
     );

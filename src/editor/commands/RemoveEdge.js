@@ -3,6 +3,7 @@ import Command from './Command';
 const methods = {
   default: 'createEdge',
   generator: 'createGeneratorEdge',
+  agreement: 'createAgreementEdge',
 };
 
 class RemoveEdgeCommand extends Command {
@@ -10,9 +11,11 @@ class RemoveEdgeCommand extends Command {
     const { graph, ui, options } = this;
 
     const edge = graph.getEdge(options.edgeId);
+    const { from } = edge;
 
     ui.removeEdge(edge);
     graph.removeEdge(edge);
+    ui.refreshNode(ui.getNode(from.id));
 
     this.edge = edge;
   }
@@ -26,7 +29,7 @@ class RemoveEdgeCommand extends Command {
       this.edge.id,
     );
     ui.createEdge(edge);
-    ui.refreshNode(this.edge.from);
+    ui.refreshNode(ui.getNode(this.edge.from.id));
   }
 }
 

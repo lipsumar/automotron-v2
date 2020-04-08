@@ -6,6 +6,7 @@ import EdgeUi from '../ui/EdgeUi';
 import { hasIntersection, distance } from '../ui/utils';
 import MouseNode from '../ui/MouseNode';
 import GeneratorEdgeUi from '../ui/GeneratorEdgeUi';
+import AgreementEdgeUi from '../ui/AgreementEdgeUi';
 
 class EditorUi extends EventEmitter {
   constructor(graphUiEl, graph, actions) {
@@ -30,7 +31,7 @@ class EditorUi extends EventEmitter {
     graphUi.on('edge:created', this.setupEdge.bind(this));
     this.graphUi.stage.on('dblclick', () => {
       this.commandInvoker.execute('createNode', {
-        value: 'oooh!',
+        text: 'oooh!',
         ui: {
           x: this.mouseNode.inletX(), // vite fait
           y: this.mouseNode.inletY() - 20,
@@ -68,6 +69,11 @@ class EditorUi extends EventEmitter {
 
       if (this.generatorEdgeToMouse) {
         this.abortEdgeToGenerator();
+        return;
+      }
+
+      if (this.agreementEdgeToMouse) {
+        this.abortEdgeToAgreement();
       }
     });
 
@@ -101,7 +107,7 @@ class EditorUi extends EventEmitter {
 
   createNode() {
     this.commandInvoker.execute('createNode', {
-      value: 'wow!',
+      text: 'wow!',
       ui: {
         x: this.mouseNode.inletX(), // vite fait
         y: this.mouseNode.inletY() - 20,
@@ -149,6 +155,28 @@ class EditorUi extends EventEmitter {
       fromNodeId: this.generatorEdgeToMouse.from.node.id,
       toNodeId: toNodeUi.node.id,
       type: 'generator',
+    });
+  }
+
+  initiateEdgeToAgreement(nodeId) {
+    this.agreementEdgeToMouse = new AgreementEdgeUi(
+      this.graphUi.getNode(nodeId),
+      this.mouseNode,
+    );
+    this.graphUi.setupEdge(this.agreementEdgeToMouse);
+  }
+
+  abortEdgeToAgreement() {
+    this.agreementEdgeToMouse.destroy();
+    this.agreementEdgeToMouse = null;
+    this.graphUi.draw();
+  }
+
+  finishEdgeToAgreement(toNodeUi) {
+    this.commandInvoker.execute('linkNode', {
+      fromNodeId: this.agreementEdgeToMouse.from.node.id,
+      toNodeId: toNodeUi.node.id,
+      type: 'agreement',
     });
   }
 
@@ -225,7 +253,7 @@ class EditorUi extends EventEmitter {
         return;
       }
       this.commandInvoker.execute('createNode', {
-        value: 'aaah!',
+        text: 'aaah!',
         ui: {
           x: this.mouseNode.inletX(), // vite fait
           y: this.mouseNode.inletY() - 20,
@@ -245,7 +273,6 @@ class EditorUi extends EventEmitter {
       if (otherNodes.length > 0) {
         otherNodes.forEach(otherUiNode => {
           if (!otherUiNode.posBeforeDrag) {
-            // eslint-disable-next-line no-param-reassign
             otherUiNode.posBeforeDrag = {
               x: otherUiNode.x(),
               y: otherUiNode.y(),
@@ -294,6 +321,11 @@ class EditorUi extends EventEmitter {
     uiNode.on('click', e => {
       if (this.generatorEdgeToMouse) {
         this.finishEdgeToGenerator(uiNode);
+        return;
+      }
+
+      if (this.agreementEdgeToMouse) {
+        this.finishEdgeToAgreement(uiNode);
         return;
       }
 

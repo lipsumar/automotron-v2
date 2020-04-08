@@ -74,6 +74,12 @@ class EditorUiComponent extends React.Component {
     );
   }
 
+  linkToAgreement() {
+    this.editorUi.initiateEdgeToAgreement(
+      this.state.contextMenuSubject.node.id,
+    );
+  }
+
   setNodeTitle() {
     const title = window.prompt('Title');
     this.editorUi.setNodeTitle(this.state.contextMenuSubject.node.id, title);
@@ -113,6 +119,7 @@ class EditorUiComponent extends React.Component {
           onInsertNode={this.insertNode.bind(this)}
           onLinkToGenerator={this.linkToGenerator.bind(this)}
           onSetNodeTitle={this.setNodeTitle.bind(this)}
+          onAgreementLink={this.linkToAgreement.bind(this)}
         />
       </>
     );

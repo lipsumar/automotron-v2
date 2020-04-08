@@ -1,5 +1,6 @@
 import Node from './Node';
 import { pickRandom } from './utils';
+import filterAgreement from './filterAgreement';
 
 class TextNode extends Node {
   type = 'text';
@@ -10,17 +11,22 @@ class TextNode extends Node {
 
   constructor(value = [], opts = {}) {
     super();
-    this.value = typeof value === 'string' ? [value] : value;
+    this.value = value;
     this.title = opts.title;
   }
 
   static fromJSON(json) {
-    const textNode = new TextNode(json.value, { title: json.title });
+    let { value } = json;
+    if (typeof value[0] === 'string') {
+      value = value.map(text => ({ text }));
+    }
+    const textNode = new TextNode(value, { title: json.title });
     return Node.fromJSON(json, textNode);
   }
 
-  async evaluate() {
-    return pickRandom(this.value);
+  async evaluate(agreement = null) {
+    const possibleValues = filterAgreement(this.value, agreement);
+    return pickRandom(possibleValues);
   }
 }
 

@@ -3,6 +3,7 @@ import Command from './Command';
 const methods = {
   default: 'createEdge',
   generator: 'createGeneratorEdge',
+  agreement: 'createAgreementEdge',
 };
 
 class LinkNodeCommand extends Command {

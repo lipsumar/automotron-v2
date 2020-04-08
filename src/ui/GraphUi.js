@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { Stage, Layer } from 'konva';
 import throttle from 'lodash.throttle';
 import { EventEmitter } from 'events';
@@ -7,10 +6,17 @@ import StartNodeUi from './StartNodeUi';
 import TextNodeUi from './TextNodeUi';
 import EdgeUi from './EdgeUi';
 import GeneratorEdgeUi from './GeneratorEdgeUi';
+import AgreementEdgeUi from './AgreementEdgeUi';
 
 const uiNodeTypes = {
   start: StartNodeUi,
   text: TextNodeUi,
+};
+
+const uiEdgeTypes = {
+  default: EdgeUi,
+  generator: GeneratorEdgeUi,
+  agreement: AgreementEdgeUi,
 };
 
 class GraphUi extends EventEmitter {
@@ -80,7 +86,8 @@ class GraphUi extends EventEmitter {
     const generator = this.graph.getGeneratorFrom(uiNode.node);
     let generatorValue = null;
     if (generator) {
-      generatorValue = generator.title || generator.value[0] || ' ';
+      generatorValue = { text: generator.title } ||
+        generator.value[0] || { text: ' ' };
     }
 
     uiNode.node.patchUi({ generatorValue });
@@ -114,7 +121,7 @@ class GraphUi extends EventEmitter {
   }
 
   createEdge(edge) {
-    const AbstractUiEdge = edge.type === 'generator' ? GeneratorEdgeUi : EdgeUi;
+    const AbstractUiEdge = uiEdgeTypes[edge.type];
     const uiEdge = new AbstractUiEdge(
       this.getNode(edge.from.id),
       this.getNode(edge.to.id),
@@ -129,6 +136,7 @@ class GraphUi extends EventEmitter {
 
   removeEdge(edge) {
     this.getEdge(edge.id).destroy();
+    this.refreshNode(this.getNode(edge.from.id));
     this.edges = this.edges.filter(uiEdge => {
       return uiEdge.edge.id !== edge.id;
     });

@@ -6,6 +6,7 @@ class GraphEvaluator {
   }
 
   async play() {
+    this.resetNodesEvaluatedResult();
     const result = await this.run(this.graph.startNode);
     return result;
   }
@@ -28,6 +29,15 @@ class GraphEvaluator {
 
   async evaluateNode(node) {
     const generatorNode = this.graph.getGeneratorFrom(node);
+    const agreementNode = this.graph
+      .getAgreementNodesOf(node)
+      .find(agNode => !!agNode.evaluatedResult);
+
+    const agreement =
+      agreementNode && agreementNode.evaluatedResult
+        ? agreementNode.evaluatedResult.agreement
+        : null;
+
     const element = {
       nodeId: node.id,
     };
@@ -36,7 +46,8 @@ class GraphEvaluator {
       element.fromGenerator = true;
       element.result = await this.run(generatorNode);
     } else {
-      element.result = await node.evaluate();
+      element.result = await node.evaluate(agreement);
+      node.evaluatedResult = element.result;
     }
 
     return element;
@@ -50,6 +61,12 @@ class GraphEvaluator {
     const edge = pickRandom(edges);
 
     return edge;
+  }
+
+  resetNodesEvaluatedResult() {
+    this.graph.nodes.forEach(node => {
+      node.evaluatedResult = null;
+    });
   }
 }
 

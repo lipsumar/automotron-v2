@@ -1,7 +1,6 @@
 import { Path, Text, Rect, Group, Line } from 'konva';
 import NodeUi from './NodeUi';
 import { measureTextHeight, measureTextWidth } from './utils';
-import { GRID_SIZE } from './constants';
 
 const padding = 10;
 const arrowWidth = 6;
@@ -155,7 +154,7 @@ class TextListNodeUi extends NodeUi {
 
     this.getValueToShow().forEach(value => {
       const text = new Text({
-        text: value,
+        text: value.text,
         x: arrowWidth,
         y,
         width: 500,
@@ -171,7 +170,7 @@ class TextListNodeUi extends NodeUi {
       this.valuesTexts.push(text);
 
       const textWidth = text.getTextWidth();
-      const textHeight = measureTextHeight(value);
+      const textHeight = measureTextHeight(value.text);
       const width = textWidth + padding * 2;
 
       const height = textHeight + padding * 2;
@@ -215,6 +214,10 @@ class TextListNodeUi extends NodeUi {
 
   inletY() {
     return this.y() + 50 / 2 - 1;
+  }
+
+  bottomY() {
+    return this.y() + this.height;
   }
 }
 

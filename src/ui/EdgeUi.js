@@ -102,6 +102,12 @@ class EdgeUi extends EventEmitter {
   }
 
   destroy() {
+    if (this.to) {
+      this.to.off('moved', this.boundPosition);
+    }
+    if (this.from) {
+      this.from.off('moved', this.boundPosition);
+    }
     this.line.destroy();
   }
 

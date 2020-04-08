@@ -32,6 +32,8 @@ class Graph {
     json.edges.forEach(edge => {
       if (edge.type === 'generator') {
         graph.createGeneratorEdge(edge.from, edge.to);
+      } else if (edge.type === 'agreement') {
+        graph.createAgreementEdge(edge.from, edge.to);
       } else {
         graph.createEdge(edge.from, edge.to);
       }
@@ -101,6 +103,12 @@ class Graph {
     return edge;
   }
 
+  createAgreementEdge(from, to, id) {
+    const edge = this.createEdge(from, to, id);
+    edge.type = 'agreement';
+    return edge;
+  }
+
   removeEdge(edge) {
     this.edges = this.edges.filter(e => e.id !== edge.id);
   }
@@ -129,12 +137,30 @@ class Graph {
     );
   }
 
+  getEdgesOf(node, type = null) {
+    return this.edges.filter(
+      edge =>
+        (edge.to.id === node.id || edge.from.id === node.id) &&
+        (type ? edge.type === type : true),
+    );
+  }
+
   getGeneratorFrom(node) {
     const generatorEdge = this.getEdgesFrom(node, 'generator')[0];
     if (!generatorEdge) {
       return null;
     }
     return generatorEdge.to;
+  }
+
+  getAgreementNodesOf(node) {
+    const agreementEdges = this.getEdgesOf(node, 'agreement');
+    if (agreementEdges.length === 0) {
+      return [];
+    }
+    return agreementEdges.map(edge => {
+      return edge.from.id === node.id ? edge.to : edge.from;
+    });
   }
 
   isNodeGenerated(node) {

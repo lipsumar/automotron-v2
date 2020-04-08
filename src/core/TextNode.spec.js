@@ -16,6 +16,24 @@ describe('TextNode', () => {
   describe('fromJSON', () => {
     it('creates a TextNode', () => {
       const textListNode = TextNode.fromJSON({
+        value: [{ text: 'aah' }, { text: 'ooh', agreement: { dude: 'wow' } }],
+        title: 'coucou',
+        ui: {
+          x: 1,
+          y: 2,
+        },
+      });
+      expect(textListNode).toBeInstanceOf(TextNode);
+      expect(textListNode.value).toEqual([
+        { text: 'aah' },
+        { text: 'ooh', agreement: { dude: 'wow' } },
+      ]);
+      expect(textListNode.title).toEqual('coucou');
+      expect(textListNode.ui).toEqual({ x: 1, y: 2 });
+    });
+
+    it('is backward compatible with value:string[]', () => {
+      const textListNode = TextNode.fromJSON({
         value: ['aah', 'ooh'],
         title: 'coucou',
         ui: {
@@ -24,23 +42,23 @@ describe('TextNode', () => {
         },
       });
       expect(textListNode).toBeInstanceOf(TextNode);
-      expect(textListNode.value).toEqual(['aah', 'ooh']);
-      expect(textListNode.title).toEqual('coucou');
-      expect(textListNode.ui).toEqual({ x: 1, y: 2 });
+      expect(textListNode.value).toEqual([{ text: 'aah' }, { text: 'ooh' }]);
     });
   });
 
   describe('constructor', () => {
-    it('accepts a string[] value', () => {
-      const text = new TextNode(['hey']);
-      expect(text.value).toEqual(['hey']);
-    });
-    it('accepts a string value', () => {
-      const text = new TextNode('dude');
-      expect(text.value).toEqual(['dude']);
+    it('accepts a ({ text:string, agreement:{}[] })[] value', () => {
+      const text = new TextNode([
+        { text: 'hey' },
+        { text: 'ho', agreement: { dude: 'wow' } },
+      ]);
+      expect(text.value).toEqual([
+        { text: 'hey' },
+        { text: 'ho', agreement: { dude: 'wow' } },
+      ]);
     });
     it('accepts options', () => {
-      const text = new TextNode(['hey'], { title: 'ho' });
+      const text = new TextNode([{ text: 'hi' }], { title: 'ho' });
       expect(text.title).toBe('ho');
     });
   });
@@ -55,8 +73,8 @@ describe('TextNode', () => {
   describe('evaluate()', () => {
     it('returns random element from value', async () => {
       seedRandom('seed_TextNode eval');
-      const text = new TextNode(['hey', 'yo']);
-      expect(await text.evaluate()).toBe('yo');
+      const text = new TextNode([{ text: 'hey' }, { text: 'yo' }]);
+      expect(await text.evaluate()).toEqual({ text: 'yo' });
     });
   });
 });

@@ -1,6 +1,12 @@
 import Command from './Command';
 import TextNode from '../../core/TextNode';
 
+const createEdgeMethods = {
+  default: 'createEdge',
+  generator: 'createGeneratorEdge',
+  agreement: 'createAgreementEdge',
+};
+
 class RemoveNodeCommand extends Command {
   execute() {
     const { graph, ui, options } = this;
@@ -21,8 +27,13 @@ class RemoveNodeCommand extends Command {
     ui.createNode(node);
 
     this.removedEdges.forEach(edge => {
-      const createdEdge = graph.createEdge(edge.from, edge.to, edge.id);
+      const createdEdge = graph[createEdgeMethods[edge.type]](
+        edge.from,
+        edge.to,
+        edge.id,
+      );
       ui.createEdge(createdEdge);
+      ui.refreshNode(ui.getNode(edge.from.id));
     });
   }
 }

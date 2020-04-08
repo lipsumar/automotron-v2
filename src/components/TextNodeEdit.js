@@ -1,5 +1,7 @@
 import React, { createRef } from 'react';
+import cloneDeep from 'lodash.clonedeep';
 import { measureTextHeight, measureTextWidth } from '../ui/utils';
+import parseRawText from '../ui/parseRawText';
 
 const DEFAULT_SIZE = {
   width: 175,
@@ -20,7 +22,10 @@ class TextNodeEdit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: [...props.value],
+      // value: cloneDeep(props.value),
+      value: props.value.map(val => {
+        return { ...val, rawText: val.rawText || val.text };
+      }),
       size: props.value.map(() => {
         return { ...DEFAULT_SIZE };
       }),
@@ -45,17 +50,18 @@ class TextNodeEdit extends React.Component {
     this.focusRef.current.focus();
   }
 
-  setOneValue(val, index, cb) {
-    const value = [...this.state.value];
-    value[index] = val;
+  setOneValue(rawText, index, cb) {
+    const value = cloneDeep(this.state.value);
+    value[index] = parseRawText(rawText);
+    value[index].rawText = rawText;
     this.setState({ value }, cb);
-    this.resize(val, index);
+    this.resize(value[index], index);
   }
 
   measure(val) {
-    const textWidth = measureTextWidth(val);
+    const textWidth = measureTextWidth(val.text);
     const width = Math.min(Math.max(175, textWidth), 500);
-    const textHeight = measureTextHeight(val, width + 6);
+    const textHeight = measureTextHeight(val.text, width + 6);
     return { width, textHeight };
   }
 
@@ -138,11 +144,14 @@ class TextNodeEdit extends React.Component {
                     ? ''
                     : 'text-node-edit__textarea--single-line'
                 }`}
-                value={oneValue}
+                value={oneValue.rawText}
                 onChange={e => {
                   this.setOneValue(e.target.value, i, () => {
+                    const cleanedValues = this.state.value.filter(
+                      v => v.text.trim() !== '',
+                    );
                     this.props.onChange(
-                      this.state.value.filter(v => v.trim() !== ''),
+                      cleanedValues.length > 0 ? cleanedValues : [{ text: '' }],
                     );
                   });
                 }}

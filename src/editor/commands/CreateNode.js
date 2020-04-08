@@ -4,7 +4,7 @@ import TextNode from '../../core/TextNode';
 class CreateNodeCommand extends Command {
   execute() {
     const { graph, ui, options } = this;
-    const node = new TextNode(options.value);
+    const node = new TextNode([{ text: options.text }]);
     node.ui = { ...options.ui };
     graph.addNode(node, this.previousId);
     this.previousId = node.id;
