@@ -1,3 +1,4 @@
+import cloneDeep from 'lodash.clonedeep';
 import { pickRandom } from './utils';
 
 class GraphEvaluator {
@@ -28,6 +29,15 @@ class GraphEvaluator {
   }
 
   async evaluateNode(node) {
+    const element = {
+      nodeId: node.id,
+    };
+
+    if (node.frozen && node.evaluatedResult) {
+      element.result = cloneDeep(node.evaluatedResult);
+      return element;
+    }
+
     const generatorNode = this.graph.getGeneratorFrom(node);
     const agreementNode = this.graph
       .getAgreementNodesOf(node)
@@ -38,17 +48,12 @@ class GraphEvaluator {
         ? agreementNode.evaluatedResult.agreement
         : null;
 
-    const element = {
-      nodeId: node.id,
-    };
-
     if (generatorNode) {
-      element.fromGenerator = true;
       element.result = await this.run(generatorNode);
     } else {
       element.result = await node.evaluate(agreement);
-      node.evaluatedResult = element.result;
     }
+    node.evaluatedResult = element.result;
 
     return element;
   }

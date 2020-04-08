@@ -85,6 +85,10 @@ class EditorUiComponent extends React.Component {
     this.editorUi.setNodeTitle(this.state.contextMenuSubject.node.id, title);
   }
 
+  freezeNode() {
+    this.editorUi.freezeNode(this.state.contextMenuSubject.node.id);
+  }
+
   undo() {
     this.editorUi.undo();
   }
@@ -120,6 +124,7 @@ class EditorUiComponent extends React.Component {
           onLinkToGenerator={this.linkToGenerator.bind(this)}
           onSetNodeTitle={this.setNodeTitle.bind(this)}
           onAgreementLink={this.linkToAgreement.bind(this)}
+          onNodeFreeze={this.freezeNode.bind(this)}
         />
       </>
     );

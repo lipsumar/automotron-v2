@@ -28,7 +28,6 @@ describe('stringifyGraphResult()', () => {
             result: { text: 'kay' },
           },
         ],
-        fromGenerator: true,
       },
     ];
     expect(stringifyGraphResult(result)).toBe('hello doh kay');

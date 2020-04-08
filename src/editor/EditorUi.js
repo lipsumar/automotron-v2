@@ -226,6 +226,12 @@ class EditorUi extends EventEmitter {
     });
   }
 
+  freezeNode(nodeId) {
+    this.commandInvoker.execute('freezeNode', {
+      nodeId,
+    });
+  }
+
   setupNode(uiNode) {
     let edgeToMouse = null;
     uiNode.on('newEdgeToMouse:start', fromUiNode => {

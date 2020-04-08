@@ -7,7 +7,7 @@ function stringifyElement(element) {
     return element.result.text;
   }
 
-  if (element.fromGenerator) {
+  if (element.result instanceof Array) {
     // eslint-disable-next-line no-use-before-define
     return stringifyElements(element.result);
   }

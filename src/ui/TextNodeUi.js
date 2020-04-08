@@ -78,6 +78,17 @@ class TextListNodeUi extends NodeUi {
       this.titleRect.width(measureTextWidth(this.node.title, 12) + 4);
     }
 
+    // temporary, does not look great
+    if (this.node.frozen) {
+      this.rect.shadowColor('blue');
+      this.rect.shadowOpacity(0.6);
+      this.rect.shadowBlur(12);
+    } else {
+      this.rect.shadowColor('black');
+      this.rect.shadowOpacity(0.2);
+      this.rect.shadowBlur(5);
+    }
+
     this.resize();
     this.emit('draw');
   }

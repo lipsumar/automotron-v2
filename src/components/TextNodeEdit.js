@@ -22,7 +22,6 @@ class TextNodeEdit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // value: cloneDeep(props.value),
       value: props.value.map(val => {
         return { ...val, rawText: val.rawText || val.text };
       }),

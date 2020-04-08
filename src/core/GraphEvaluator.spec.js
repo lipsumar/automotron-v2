@@ -65,7 +65,6 @@ describe('GraphEvaluator', () => {
             result: { text: 'generator speaking' },
           },
         ],
-        fromGenerator: true,
       });
     });
 

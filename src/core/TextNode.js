@@ -9,6 +9,8 @@ class TextNode extends Node {
 
   title;
 
+  frozen = false;
+
   constructor(value = [], opts = {}) {
     super();
     this.value = value;
@@ -21,6 +23,10 @@ class TextNode extends Node {
       value = value.map(text => ({ text }));
     }
     const textNode = new TextNode(value, { title: json.title });
+    if (json.frozen) {
+      textNode.frozen = true;
+    }
+
     return Node.fromJSON(json, textNode);
   }
 
