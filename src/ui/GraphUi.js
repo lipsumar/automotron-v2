@@ -86,8 +86,10 @@ class GraphUi extends EventEmitter {
     const generator = this.graph.getGeneratorFrom(uiNode.node);
     let generatorValue = null;
     if (generator) {
-      generatorValue = { text: generator.title } ||
-        generator.value[0] || { text: ' ' };
+      generatorValue = generator.value[0] || { text: ' ' };
+      if (generator.title) {
+        generatorValue = { text: generator.title };
+      }
     }
 
     uiNode.node.patchUi({ generatorValue });
