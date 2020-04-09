@@ -46,6 +46,9 @@ class EditorUiComponent extends React.Component {
     this.editorUi.on('edge:contextmenu', uiEdge => {
       this.setState({ contextMenuSubject: uiEdge });
     });
+    this.editorUi.on('graph:change', () => {
+      this.props.onGraphChange();
+    });
   }
 
   onContextMenuHide() {

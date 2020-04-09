@@ -10,6 +10,7 @@ import stringifyGraphResult from '../../core/stringifyGraphResult';
 import LoginModal from '../LoginModal';
 import exportService from '../../editor/services/exportService';
 import { whenFontLoaded } from '../utils';
+import countPossibilities from '../../core/countPossibilities';
 
 class Editor extends React.Component {
   constructor(props) {
@@ -20,6 +21,7 @@ class Editor extends React.Component {
       showLoginModal: false,
       user: null,
       ready: false,
+      possibilityCount: null,
     };
     this.afterLoginSuccess = null;
     this.editorUiRef = createRef();
@@ -33,12 +35,15 @@ class Editor extends React.Component {
     window.document.body.style.overflow = 'hidden';
     const { generatorId } = this.props.match.params;
     client.getGenerator(generatorId).then(generatorData => {
-      this.setState({
-        generator: {
-          ...generatorData,
-          ...{ graph: Graph.fromJSON(generatorData.graph) },
+      this.setState(
+        {
+          generator: {
+            ...generatorData,
+            ...{ graph: Graph.fromJSON(generatorData.graph) },
+          },
         },
-      });
+        () => this.updatePossibilityCount(),
+      );
     });
   }
 
@@ -83,6 +88,23 @@ class Editor extends React.Component {
     }
   }
 
+  onGraphChange() {
+    this.updatePossibilityCount();
+  }
+
+  updatePossibilityCount() {
+    try {
+      const count = countPossibilities(this.state.generator.graph);
+      this.setState({ possibilityCount: count });
+    } catch (err) {
+      if (err instanceof RangeError) {
+        this.setState({ possibilityCount: Infinity });
+      } else {
+        this.setState({ possibilityCount: null });
+      }
+    }
+  }
+
   undo() {
     this.editorUiRef.current.undo();
   }
@@ -107,9 +129,13 @@ class Editor extends React.Component {
         </div>
         <div className="editor__body">
           {generator && ready && (
-            <EditorUiComponent ref={this.editorUiRef} graph={generator.graph} />
+            <EditorUiComponent
+              ref={this.editorUiRef}
+              graph={generator.graph}
+              onGraphChange={this.onGraphChange.bind(this)}
+            />
           )}
-          <ResultPanel output={result} />
+          <ResultPanel output={result} count={this.state.possibilityCount} />
           <LoginModal
             isOpen={showLoginModal}
             onCloseRequest={() => this.setState({ showLoginModal: false })}

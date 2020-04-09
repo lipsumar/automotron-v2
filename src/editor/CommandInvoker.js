@@ -1,3 +1,4 @@
+import { EventEmitter } from 'events';
 import CreateNodeCommand from './commands/CreateNode';
 import MoveNodeCommand from './commands/MoveNode';
 import SetNodeValueCommand from './commands/SetNodeValue';
@@ -20,12 +21,13 @@ const commands = {
   freezeNode: FreezeNodeCommand,
 };
 
-class CommandInvoker {
+class CommandInvoker extends EventEmitter {
   graph;
 
   ui;
 
   constructor(graph, ui) {
+    super();
     this.graph = graph;
     this.ui = ui;
     this.undoStack = [];
@@ -42,6 +44,7 @@ class CommandInvoker {
     this.ui.draw();
     this.redoStack = [];
     this.undoStack.push(command);
+    this.emit('command');
   }
 
   undo() {
@@ -51,6 +54,7 @@ class CommandInvoker {
     command.undo();
     this.ui.draw();
     this.redoStack.push(command);
+    this.emit('command');
   }
 
   redo() {
@@ -59,6 +63,7 @@ class CommandInvoker {
     command.redo();
     this.ui.draw();
     this.undoStack.push(command);
+    this.emit('command');
   }
 }
 
