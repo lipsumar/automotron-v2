@@ -1,5 +1,6 @@
 import cloneDeep from 'lodash.clonedeep';
 import { pickRandom } from './utils';
+import combineAgreements from './combineAgreements';
 
 class GraphEvaluator {
   constructor(graph) {
@@ -12,9 +13,9 @@ class GraphEvaluator {
     return result;
   }
 
-  async run(currentPointer, result = []) {
+  async run(currentPointer, result = [], agreement = null) {
     if (currentPointer) {
-      const element = await this.evaluateNode(currentPointer);
+      const element = await this.evaluateNode(currentPointer, agreement);
       result.push(element);
       const nextEdge = this.findNextEdge(currentPointer);
       if (nextEdge) {
@@ -28,7 +29,7 @@ class GraphEvaluator {
     return result;
   }
 
-  async evaluateNode(node) {
+  async evaluateNode(node, inheritedAgreement) {
     const element = {
       nodeId: node.id,
     };
@@ -46,14 +47,23 @@ class GraphEvaluator {
     const agreement =
       agreementNode && agreementNode.evaluatedResult
         ? agreementNode.evaluatedResult.agreement
-        : null;
+        : inheritedAgreement;
 
     if (generatorNode) {
-      element.result = await this.run(generatorNode);
+      element.result = await this.run(generatorNode, [], agreement);
+      node.evaluatedResult = element.result;
     } else {
       element.result = await node.evaluate(agreement);
+      // console.log(agreement);
+      node.evaluatedResult = {
+        ...element.result,
+        agreement: combineAgreements(
+          element.result ? element.result.agreement : null,
+          agreement,
+        ),
+      };
+      console.log('===>', node.evaluatedResult.agreement);
     }
-    node.evaluatedResult = element.result;
 
     return element;
   }

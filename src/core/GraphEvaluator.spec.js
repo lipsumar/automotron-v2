@@ -128,5 +128,54 @@ describe('GraphEvaluator', () => {
       expect(result[4].result.text).toBe('ballon');
       expect(result[6].result.text).toBe('foo');
     });
+
+    it('forwards agreement to generator', async () => {
+      // random has no play here, the choice is forced by the agreement
+      seedRandom(`seed_GraphEvaluator_agreement_${Math.random()}`);
+      const graph = new Graph();
+      const textNodeA = new TextNode([
+        { text: 'le', agreement: { gender: 'm' } },
+      ]);
+      const textNodeB = new TextNode([{ text: 'poi' }]);
+      graph.addNode(textNodeA);
+      graph.addNode(textNodeB);
+      graph.createEdge(graph.startNode, textNodeA);
+      graph.createEdge(textNodeA, textNodeB);
+      const generator = new TextNode([
+        { text: 'poisson', agreement: { gender: 'm' } },
+        { text: 'fleur', agreement: { gender: 'f' } },
+        { text: 'fleur', agreement: { gender: 'f' } },
+        { text: 'fleur', agreement: { gender: 'f' } },
+        { text: 'fleur', agreement: { gender: 'f' } },
+      ]);
+      graph.addNode(generator);
+      graph.createGeneratorEdge(textNodeB, generator);
+      graph.createAgreementEdge(textNodeA, textNodeB);
+
+      const evaluator = new GraphEvaluator(graph);
+      const result = await evaluator.play();
+      expect(result).toHaveLength(5);
+      expect(result[0]).toEqual({ nodeId: 1, result: null });
+      expect(result[1]).toEqual({ edge: true, result: ' ' });
+      expect(result[4].result[0].result.text).toBe('poisson');
+    });
+
+    it('uses the most restrictive agreement as evaluated agreement', async () => {
+      seedRandom(`seed_GraphEvaluator_agreement1`);
+      // [le, la] <---> stupide <---> [pot, dalle]
+      //      \____________/\_____________/
+      const graph = Graph.fromJSON(
+        JSON.parse(
+          '{"nodes":[{"id":1,"ui":{"x":-50,"y":-50,"generatorValue":null,"width":100,"height":75},"type":"start","evaluatedResult":null},{"id":2,"ui":{"x":300,"y":-50,"generatorValue":null,"width":52,"height":88},"type":"text","frozen":false,"value":[{"text":"le","agreement":{"gender":"m","number":"s"},"rawText":"le(m,s)"},{"text":"la","agreement":{"gender":"f","number":"s"},"rawText":"la(f,s)"}],"evaluatedResult":{"text":"le","agreement":{"gender":"m","number":"s"},"rawText":"le(m,s)"}},{"id":3,"ui":{"x":399,"y":-51,"width":97.66796875,"height":52,"generatorValue":null},"type":"text","frozen":false,"value":[{"text":"stupide","rawText":"stupide"}],"evaluatedResult":{"text":"stupide","rawText":"stupide"}},{"id":5,"ui":{"x":574,"y":-51,"width":72.716796875,"height":88,"generatorValue":null},"type":"text","frozen":false,"value":[{"text":"pot","agreement":{"gender":"m","number":"s"},"rawText":"pot(m,s)"},{"text":"dalle","agreement":{"gender":"f","number":"s"},"rawText":"dalle(f,s)"}],"evaluatedResult":{"text":"pot","agreement":{"gender":"m","number":"s"},"rawText":"pot(m,s)"}}],"edges":[{"from":{"id":1},"to":{"id":2},"type":"default"},{"from":{"id":2},"to":{"id":3},"type":"default"},{"from":{"id":3},"to":{"id":5},"type":"default"},{"from":{"id":5},"to":{"id":3},"type":"agreement"},{"from":{"id":3},"to":{"id":2},"type":"agreement"}]}',
+        ),
+      );
+
+      const evaluator = new GraphEvaluator(graph);
+      const result = await evaluator.play();
+      expect(result).toHaveLength(7);
+      expect(result[2].result.text).toBe('la');
+      expect(result[4].result.text).toBe('stupide');
+      expect(result[6].result.text).toBe('dalle'); // seeded random would choose "pot" if not forced
+    });
   });
 });

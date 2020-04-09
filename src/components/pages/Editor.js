@@ -25,6 +25,10 @@ class Editor extends React.Component {
     };
     this.afterLoginSuccess = null;
     this.editorUiRef = createRef();
+
+    // dev utility
+    window.exportGraph = () =>
+      exportService.exportGenerator(this.state.generator);
   }
 
   componentDidMount() {
