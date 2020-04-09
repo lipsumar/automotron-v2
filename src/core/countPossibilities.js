@@ -30,19 +30,13 @@ class PossibilityExplorer {
     const nexts = [];
     nextEdges.forEach(edge => {
       const nextNode = edge.to;
-      // this.explore(edge.to);
       const generator = this.graph.getGeneratorFrom(nextNode);
       if (generator) {
         total = this.explore(generator);
       }
       const totalNext = this.explore(nextNode);
       nexts.push(total * totalNext);
-      // if (totalNext) {
-      //   console.log(total, '*', totalNext);
-      //   total *= totalNext;
-      // }
     });
-    console.log(nexts);
     return nexts.reduce((acc, n) => acc + n, 0);
   }
 }
