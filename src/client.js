@@ -133,6 +133,9 @@ export default {
   saveGenerator(generator) {
     return ax.post('/api/generators', { generator }).then(resp => resp.data);
   },
+  deleteGenerator(generatorId) {
+    return ax.delete(`/api/generators/${generatorId}`).then(resp => resp.data);
+  },
   // getUsers() {
   //   return ax.get('/admin/users').then(resp => resp.data);
   // },

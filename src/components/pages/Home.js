@@ -1,5 +1,6 @@
 import React, { createRef } from 'react';
 import { Link } from 'react-router-dom';
+import { FiTrash2 } from 'react-icons/fi';
 import client from '../../client';
 import Header from '../Header';
 import LoginModal from '../LoginModal';
@@ -36,6 +37,16 @@ class Home extends React.Component {
     window.location.reload();
   }
 
+  deleteGenerator(generatorId) {
+    if (window.confirm('Are you sure ?')) {
+      client.deleteGenerator(generatorId).then(() => {
+        this.setState({
+          generators: this.state.generators.filter(g => g._id !== generatorId),
+        });
+      });
+    }
+  }
+
   render() {
     return (
       <div className="container">
@@ -67,6 +78,16 @@ class Home extends React.Component {
                 className="generator-card"
                 key={generator._id}
               >
+                <div
+                  className="generator-card__delete"
+                  onClick={e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.deleteGenerator(generator._id);
+                  }}
+                >
+                  <FiTrash2 />
+                </div>
                 <div className="generator-card__image">
                   <img src={generator.preview} alt={generator.title} />
                 </div>

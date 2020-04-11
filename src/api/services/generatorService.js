@@ -32,4 +32,13 @@ module.exports = {
       graph: JSON.parse(generator.graphData),
     };
   },
+
+  async userOwnsGenerator(generatorId, userId) {
+    const generator = await Generator.findOne({ _id: generatorId });
+    return generator.userId === userId;
+  },
+
+  async delete(generatorId) {
+    await Generator.deleteOne({ _id: generatorId });
+  },
 };

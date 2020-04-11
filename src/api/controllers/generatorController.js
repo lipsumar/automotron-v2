@@ -35,11 +35,24 @@ router.post('/', ensureLoggedIn, async (req, res) => {
     res.send({ _id: savedGenerator._id.toString() });
   } catch (err) {
     if (err.message === 'user is not owner') {
-      res.status(401).send({ error: true, message: 'Forbidden' });
+      res.status(403).send({ error: true, message: 'Forbidden' });
       return;
     }
     throw err;
   }
+});
+
+router.delete('/:generatorId', async (req, res) => {
+  const canDelete = await generatorService.userOwnsGenerator(
+    req.params.generatorId,
+    req.user._id.toString(),
+  );
+  if (!canDelete) {
+    res.status(403).send({ error: true, message: 'Forbidden' });
+    return;
+  }
+  await generatorService.delete(req.params.generatorId);
+  res.send({ ok: true });
 });
 
 module.exports = router;
