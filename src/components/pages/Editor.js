@@ -84,6 +84,18 @@ class Editor extends React.Component {
       });
   }
 
+  setGeneratorTitle(title) {
+    this.setState(
+      {
+        generator: {
+          ...this.state.generator,
+          title,
+        },
+      },
+      this.saveGenerator.bind(this),
+    );
+  }
+
   onLoginSuccess(user) {
     this.props.onLogin(user);
     this.setState({ showLoginModal: false });
@@ -123,12 +135,14 @@ class Editor extends React.Component {
       <div className="editor">
         <div className="editor__head">
           <EditorToolbar
+            generator={generator}
             user={this.props.user}
             onRun={() => this.runGenerator()}
             onSave={() => this.saveGenerator()}
             onUndo={() => this.undo()}
             onRedo={() => this.redo()}
             onLogout={this.props.onLogout}
+            setGeneratorTitle={this.setGeneratorTitle.bind(this)}
           />
         </div>
         <div className="editor__body">
