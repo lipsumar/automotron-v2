@@ -108,6 +108,7 @@ class GraphUi extends EventEmitter {
     uiNode.on('draw', () => this.stage.batchDraw());
     uiNode.snapToGrid();
     this.emit('node:created', uiNode);
+    return uiNode;
   }
 
   removeNode(nodeId) {
