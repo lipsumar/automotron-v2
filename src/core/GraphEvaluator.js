@@ -44,14 +44,22 @@ class GraphEvaluator {
       .getAgreementNodesOf(node)
       .find(agNode => !!agNode.evaluatedResult);
 
-    const agreement =
-      agreementNode && agreementNode.evaluatedResult
-        ? agreementNode.evaluatedResult.agreement
-        : inheritedAgreement;
+    let agreement = inheritedAgreement;
+    if (agreementNode && agreementNode.evaluatedResult) {
+      if (agreementNode.evaluatedResult instanceof Array) {
+        agreement = agreementNode.evaluatedResultAgreement;
+      } else {
+        agreement = agreementNode.evaluatedResult.agreement;
+      }
+    }
 
     if (generatorNode) {
       element.result = await this.run(generatorNode, [], agreement);
       node.evaluatedResult = element.result;
+      node.evaluatedResultAgreement = combineAgreements(
+        element.result[0].result.agreement,
+        agreement,
+      );
     } else {
       element.result = await node.evaluate(agreement);
       // console.log(agreement);
@@ -62,7 +70,6 @@ class GraphEvaluator {
           agreement,
         ),
       };
-      console.log('===>', node.evaluatedResult.agreement);
     }
 
     return element;
@@ -81,6 +88,7 @@ class GraphEvaluator {
   resetNodesEvaluatedResult() {
     this.graph.nodes.forEach(node => {
       node.evaluatedResult = null;
+      node.evaluatedResultAgreement = null;
     });
   }
 }

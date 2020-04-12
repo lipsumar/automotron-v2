@@ -105,6 +105,10 @@ describe('GraphEvaluator', () => {
       ]);
       const textNodeB = new TextNode([
         { text: 'balle', agreement: { gender: 'f' } },
+        { text: 'balle', agreement: { gender: 'f' } },
+        { text: 'balle', agreement: { gender: 'f' } },
+        { text: 'balle', agreement: { gender: 'f' } },
+        { text: 'balle', agreement: { gender: 'f' } },
         { text: 'ballon', agreement: { gender: 'm', foo: true } },
       ]);
       const textNodeC = new TextNode([
@@ -176,6 +180,50 @@ describe('GraphEvaluator', () => {
       expect(result[2].result.text).toBe('la');
       expect(result[4].result.text).toBe('stupide');
       expect(result[6].result.text).toBe('dalle'); // seeded random would choose "pot" if not forced
+    });
+
+    it('handles multiple agreement links on one generated node', async () => {
+      // random has no play here, the choice is forced by the agreement
+      seedRandom(`seed_GraphEvaluator_agreement_${Math.random()}`);
+      const graph = new Graph();
+      const textNodeA = new TextNode([
+        { text: 'le', agreement: { gender: 'm' } },
+      ]);
+      const textNodeB = new TextNode();
+      const textNodeBGenerator = new TextNode([
+        { text: 'balle', agreement: { gender: 'f' } },
+        { text: 'balle', agreement: { gender: 'f' } },
+        { text: 'balle', agreement: { gender: 'f' } },
+        { text: 'balle', agreement: { gender: 'f' } },
+        { text: 'balle', agreement: { gender: 'f' } },
+        { text: 'ballon', agreement: { gender: 'm', foo: true } },
+      ]);
+      const textNodeC = new TextNode([
+        { text: 'foo', agreement: { gender: 'm', foo: true } },
+        { text: 'bar', agreement: { gender: 'm', foo: false } },
+        { text: 'bar', agreement: { gender: 'm', foo: false } },
+        { text: 'bar', agreement: { gender: 'm', foo: false } },
+        { text: 'bar', agreement: { gender: 'm', foo: false } },
+        { text: 'bar', agreement: { gender: 'm', foo: false } },
+      ]);
+      graph.addNode(textNodeA);
+      graph.addNode(textNodeB);
+      graph.addNode(textNodeC);
+      graph.addNode(textNodeBGenerator);
+      graph.createEdge(graph.startNode, textNodeA);
+      graph.createEdge(textNodeA, textNodeB);
+      graph.createEdge(textNodeB, textNodeC);
+      graph.createAgreementEdge(textNodeA, textNodeB);
+      graph.createAgreementEdge(textNodeB, textNodeC);
+      graph.createGeneratorEdge(textNodeB, textNodeBGenerator);
+
+      const evaluator = new GraphEvaluator(graph);
+      const result = await evaluator.play();
+
+      expect(result).toHaveLength(7);
+      expect(result[2].result.text).toBe('le');
+      expect(result[4].result[0].result.text).toBe('ballon');
+      expect(result[6].result.text).toBe('foo');
     });
   });
 });
