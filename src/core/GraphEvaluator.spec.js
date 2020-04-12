@@ -225,5 +225,7 @@ describe('GraphEvaluator', () => {
       expect(result[4].result[0].result.text).toBe('ballon');
       expect(result[6].result.text).toBe('foo');
     });
+
+    it.todo('reset evaluated values when re-evaluating a node');
   });
 });

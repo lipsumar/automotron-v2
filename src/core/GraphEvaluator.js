@@ -39,6 +39,11 @@ class GraphEvaluator {
       return element;
     }
 
+    if (node.evaluatedResult) {
+      // evaluating node for a second time
+      this.resetNodesEvaluatedResultAfter(node);
+    }
+
     const generatorNode = this.graph.getGeneratorFrom(node);
     const agreementNode = this.graph
       .getAgreementNodesOf(node)
@@ -90,6 +95,15 @@ class GraphEvaluator {
       node.evaluatedResult = null;
       node.evaluatedResultAgreement = null;
     });
+  }
+
+  resetNodesEvaluatedResultAfter(startAtNode) {
+    startAtNode.evaluatedResult = null;
+    startAtNode.evaluatedResultAgreement = null;
+    const nextEdges = this.graph.getEdgesFrom(startAtNode, 'default');
+    if (nextEdges.length > 0) {
+      nextEdges.forEach(edge => this.resetNodesEvaluatedResultAfter(edge.to));
+    }
   }
 }
 
