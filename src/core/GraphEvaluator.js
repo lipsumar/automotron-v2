@@ -61,7 +61,10 @@ class GraphEvaluator {
         const nonEvaluatedGeneratedAgreementNodeGenerator = this.graph.getGeneratorFrom(
           nonEvaluatedGeneratedAgreementNode,
         );
-        if (nonEvaluatedGeneratedAgreementNodeGenerator.evaluatedResult) {
+        if (
+          nonEvaluatedGeneratedAgreementNodeGenerator.evaluatedResult &&
+          nonEvaluatedGeneratedAgreementNodeGenerator.frozen
+        ) {
           agreementNode = nonEvaluatedGeneratedAgreementNodeGenerator;
         }
       }
