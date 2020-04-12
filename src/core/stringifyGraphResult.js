@@ -12,7 +12,6 @@ function stringifyElement(element) {
     return stringifyElements(element.result);
   }
 
-  console.error(element);
   throw new Error('stringifyElement error');
 }
 
@@ -21,7 +20,6 @@ function stringifyElements(elements) {
 }
 
 function stringifyGraphResult(result) {
-  console.log(result);
   // eslint-disable-next-line no-unused-vars
   const [startNode, firstEdge, ...elements] = result;
 
