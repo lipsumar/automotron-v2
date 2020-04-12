@@ -4,7 +4,9 @@ import LoggedInStatus from './LoggedInStatus';
 class EditorToolbar extends React.Component {
   promptGeneratorTitle() {
     const title = window.prompt('Generator title');
+    if (title) {
     this.props.setGeneratorTitle(title);
+  }
   }
 
   render() {
