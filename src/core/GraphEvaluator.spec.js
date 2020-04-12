@@ -227,5 +227,9 @@ describe('GraphEvaluator', () => {
     });
 
     it.todo('reset evaluated values when re-evaluating a node');
+
+    it.todo(
+      'handles agreement to generated non-evaluated node (aka. look-ahead agreement)',
+    );
   });
 });

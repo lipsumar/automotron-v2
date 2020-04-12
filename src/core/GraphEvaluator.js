@@ -45,9 +45,27 @@ class GraphEvaluator {
     }
 
     const generatorNode = this.graph.getGeneratorFrom(node);
-    const agreementNode = this.graph
+    let agreementNode = this.graph
       .getAgreementNodesOf(node)
       .find(agNode => !!agNode.evaluatedResult);
+
+    if (!agreementNode) {
+      // retry with generator of non-evaluated agreement node
+      const nonEvaluatedGeneratedAgreementNode = this.graph
+        .getAgreementNodesOf(node)
+        .find(
+          agNode =>
+            this.graph.isNodeGenerated(agNode) && !agNode.evaluatedResult,
+        );
+      if (nonEvaluatedGeneratedAgreementNode) {
+        const nonEvaluatedGeneratedAgreementNodeGenerator = this.graph.getGeneratorFrom(
+          nonEvaluatedGeneratedAgreementNode,
+        );
+        if (nonEvaluatedGeneratedAgreementNodeGenerator.evaluatedResult) {
+          agreementNode = nonEvaluatedGeneratedAgreementNodeGenerator;
+        }
+      }
+    }
 
     let agreement = inheritedAgreement;
     if (agreementNode && agreementNode.evaluatedResult) {
