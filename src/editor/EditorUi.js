@@ -414,6 +414,10 @@ class EditorUi extends EventEmitter {
     this.selection = [];
   }
 
+  setCurrentStep(nodeId) {
+    this.graphUi.highlightNode(nodeId);
+  }
+
   mouseOnInlet() {
     const mouseRect = {
       x: this.mouseNode.inletX() - 2,

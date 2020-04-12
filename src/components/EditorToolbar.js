@@ -5,8 +5,8 @@ class EditorToolbar extends React.Component {
   promptGeneratorTitle() {
     const title = window.prompt('Generator title');
     if (title) {
-    this.props.setGeneratorTitle(title);
-  }
+      this.props.setGeneratorTitle(title);
+    }
   }
 
   render() {
@@ -21,6 +21,7 @@ class EditorToolbar extends React.Component {
         </div>
         <div className="editor-toolbar__tools">
           <button onClick={this.props.onRun}>Run</button>
+          <button onClick={this.props.onStep}>Step</button>
           <button onClick={this.props.onSave}>Save</button>
           <div className="editor-toolbar__separator"></div>
           <button onClick={this.props.onUndo}>Undo</button>

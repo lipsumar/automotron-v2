@@ -92,6 +92,10 @@ class EditorUiComponent extends React.Component {
     this.editorUi.freezeNode(this.state.contextMenuSubject.node.id);
   }
 
+  setCurrentStep(nodeId) {
+    this.editorUi.setCurrentStep(nodeId);
+  }
+
   undo() {
     this.editorUi.undo();
   }

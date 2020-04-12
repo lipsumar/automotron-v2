@@ -60,6 +60,23 @@ class Editor extends React.Component {
     });
   }
 
+  stepGenerator() {
+    if (!this.evaluator) {
+      this.evaluator = new GraphEvaluator(this.state.generator.graph);
+    }
+
+    this.editorUiRef.current.setCurrentStep(this.evaluator.stepPointer.id);
+
+    this.evaluator.step().then(hasNext => {
+      this.setState({
+        result: stringifyGraphResult(this.evaluator.stepResult),
+      });
+      if (!hasNext) {
+        this.evaluator = null;
+      }
+    });
+  }
+
   saveGenerator() {
     client
       .saveGenerator(exportService.exportGenerator(this.state.generator))
@@ -138,6 +155,7 @@ class Editor extends React.Component {
             generator={generator}
             user={this.props.user}
             onRun={() => this.runGenerator()}
+            onStep={() => this.stepGenerator()}
             onSave={() => this.saveGenerator()}
             onUndo={() => this.undo()}
             onRedo={() => this.redo()}

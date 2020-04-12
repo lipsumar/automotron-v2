@@ -1,4 +1,4 @@
-import { Stage, Layer } from 'konva';
+import { Stage, Layer, Rect } from 'konva';
 import throttle from 'lodash.throttle';
 import { EventEmitter } from 'events';
 import Grid from './Grid';
@@ -46,6 +46,14 @@ class GraphUi extends EventEmitter {
     this.gridLayer = new Layer();
     this.stage.add(this.gridLayer);
     this.grid = new Grid(this.stage, this.gridLayer);
+    this.highlighter = new Rect({
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+      fill: 'yellow',
+    });
+    this.gridLayer.add(this.highlighter);
 
     this.linkLayer = new Layer();
     this.stage.add(this.linkLayer);
@@ -170,6 +178,17 @@ class GraphUi extends EventEmitter {
       width: uiNode.width * this.stage.scaleX(),
       height: uiNode.height * this.stage.scaleY(),
     };
+  }
+
+  highlightNode(nodeId) {
+    const uiNode = this.getNode(nodeId);
+    this.highlighter.setAttrs({
+      x: uiNode.x() - 5,
+      y: uiNode.y() - 5,
+      width: uiNode.width + 10,
+      height: uiNode.height + 10,
+    });
+    this.draw();
   }
 
   draw() {

@@ -5,12 +5,23 @@ import combineAgreements from './combineAgreements';
 class GraphEvaluator {
   constructor(graph) {
     this.graph = graph;
+    this.stepPointer = this.graph.startNode;
+    this.stepResult = [];
   }
 
   async play() {
     this.resetNodesEvaluatedResult();
     const result = await this.run(this.graph.startNode);
     return result;
+  }
+
+  async step() {
+    const { nextPointer } = await this.runOne(
+      this.stepPointer,
+      this.stepResult,
+    );
+    this.stepPointer = nextPointer;
+    return !!nextPointer;
   }
 
   async run(currentPointer, result = [], agreement = null) {
@@ -27,6 +38,21 @@ class GraphEvaluator {
       }
     }
     return result;
+  }
+
+  async runOne(currentPointer, result = [], agreement = null) {
+    const element = await this.evaluateNode(currentPointer, agreement);
+    result.push(element);
+    const nextEdge = this.findNextEdge(currentPointer);
+    let nextPointer = null;
+    if (nextEdge) {
+      result.push({
+        edge: true,
+        result: ' ',
+      });
+      nextPointer = nextEdge.to;
+    }
+    return { result, nextPointer };
   }
 
   async evaluateNode(node, inheritedAgreement) {
