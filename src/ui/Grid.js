@@ -31,10 +31,12 @@ class Grid {
       line.destroy();
     });
     this.horizontalGridLines = [];
-    for (let x = 0; x < this.width; x += this.space) {
+
+    const { x: x_, y: y_, width, height } = this.getNormalizedGeo();
+    for (let x = x_; x < width; x += this.space) {
       this.addVerticalGridLine(x);
     }
-    for (let y = 0; y < this.height; y += this.space) {
+    for (let y = y_; y < height; y += this.space) {
       this.addHorizontalGridLine(y);
     }
   }
@@ -138,7 +140,8 @@ class Grid {
   }
 
   addVerticalGridLine(x, method = 'push') {
-    const points = [x, 0, x, this.height];
+    const { y, height } = this.getNormalizedGeo();
+    const points = [x, y, x, height];
     const line = new Line({
       points,
       stroke: '#d7e2ee',
@@ -149,7 +152,8 @@ class Grid {
   }
 
   addHorizontalGridLine(y, method = 'push') {
-    const points = [0, y, this.width, y];
+    const { x, width } = this.getNormalizedGeo();
+    const points = [x, y, width, y];
     const line = new Line({
       points,
       stroke: '#d7e2ee',

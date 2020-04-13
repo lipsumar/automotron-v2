@@ -10,6 +10,8 @@ const newGenerator = {
         ui: {
           x: -50,
           y: -50,
+          width: 100,
+          height: 75,
         },
       },
       {
@@ -19,6 +21,8 @@ const newGenerator = {
         ui: {
           x: 300,
           y: -50,
+          width: 194.1328125,
+          height: 52,
         },
       },
     ],
@@ -35,6 +39,8 @@ const demoGenerator = {
         ui: {
           x: -50,
           y: -50,
+          width: 100,
+          height: 75,
         },
       },
       {
@@ -44,6 +50,8 @@ const demoGenerator = {
         ui: {
           x: 300,
           y: -150,
+          width: 73.693359375,
+          height: 52,
         },
       },
       {
@@ -53,6 +61,8 @@ const demoGenerator = {
         ui: {
           x: 300,
           y: -50,
+          width: 213.29296875,
+          height: 128,
         },
       },
       {
@@ -62,6 +72,8 @@ const demoGenerator = {
         ui: {
           x: 300,
           y: 100,
+          width: 487.052734375,
+          height: 68,
         },
       },
       {
@@ -73,6 +85,8 @@ const demoGenerator = {
         ui: {
           x: 300,
           y: 175,
+          width: 481.818359375,
+          height: 88,
         },
       },
       {
@@ -83,6 +97,8 @@ const demoGenerator = {
         ui: {
           x: -400,
           y: -200,
+          width: 214.62109375,
+          height: 128,
         },
       },
     ],

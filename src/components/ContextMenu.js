@@ -27,6 +27,7 @@ function renderItems(props) {
   return (
     <>
       <MenuItem onClick={props.onCreateNode}>New</MenuItem>
+      <MenuItem onClick={props.onCenterGraph}>Center graph</MenuItem>
     </>
   );
 }

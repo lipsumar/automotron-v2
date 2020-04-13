@@ -35,6 +35,11 @@ class Editor extends React.Component {
     whenFontLoaded('Open Sans').then(() => {
       this.setState({ ready: true });
     });
+    this.setState({
+      panelWidth:
+        document.body.offsetWidth -
+        document.querySelector('.result-panel').getBoundingClientRect().x,
+    });
     document.querySelector('html').style.overflow = 'hidden';
     window.document.body.style.overflow = 'hidden';
     const { generatorId } = this.props.match.params;
@@ -151,6 +156,7 @@ class Editor extends React.Component {
               ref={this.editorUiRef}
               graph={generator.graph}
               onGraphChange={this.onGraphChange.bind(this)}
+              panelWidth={this.state.panelWidth}
             />
           )}
           <ResultPanel output={result} count={this.state.possibilityCount} />

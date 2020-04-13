@@ -9,10 +9,11 @@ import GeneratorEdgeUi from '../ui/GeneratorEdgeUi';
 import AgreementEdgeUi from '../ui/AgreementEdgeUi';
 
 class EditorUi extends EventEmitter {
-  constructor(graphUiEl, graph, actions) {
+  constructor(graphUiEl, graph, actions, opts = {}) {
     super();
     const graphUi = new GraphUi(graphUiEl, graph, {
       editable: true,
+      panelWidth: opts.panelWidth || 0,
     });
     this.mouseNode = new MouseNode(graphUi.stage);
     this.generatorEdgeToMouse = null;
@@ -234,6 +235,11 @@ class EditorUi extends EventEmitter {
     this.commandInvoker.execute('freezeNode', {
       nodeId,
     });
+  }
+
+  centerGraph() {
+    this.graphUi.centerGraph();
+    this.graphUi.draw();
   }
 
   setupNode(uiNode) {

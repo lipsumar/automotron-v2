@@ -18,27 +18,34 @@ class EditorUiComponent extends React.Component {
   }
 
   componentDidMount() {
-    this.editorUi = new EditorUi(this.stageRef.current, this.props.graph, {
-      openNodeEditor: (bbox, value) => {
-        this.setState({
-          nodeEdit: {
-            bbox,
-            value,
-          },
-          graphBlur: true,
-          nodeEditValue: value,
-        });
+    this.editorUi = new EditorUi(
+      this.stageRef.current,
+      this.props.graph,
+      {
+        openNodeEditor: (bbox, value) => {
+          this.setState({
+            nodeEdit: {
+              bbox,
+              value,
+            },
+            graphBlur: true,
+            nodeEditValue: value,
+          });
+        },
+        closeNodeEditor: () => {
+          this.setState({
+            nodeEdit: false,
+            graphBlur: false,
+          });
+        },
+        getNodeEditorValue: () => {
+          return this.state.nodeEditValue;
+        },
       },
-      closeNodeEditor: () => {
-        this.setState({
-          nodeEdit: false,
-          graphBlur: false,
-        });
+      {
+        panelWidth: this.props.panelWidth,
       },
-      getNodeEditorValue: () => {
-        return this.state.nodeEditValue;
-      },
-    });
+    );
 
     this.editorUi.on('node:contextmenu', uiNode => {
       this.setState({ contextMenuSubject: uiNode });
@@ -92,6 +99,10 @@ class EditorUiComponent extends React.Component {
     this.editorUi.freezeNode(this.state.contextMenuSubject.node.id);
   }
 
+  centerGraph() {
+    this.editorUi.centerGraph();
+  }
+
   undo() {
     this.editorUi.undo();
   }
@@ -128,6 +139,7 @@ class EditorUiComponent extends React.Component {
           onSetNodeTitle={this.setNodeTitle.bind(this)}
           onAgreementLink={this.linkToAgreement.bind(this)}
           onNodeFreeze={this.freezeNode.bind(this)}
+          onCenterGraph={this.centerGraph.bind(this)}
         />
       </>
     );

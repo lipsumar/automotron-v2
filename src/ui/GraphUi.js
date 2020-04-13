@@ -7,6 +7,7 @@ import TextNodeUi from './TextNodeUi';
 import EdgeUi from './EdgeUi';
 import GeneratorEdgeUi from './GeneratorEdgeUi';
 import AgreementEdgeUi from './AgreementEdgeUi';
+import findBoundaries from '../utils/findBoundaries';
 
 const uiNodeTypes = {
   start: StartNodeUi,
@@ -45,7 +46,6 @@ class GraphUi extends EventEmitter {
 
     this.gridLayer = new Layer();
     this.stage.add(this.gridLayer);
-    this.grid = new Grid(this.stage, this.gridLayer);
 
     this.linkLayer = new Layer();
     this.stage.add(this.linkLayer);
@@ -59,8 +59,10 @@ class GraphUi extends EventEmitter {
     this.setupEdges();
     this.postSetup();
 
-    this.grid.centerOrigin();
+    // this.grid.centerOrigin();
 
+    this.centerGraph();
+    this.grid = new Grid(this.stage, this.gridLayer);
     this.stage.draw();
   }
 
@@ -174,6 +176,40 @@ class GraphUi extends EventEmitter {
 
   draw() {
     this.stage.batchDraw();
+  }
+
+  centerGraph() {
+    this.stage.scale({ x: 1, y: 1 });
+    const { mostLeft, mostTop, mostRight, mostBottom } = findBoundaries(
+      this.graph,
+    );
+    const width = mostRight - mostLeft;
+    const height = mostBottom - mostTop;
+    const maxWidth = this.stage.width() - this.opts.panelWidth;
+    const maxHeight = this.stage.height();
+    let scale = maxWidth / width;
+    if (height * scale > maxHeight) {
+      scale = maxHeight / height;
+    }
+    if (scale > 1) scale = 1;
+
+    this.stage.scale({ x: scale, y: scale });
+
+    let mostTopStage = -mostTop;
+    if (height * scale < maxHeight) {
+      mostTopStage += maxHeight / scale / 2 - height / 2;
+    }
+    this.stage.y(mostTopStage * scale);
+
+    let mostLeftStage = -mostLeft;
+    if (width * scale < maxWidth) {
+      mostLeftStage += maxWidth / scale / 2 - width / 2;
+    }
+    this.stage.x(mostLeftStage * scale);
+
+    if (this.grid) {
+      this.grid.reposition();
+    }
   }
 
   setupStageScaling() {
