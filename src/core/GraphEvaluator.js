@@ -13,6 +13,13 @@ class GraphEvaluator {
     return result;
   }
 
+  /**
+   *
+   * @param {Node} currentPointer
+   * @param {Array} result
+   * @param {agreement} agreement
+   * @returns {results: []}
+   */
   async run(currentPointer, result = [], agreement = null) {
     if (currentPointer) {
       const element = await this.evaluateNode(currentPointer, agreement);
@@ -26,9 +33,24 @@ class GraphEvaluator {
         return this.run(nextEdge.to, result);
       }
     }
-    return result;
+    return { results: result };
   }
 
+  /**
+   *
+   * @param {Node} node
+   * @param {agreement} inheritedAgreement
+   * @returns {
+   *  {
+   *    nodeId: Number,
+   *    result: {
+   *      text?: string,
+   *      results?: string,
+   *      agreement: agreement
+   *    }
+   *  }
+   * }
+   */
   async evaluateNode(node, inheritedAgreement) {
     const element = {
       nodeId: node.id,
@@ -70,25 +92,24 @@ class GraphEvaluator {
       }
     }
 
-    let agreement = inheritedAgreement;
-    if (agreementNode && agreementNode.evaluatedResult) {
-      if (agreementNode.evaluatedResult instanceof Array) {
-        agreement = agreementNode.evaluatedResultAgreement;
-      } else {
-        agreement = agreementNode.evaluatedResult.agreement;
-      }
-    }
+    const agreement =
+      agreementNode && agreementNode.evaluatedResult
+        ? agreementNode.evaluatedResult.agreement
+        : inheritedAgreement;
 
     if (generatorNode) {
       element.result = await this.run(generatorNode, [], agreement);
-      node.evaluatedResult = element.result;
-      node.evaluatedResultAgreement = combineAgreements(
-        element.result[0].result.agreement,
-        agreement,
-      );
+      // copy the first agreement of results as agreement of the result
+      element.result.agreement = element.result.results[0].result.agreement;
+      node.evaluatedResult = {
+        ...element.result,
+        agreement: combineAgreements(
+          element.result.results[0].result.agreement,
+          agreement,
+        ),
+      };
     } else {
       element.result = await node.evaluate(agreement);
-      // console.log(agreement);
       node.evaluatedResult = {
         ...element.result,
         agreement: combineAgreements(
@@ -114,13 +135,11 @@ class GraphEvaluator {
   resetNodesEvaluatedResult() {
     this.graph.nodes.forEach(node => {
       node.evaluatedResult = null;
-      node.evaluatedResultAgreement = null;
     });
   }
 
   resetNodesEvaluatedResultAfter(startAtNode) {
     startAtNode.evaluatedResult = null;
-    startAtNode.evaluatedResultAgreement = null;
     const nextEdges = this.graph.getEdgesFrom(startAtNode, 'default');
     if (nextEdges.length > 0) {
       nextEdges.forEach(edge => this.resetNodesEvaluatedResultAfter(edge.to));

@@ -7,11 +7,12 @@ function stringifyElement(element) {
     return element.result.text;
   }
 
-  if (element.result instanceof Array) {
+  if (element.result.results instanceof Array) {
     // eslint-disable-next-line no-use-before-define
-    return stringifyElements(element.result);
+    return stringifyElements(element.result.results);
   }
 
+  console.error(element);
   throw new Error('stringifyElement error');
 }
 
@@ -21,7 +22,7 @@ function stringifyElements(elements) {
 
 function stringifyGraphResult(result) {
   // eslint-disable-next-line no-unused-vars
-  const [startNode, firstEdge, ...elements] = result;
+  const [startNode, firstEdge, ...elements] = result.results;
 
   return stringifyElements(elements);
 }
