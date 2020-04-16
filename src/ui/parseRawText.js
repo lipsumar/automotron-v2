@@ -10,7 +10,7 @@ export const hardCodedSyntax = {
 };
 
 function parseRawText(raw, syntax = hardCodedSyntax) {
-  const m = /(.*)\(([a-zA-Z*,= :]+)\)$/.exec(raw);
+  const m = /(.*)\(([a-zA-Z0-9*,= :]+)\)$/.exec(raw);
 
   const text = m ? m[1].trim() : raw;
   let agreement = null;

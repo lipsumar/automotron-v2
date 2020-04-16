@@ -33,6 +33,13 @@ describe('parseRawText', () => {
     });
   });
 
+  it('supports only keyword agreement with numbers', () => {
+    expect(parseRawText('foo(cool=1)', syntax)).toEqual({
+      text: 'foo',
+      agreement: { cool: '1' },
+    });
+  });
+
   it('supports specifying a syntax', () => {
     expect(parseRawText('foo(inversed:p,f)', syntax)).toEqual({
       text: 'foo',
