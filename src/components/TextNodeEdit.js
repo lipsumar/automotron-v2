@@ -146,8 +146,8 @@ class TextNodeEdit extends React.Component {
                 value={oneValue.rawText}
                 onChange={e => {
                   this.setOneValue(e.target.value, i, () => {
-                    const cleanedValues = this.state.value.filter(
-                      v => v.text.trim() !== '',
+                    const cleanedValues = this.state.value.filter(v =>
+                      v.text ? v.text.trim() !== '' : true,
                     );
                     this.props.onChange(
                       cleanedValues.length > 0 ? cleanedValues : [{ text: '' }],

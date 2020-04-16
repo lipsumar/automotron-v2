@@ -17,12 +17,22 @@ function agreementsMatch(a, b) {
 }
 
 function filterAgreement(values, agreement) {
-  if (!agreement || agreement.length === 0) {
-    return values;
+  const all = [];
+  values.forEach(value => {
+    if (value.variants) {
+      all.push(...value.variants);
+    } else {
+      all.push(value);
+    }
+  });
+
+  if (!agreement) {
+    return all;
   }
 
-  return values.filter(value => {
+  return all.filter(value => {
     if (!value.agreement) return true;
+
     return agreementsMatch(value.agreement, agreement);
   });
 }

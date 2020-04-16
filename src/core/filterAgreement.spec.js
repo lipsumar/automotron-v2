@@ -114,4 +114,73 @@ describe('filterAgreement', () => {
       ]);
     });
   });
+
+  describe('variants', () => {
+    test('1 value w/ variants', () => {
+      const values = [
+        {
+          variants: [
+            { text: 'she', agreement: { gender: 'f' } },
+            { text: 'he', agreement: { gender: 'm' } },
+          ],
+        },
+      ];
+      expect(filterAgreement(values, { gender: 'f' })).toEqual([
+        { text: 'she', agreement: { gender: 'f' } },
+      ]);
+    });
+
+    test('2 values w/ variants', () => {
+      const values = [
+        {
+          variants: [
+            { text: 'she', agreement: { gender: 'f' } },
+            { text: 'he', agreement: { gender: 'm' } },
+          ],
+        },
+        {
+          variants: [
+            { text: 'girl', agreement: { gender: 'f' } },
+            { text: 'boy', agreement: { gender: 'm' } },
+          ],
+        },
+      ];
+      expect(filterAgreement(values, { gender: 'f' })).toEqual([
+        { text: 'she', agreement: { gender: 'f' } },
+        { text: 'girl', agreement: { gender: 'f' } },
+      ]);
+    });
+
+    test('mixed', () => {
+      const values = [
+        {
+          variants: [
+            { text: 'she', agreement: { gender: 'f' } },
+            { text: 'he', agreement: { gender: 'm' } },
+          ],
+        },
+        { text: 'girl', agreement: { gender: 'f' } },
+        { text: 'boy', agreement: { gender: 'm' } },
+      ];
+      expect(filterAgreement(values, { gender: 'f' })).toEqual([
+        { text: 'she', agreement: { gender: 'f' } },
+        { text: 'girl', agreement: { gender: 'f' } },
+      ]);
+    });
+
+    test('no agreement', () => {
+      const values = [
+        {
+          variants: [
+            { text: 'she', agreement: { gender: 'f' } },
+            { text: 'he', agreement: { gender: 'm' } },
+          ],
+        },
+      ];
+      expect(filterAgreement(values, null)).toEqual([
+        { text: 'she', agreement: { gender: 'f' } },
+        { text: 'he', agreement: { gender: 'm' } },
+      ]);
+    });
+  });
 });

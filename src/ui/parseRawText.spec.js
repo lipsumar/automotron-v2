@@ -43,6 +43,7 @@ describe('parseRawText', () => {
   describe('positional syntax', () => {
     it('supports positional syntax with one term', () => {
       expect(parseRawText('[un, une]', syntax)).toEqual({
+        text: 'un [2]',
         variants: [
           { text: 'un', agreement: { gender: 'm', number: 's' } },
           { text: 'une', agreement: { gender: 'f', number: 's' } },
@@ -54,6 +55,7 @@ describe('parseRawText', () => {
       expect(
         parseRawText('[conjugaison:suis,es,est,sommes,êtes,sont]', syntax),
       ).toEqual({
+        text: 'suis [6]',
         variants: [
           { text: 'suis', agreement: { number: 's', person: '1' } },
           { text: 'es', agreement: { number: 's', person: '2' } },
@@ -67,6 +69,7 @@ describe('parseRawText', () => {
 
     it('supports positional syntax with multiple term', () => {
       expect(parseRawText('[beau, belle, beaux, belles]', syntax)).toEqual({
+        text: 'beau [4]',
         variants: [
           { text: 'beau', agreement: { gender: 'm', number: 's' } },
           { text: 'belle', agreement: { gender: 'f', number: 's' } },
@@ -85,6 +88,7 @@ describe('parseRawText', () => {
     describe('positional syntax with forced term', () => {
       test('[beaux, belles](number=p)', () => {
         expect(parseRawText('[beaux, belles](number=p)', syntax)).toEqual({
+          text: 'beaux [2]',
           variants: [
             { text: 'beaux', agreement: { gender: 'm', number: 'p' } },
             { text: 'belles', agreement: { gender: 'f', number: 'p' } },
@@ -94,6 +98,7 @@ describe('parseRawText', () => {
 
       test('[beau, beaux](gender=m)', () => {
         expect(parseRawText('[beau, beaux](gender=m)', syntax)).toEqual({
+          text: 'beau [2]',
           variants: [
             { text: 'beau', agreement: { gender: 'm', number: 's' } },
             { text: 'beaux', agreement: { gender: 'm', number: 'p' } },
@@ -105,6 +110,7 @@ describe('parseRawText', () => {
         expect(
           parseRawText('[conjugaison:sommes,êtes,sont](number=p)', syntax),
         ).toEqual({
+          text: 'sommes [3]',
           variants: [
             { text: 'sommes', agreement: { number: 'p', person: '1' } },
             { text: 'êtes', agreement: { number: 'p', person: '2' } },
@@ -117,6 +123,7 @@ describe('parseRawText', () => {
     it('applies any other keyword argument term to all variants', () => {
       expect(parseRawText('[beaux, belles](number=p,foo=bar)', syntax)).toEqual(
         {
+          text: 'beaux [2]',
           variants: [
             {
               text: 'beaux',

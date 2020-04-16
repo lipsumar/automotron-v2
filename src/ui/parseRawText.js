@@ -9,7 +9,7 @@ export const hardCodedSyntax = {
   conjugaison: ['person', 'number'],
 };
 
-function parseRawText(raw, syntax) {
+function parseRawText(raw, syntax = hardCodedSyntax) {
   const m = /(.*)\(([a-zA-Z*,= :]+)\)$/.exec(raw);
 
   const text = m ? m[1].trim() : raw;
@@ -85,7 +85,7 @@ function parseRawText(raw, syntax) {
       });
     });
 
-    return { variants };
+    return { variants, text: `${texts[0]} [${texts.length}]` };
   }
 
   return { text, agreement };
