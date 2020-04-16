@@ -50,6 +50,7 @@ module.exports = {
     'class-methods-use-this': 'off',
     'import/prefer-default-export': 'off',
     'no-underscore-dangle': 'off',
-    'no-param-reassign': 'off'
+    'no-param-reassign': 'off',
+    'prefer-destructuring': 'off'
   },
 };

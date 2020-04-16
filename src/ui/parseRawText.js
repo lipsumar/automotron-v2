@@ -1,44 +1,94 @@
-const nomenclatures = {
-  terms: {
-    gender: { boolean: false },
-    number: { boolean: false },
-    color: { boolean: false },
+export const hardCodedSyntax = {
+  _terms: {
+    gender: { variants: ['m', 'f'] },
+    number: { variants: ['s', 'p'] },
+    person: { variants: ['1', '2', '3'] },
   },
-  default: [
-    { name: 'gender', boolean: false },
-    { name: 'number', boolean: false },
-  ],
+  default: ['gender', 'number'],
+  inversed: ['number', 'gender'],
+  conjugaison: ['person', 'number'],
 };
 
-function parseRawText(raw) {
+function parseRawText(raw, syntax) {
   const m = /(.*)\(([a-zA-Z*,= :]+)\)$/.exec(raw);
-  if (!m) {
-    return { text: raw };
+
+  const text = m ? m[1].trim() : raw;
+  let agreement = null;
+
+  const agreementText = m ? m[2] : null;
+  let isUsingPositionalArgument = false;
+  if (agreementText) {
+    // select syntax
+    let syntaxName = 'default';
+    let termsStr = agreementText;
+    if (agreementText.includes(':')) {
+      [syntaxName, termsStr] = agreementText.split(':');
+    }
+    const terms = termsStr.split(',').map(s => s.trim());
+    isUsingPositionalArgument = !!terms.find(t => !t.includes('='));
+
+    // positional arguments
+    if (isUsingPositionalArgument) {
+      agreement = syntax[syntaxName].reduce((acc, termName, i) => {
+        acc[termName] = terms.shift();
+        return acc;
+      }, {});
+    } else {
+      agreement = {};
+    }
+
+    // keyword arguments
+    if (terms.length > 0) {
+      terms.forEach(t => {
+        const [termName, termValue] = t.split('=');
+        agreement[termName] = termValue;
+      });
+    }
   }
 
-  const agreementText = m[2];
-  let nomenclatureName = 'default';
-  let termsStr = agreementText;
-  if (agreementText.includes(':')) {
-    [nomenclatureName, termsStr] = agreementText.split(':');
-  }
-  const terms = termsStr.split(',').map(s => s.trim());
+  // positional syntax
+  const pm = /^\[(.*)\]$/.exec(text);
+  if (pm) {
+    if (isUsingPositionalArgument) {
+      throw new Error('positional syntax mixed with positional argument');
+    }
+    if (!agreement) {
+      agreement = {};
+    }
+    let texts = pm[1];
+    const variants = [];
+    let syntaxName = 'default';
+    if (texts.includes(':')) {
+      [syntaxName, texts] = texts.split(':');
+    }
+    texts = texts.split(',').map(t => t.trim());
+    const syntaxTerms = syntax[syntaxName];
 
-  // ordered terms
-  const agreement = nomenclatures[nomenclatureName].reduce((acc, term, i) => {
-    acc[term.name] = terms.shift();
-    return acc;
-  }, {});
-
-  // unordered terms
-  if (terms.length > 0) {
-    terms.forEach(t => {
-      const [termName, termValue] = t.split('=');
-      agreement[termName] = termValue;
+    let firstTerm = syntaxTerms[0];
+    let secondTerm = syntaxTerms[1];
+    if (agreement[firstTerm]) {
+      firstTerm = syntaxTerms[1];
+      secondTerm = syntaxTerms[0];
+    }
+    const termVariants = syntax._terms[firstTerm].variants;
+    const secondTermVariants = syntax._terms[secondTerm].variants;
+    texts.forEach((text_, i) => {
+      variants.push({
+        text: text_,
+        agreement: {
+          ...agreement,
+          [firstTerm]: termVariants[i % termVariants.length],
+          [secondTerm]:
+            agreement[secondTerm] ||
+            secondTermVariants[Math.floor(i / termVariants.length)],
+        },
+      });
     });
+
+    return { variants };
   }
 
-  return { text: m[1].trim(), agreement };
+  return { text, agreement };
 }
 
 export default parseRawText;
