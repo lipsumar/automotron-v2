@@ -75,6 +75,9 @@
   flex-direction: column;
   justify-content: space-between;
 }
+.result-panel__output{
+  overflow-y: overlay;
+}
 .result-panel__possibility-count{
   font-size: 14px;
   color:#999;

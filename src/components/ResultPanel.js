@@ -9,7 +9,7 @@ function ResultPanel(props) {
           {props.error.message}
         </div>
       ) : (
-        <div>{props.output}</div>
+        <div className="result-panel__output">{props.output}</div>
       )}
 
       {props.count ? (
