@@ -58,6 +58,16 @@ describe('parseRawText', () => {
       });
     });
 
+    it('allows white spaces at beginning and end', () => {
+      expect(parseRawText(' [un, une] ', syntax)).toEqual({
+        text: 'un [2]',
+        variants: [
+          { text: 'un', agreement: { gender: 'm', number: 's' } },
+          { text: 'une', agreement: { gender: 'f', number: 's' } },
+        ],
+      });
+    });
+
     it('supports specifying a syntax ', () => {
       expect(
         parseRawText('[conjugaison:suis,es,est,sommes,êtes,sont]', syntax),
