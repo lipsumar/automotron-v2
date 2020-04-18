@@ -110,22 +110,28 @@ class GraphEvaluator {
       element.result = await this.run(generatorNode, [], agreement);
       // copy the first agreement of results as agreement of the result
       element.result.agreement = element.result.results[0].result.agreement;
-      node.evaluatedResult = {
-        ...element.result,
-        agreement: combineAgreements(
-          element.result.results[0].result.agreement,
-          agreement,
-        ),
-      };
+      // node.evaluatedResult = {
+      //   ...element.result,
+      //   agreement: combineAgreements(
+      //     element.result.results[0].result.agreement,
+      //     agreement,
+      //   ),
+      // };
     } else {
       element.result = await node.evaluate(agreement);
-      node.evaluatedResult = {
-        ...element.result,
-        agreement: combineAgreements(
-          element.result ? element.result.agreement : null,
-          agreement,
-        ),
-      };
+    }
+
+    node.evaluatedResult = {
+      ...element.result,
+      agreement: combineAgreements(
+        element.result ? element.result.agreement : null,
+        agreement,
+      ),
+    };
+    node.evaluatedCount += 1;
+
+    if (node.evaluatedCount > 9000) {
+      throw new Error('infinite loop');
     }
 
     return element;
@@ -144,6 +150,7 @@ class GraphEvaluator {
   resetNodesEvaluatedResult() {
     this.graph.nodes.forEach(node => {
       node.evaluatedResult = null;
+      node.evaluatedCount = 0;
     });
   }
 
