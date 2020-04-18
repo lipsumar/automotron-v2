@@ -33,10 +33,10 @@ class Grid {
     this.horizontalGridLines = [];
 
     const { x: x_, y: y_, width, height } = this.getNormalizedGeo();
-    for (let x = x_; x < width; x += this.space) {
+    for (let x = x_; x < x_ + width; x += this.space) {
       this.addVerticalGridLine(x);
     }
-    for (let y = y_; y < height; y += this.space) {
+    for (let y = y_; y < y_ + height; y += this.space) {
       this.addHorizontalGridLine(y);
     }
   }
@@ -83,6 +83,15 @@ class Grid {
         return true;
       },
     );
+
+    if (
+      this.verticalGridLines.length === 0 ||
+      this.horizontalGridLines.length === 0
+    ) {
+      this.setup();
+      return;
+    }
+
     // add missing lines (left)
     if (this.verticalGridLines[0].x > x + this.space) {
       for (
