@@ -58,9 +58,9 @@ class TextNodeEdit extends React.Component {
   }
 
   measure(val) {
-    const textWidth = measureTextWidth(val.text);
+    const textWidth = measureTextWidth(val.rawText);
     const width = Math.min(Math.max(175, textWidth), 500);
-    const textHeight = measureTextHeight(val.text, width + 6);
+    const textHeight = measureTextHeight(val.rawText, width + 6);
     return { width, textHeight };
   }
 
