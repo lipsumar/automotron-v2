@@ -11,7 +11,7 @@ export const hardCodedSyntax = {
 
 function parseRawText(raw, syntax = hardCodedSyntax) {
   raw = raw.trim();
-  const m = /(.*)\(([a-zA-Z0-9*,= :]+)\)$/.exec(raw);
+  const m = /(.*)\(([^)]+)\)$/.exec(raw);
 
   const text = m ? m[1].trim() : raw;
   let agreement = null;
@@ -30,7 +30,7 @@ function parseRawText(raw, syntax = hardCodedSyntax) {
 
     // positional arguments
     if (isUsingPositionalArgument) {
-      agreement = syntax[syntaxName].reduce((acc, termName, i) => {
+      agreement = syntax[syntaxName].reduce((acc, termName) => {
         acc[termName] = terms.shift();
         return acc;
       }, {});

@@ -33,6 +33,13 @@ describe('parseRawText', () => {
     });
   });
 
+  it('supports keyword agreement with accent', () => {
+    expect(parseRawText('foo(rime=é)', syntax)).toEqual({
+      text: 'foo',
+      agreement: { rime: 'é' },
+    });
+  });
+
   it('supports only keyword agreement with numbers', () => {
     expect(parseRawText('foo(cool=1)', syntax)).toEqual({
       text: 'foo',
