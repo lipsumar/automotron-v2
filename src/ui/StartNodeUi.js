@@ -13,7 +13,7 @@ class StartNodeUi extends NodeUi {
       y: 0,
       // width,
       // height,
-      fill: '#91fbcf',
+      fill: this.backgroundColor(),
       shadowColor: 'black',
       shadowBlur: 5,
       shadowOffset: { x: 0, y: 0 },
@@ -38,6 +38,10 @@ class StartNodeUi extends NodeUi {
     if (opts.editable) {
       this.registerOutlet('right');
     }
+  }
+
+  backgroundColor() {
+    return '#91fbcf';
   }
 
   outletX() {

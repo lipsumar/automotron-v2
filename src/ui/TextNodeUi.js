@@ -67,10 +67,14 @@ class TextListNodeUi extends NodeUi {
     this.refresh();
   }
 
+  backgroundColor() {
+    return this.isGenerated() ? '#e5d4f5' : '#fff';
+  }
+
   refresh() {
     NodeUi.prototype.refresh.call(this);
 
-    this.rect.fill(this.isGenerated() ? '#e5d4f5' : '#fff');
+    this.rect.fill(this.backgroundColor());
 
     this.titleGroup.visible(!!this.node.title);
     if (this.node.title) {

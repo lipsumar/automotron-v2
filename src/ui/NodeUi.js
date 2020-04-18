@@ -58,7 +58,7 @@ class NodeUi extends EventEmitter {
     if (error) {
       this.rect.fill('red');
     } else {
-      this.rect.fill('#fff');
+      this.rect.fill(this.backgroundColor());
     }
 
     this.draw();

@@ -14,7 +14,7 @@ class GraphNodeUi extends NodeUi {
       y: 0,
       // width,
       // height,
-      fill: '#bfd5ed',
+      fill: this.backgroundColor(),
       shadowColor: 'black',
       shadowBlur: 5,
       shadowOffset: { x: 0, y: 0 },
@@ -45,6 +45,10 @@ class GraphNodeUi extends NodeUi {
         this.emit('edit:start');
       });
     }
+  }
+
+  backgroundColor() {
+    return '#bfd5ed';
   }
 
   getPath(width = 100, height = 75) {
