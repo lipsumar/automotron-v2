@@ -3,6 +3,12 @@ import Node from './Node';
 class GraphNode extends Node {
   type = 'graph';
 
+  constructor(value, opts = {}) {
+    super();
+    this.value = value;
+    this.title = opts.title;
+  }
+
   static fromJSON(json) {
     const { value } = json;
     const graphNode = new GraphNode(value, { title: json.title });

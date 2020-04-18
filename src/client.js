@@ -106,7 +106,7 @@ const demoGenerator = {
         id: 7,
         type: 'graph',
         value: {
-          ...cloneDeep(newGenerator),
+          ...cloneDeep(newGenerator.graph),
         },
         ui: {
           x: 550,
