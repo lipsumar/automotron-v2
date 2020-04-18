@@ -18,6 +18,7 @@ class Editor extends React.Component {
     this.state = {
       generator: null,
       result: null,
+      error: null,
       showLoginModal: false,
       user: null,
       ready: false,
@@ -57,12 +58,24 @@ class Editor extends React.Component {
   }
 
   runGenerator() {
+    this.editorUiRef.current.resetNodeErrors();
     const evaluator = new GraphEvaluator(this.state.generator.graph);
-    evaluator.play().then(result => {
-      this.setState({
-        result: stringifyGraphResult(result),
+    evaluator
+      .play()
+      .then(result => {
+        this.setState({
+          error: null,
+          result: stringifyGraphResult(result),
+        });
+      })
+      .catch(err => {
+        this.setState({
+          result: null,
+          error: err,
+        });
+        this.editorUiRef.current.setNodeError(err.nodeId, err);
+        console.log('err!', err.nodeId, err);
       });
-    });
   }
 
   saveGenerator() {
@@ -159,7 +172,11 @@ class Editor extends React.Component {
               panelWidth={this.state.panelWidth}
             />
           )}
-          <ResultPanel output={result} count={this.state.possibilityCount} />
+          <ResultPanel
+            output={result}
+            error={this.state.error}
+            count={this.state.possibilityCount}
+          />
           <LoginModal
             isOpen={showLoginModal}
             onCloseRequest={() => this.setState({ showLoginModal: false })}

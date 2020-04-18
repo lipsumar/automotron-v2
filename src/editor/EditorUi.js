@@ -242,6 +242,14 @@ class EditorUi extends EventEmitter {
     this.graphUi.draw();
   }
 
+  setNodeError(nodeId, error) {
+    this.graphUi.setNodeError(nodeId, error);
+  }
+
+  resetNodeErrors() {
+    this.graphUi.resetNodeErrors();
+  }
+
   setupNode(uiNode) {
     let edgeToMouse = null;
     uiNode.on('newEdgeToMouse:start', fromUiNode => {

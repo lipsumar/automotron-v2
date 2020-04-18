@@ -103,6 +103,14 @@ class EditorUiComponent extends React.Component {
     this.editorUi.centerGraph();
   }
 
+  setNodeError(nodeId, error) {
+    this.editorUi.setNodeError(nodeId, error);
+  }
+
+  resetNodeErrors() {
+    this.editorUi.resetNodeErrors();
+  }
+
   undo() {
     this.editorUi.undo();
   }

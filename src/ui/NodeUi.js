@@ -53,6 +53,16 @@ class NodeUi extends EventEmitter {
     this.emit('moved');
   }
 
+  setError(error) {
+    if (error) {
+      this.rect.fill('red');
+    } else {
+      this.rect.fill('#fff');
+    }
+
+    this.draw();
+  }
+
   draw() {
     this.emit('draw');
   }

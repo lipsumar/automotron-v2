@@ -9,6 +9,7 @@ class GraphEvaluator {
 
   async play() {
     this.resetNodesEvaluatedResult();
+
     const result = await this.run(this.graph.startNode);
     return result;
   }
@@ -22,7 +23,15 @@ class GraphEvaluator {
    */
   async run(currentPointer, result = [], agreement = null) {
     if (currentPointer) {
-      const element = await this.evaluateNode(currentPointer, agreement);
+      let element;
+      try {
+        element = await this.evaluateNode(currentPointer, agreement);
+      } catch (err) {
+        err.nodeId = err.nodeId || currentPointer.id;
+        console.log('error ===>', err.nodeId, err);
+        throw err;
+      }
+
       result.push(element);
       const nextEdge = this.findNextEdge(currentPointer);
       if (nextEdge) {

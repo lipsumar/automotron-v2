@@ -174,6 +174,15 @@ class GraphUi extends EventEmitter {
     };
   }
 
+  setNodeError(nodeId, error) {
+    const uiNode = this.getNode(nodeId);
+    uiNode.setError(error);
+  }
+
+  resetNodeErrors() {
+    this.nodes.forEach(uiNode => uiNode.setError(null));
+  }
+
   draw() {
     this.stage.batchDraw();
   }

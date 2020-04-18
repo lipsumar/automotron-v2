@@ -32,6 +32,10 @@ class TextNode extends Node {
 
   async evaluate(agreement = null) {
     const possibleValues = filterAgreement(this.value, agreement);
+    if (possibleValues.length === 0) {
+      console.log('given', agreement);
+      throw new Error('impossible agreement');
+    }
     return pickRandom(possibleValues);
   }
 }
