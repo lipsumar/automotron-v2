@@ -331,6 +331,9 @@ class EditorUi extends EventEmitter {
     });
 
     uiNode.on('edit:start', () => {
+      if (uiNode.node.type === 'graph') {
+        return;
+      }
       this.activeNodeEditId = uiNode.node.id;
       this.actions.openNodeEditor(
         this.graphUi.getNodeBoundingBox(uiNode),

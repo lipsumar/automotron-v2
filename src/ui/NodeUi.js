@@ -1,6 +1,7 @@
 import { Group, Circle } from 'konva';
 import { EventEmitter } from 'events';
 import { GRID_SIZE } from './constants';
+import { clampValue } from './utils';
 
 class NodeUi extends EventEmitter {
   group = null;
@@ -128,8 +129,8 @@ class NodeUi extends EventEmitter {
 
   snapToGrid() {
     this.group.position({
-      x: Math.round(this.group.x() / GRID_SIZE) * GRID_SIZE - 1,
-      y: Math.round(this.group.y() / GRID_SIZE) * GRID_SIZE - 1,
+      x: clampValue(this.group.x(), GRID_SIZE) - 1,
+      y: clampValue(this.group.y(), GRID_SIZE) - 1,
     });
     this.emit('draw');
     this.emit('moved');

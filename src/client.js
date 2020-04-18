@@ -1,4 +1,5 @@
 import axios from 'axios';
+import cloneDeep from 'lodash.clonedeep';
 
 const newGenerator = {
   title: 'New generator',
@@ -101,12 +102,26 @@ const demoGenerator = {
           height: 128,
         },
       },
+      {
+        id: 7,
+        type: 'graph',
+        value: {
+          ...cloneDeep(newGenerator),
+        },
+        ui: {
+          x: 550,
+          y: -75,
+          width: 300,
+          height: 300,
+        },
+      },
     ],
     edges: [
       { from: { id: 1 }, to: { id: 2 } },
       { from: { id: 1 }, to: { id: 3 } },
       { from: { id: 1 }, to: { id: 4 } },
       { from: { id: 1 }, to: { id: 5 } },
+      { from: { id: 3 }, to: { id: 7 } },
     ],
   },
 };

@@ -1,5 +1,6 @@
 import { Line } from 'konva';
 import { GRID_SIZE } from './constants';
+import { clampValue } from './utils';
 
 class Grid {
   stage = null;
@@ -33,10 +34,10 @@ class Grid {
     this.horizontalGridLines = [];
 
     const { x: x_, y: y_, width, height } = this.getNormalizedGeo();
-    for (let x = x_; x < x_ + width; x += this.space) {
+    for (let x = clampValue(x_, GRID_SIZE); x < x_ + width; x += this.space) {
       this.addVerticalGridLine(x);
     }
-    for (let y = y_; y < y_ + height; y += this.space) {
+    for (let y = clampValue(y_, GRID_SIZE); y < y_ + height; y += this.space) {
       this.addHorizontalGridLine(y);
     }
   }

@@ -41,3 +41,7 @@ export function hasIntersection(r1, r2) {
 export function distance(x1, y1, x2, y2) {
   return Math.hypot(x2 - x1, y2 - y1);
 }
+
+export function clampValue(value, n) {
+  return Math.round(value / n) * n;
+}

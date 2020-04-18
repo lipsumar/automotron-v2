@@ -8,10 +8,12 @@ import EdgeUi from './EdgeUi';
 import GeneratorEdgeUi from './GeneratorEdgeUi';
 import AgreementEdgeUi from './AgreementEdgeUi';
 import findBoundaries from '../utils/findBoundaries';
+import GraphNodeUi from './GraphNodeUi';
 
 const uiNodeTypes = {
   start: StartNodeUi,
   text: TextNodeUi,
+  graph: GraphNodeUi,
 };
 
 const uiEdgeTypes = {
