@@ -57,6 +57,21 @@ class TextNodeEdit extends React.Component {
     this.resize(value[index], index);
   }
 
+  setMultipleValues(rawTexts, index, cb) {
+    const addOne = () => {
+      this.setOneValue(rawTexts.shift(), index, () => {
+        index += 1;
+        if (rawTexts.length > 0) {
+          this.addValue(index);
+          addOne();
+        } else {
+          cb();
+        }
+      });
+    };
+    addOne();
+  }
+
   measure(val) {
     const textWidth = measureTextWidth(val.rawText);
     const width = Math.min(Math.max(175, textWidth), 500);
@@ -145,14 +160,22 @@ class TextNodeEdit extends React.Component {
                 }`}
                 value={oneValue.rawText}
                 onChange={e => {
-                  this.setOneValue(e.target.value, i, () => {
+                  const text = e.target.value;
+
+                  const cb = () => {
                     const cleanedValues = this.state.value.filter(v =>
                       v.text ? v.text.trim() !== '' : true,
                     );
                     this.props.onChange(
                       cleanedValues.length > 0 ? cleanedValues : [{ text: '' }],
                     );
-                  });
+                  };
+
+                  if (text.includes('\n')) {
+                    this.setMultipleValues(text.split('\n'), i, cb);
+                  } else {
+                    this.setOneValue(text, i, cb);
+                  }
                 }}
                 onKeyDown={e => this.onKeyDown(e, i + 1)}
               ></textarea>
