@@ -77,6 +77,7 @@
 }
 .result-panel__output{
   overflow-y: overlay;
+  white-space: pre-wrap;
 }
 .result-panel__possibility-count{
   font-size: 14px;

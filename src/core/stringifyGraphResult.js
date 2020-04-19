@@ -4,6 +4,7 @@ function stringifyElement(element) {
   }
 
   if (typeof element.result.text === 'string') {
+    if (element.result.text.trim() === '\\n') return '\n';
     return element.result.text;
   }
 
