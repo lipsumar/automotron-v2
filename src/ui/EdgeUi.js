@@ -47,7 +47,10 @@ class EdgeUi extends EventEmitter {
   }
 
   refresh() {
-    if (!this.edge) return;
+    if (!this.edge) {
+      this.line.stroke('#7791F9');
+      return;
+    }
     this.line.stroke(this.edge.space ? '#7791F9' : '#b2bff6');
   }
 
