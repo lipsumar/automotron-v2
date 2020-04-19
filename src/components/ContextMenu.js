@@ -6,16 +6,20 @@ function renderItems(props) {
     // edge
     return (
       <>
-        <MenuItem onClick={props.onInsertNode}>Insert node</MenuItem>
-        <MenuItem
-          onClick={props.onToggleEdgeSpace}
-          className="react-contextmenu-item--toggle"
-        >
-          <div className="react-contextmenu-item__toggle">
-            {props.subject.edge.space ? '✔' : ''}
-          </div>
-          Add space
-        </MenuItem>
+        {props.subject.edge.type === 'default' && (
+          <>
+            <MenuItem onClick={props.onInsertNode}>Insert node</MenuItem>
+            <MenuItem
+              onClick={props.onToggleEdgeSpace}
+              className="react-contextmenu-item--toggle"
+            >
+              <div className="react-contextmenu-item__toggle">
+                {props.subject.edge.space ? '✔' : ''}
+              </div>
+              Add space
+            </MenuItem>
+          </>
+        )}
         <MenuItem onClick={props.onDeleteEdge}>Delete link</MenuItem>
       </>
     );
