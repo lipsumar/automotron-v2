@@ -6,7 +6,7 @@ class InsertNodeCommand extends Command {
     const { graph, ui, options } = this;
 
     // create new node
-    const node = new TextNode(options.value);
+    const node = new TextNode([{ text: options.text }]);
     node.ui = { ...options.ui };
     graph.addNode(node, this.previousId);
     this.previousId = node.id;

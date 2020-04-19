@@ -133,7 +133,7 @@ class EditorUi extends EventEmitter {
   insertNode(edgeId) {
     this.commandInvoker.execute('insertNode', {
       edgeId,
-      value: 'paf!',
+      text: 'paf!',
       ui: {
         x: this.mouseNode.inletX(), // vite fait
         y: this.mouseNode.inletY() - 20,
