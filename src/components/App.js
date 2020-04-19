@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Modal from 'react-modal';
+import * as Sentry from '@sentry/browser';
 import Home from './pages/Home';
 import Help from './pages/Help';
 import Editor from './pages/Editor';
@@ -18,6 +19,9 @@ class App extends React.Component {
 
   componentDidMount() {
     client.loggedIn().then(user => {
+      Sentry.configureScope(scope => {
+        scope.setUser({ username: user.username, id: user._id });
+      });
       this.setState({ user });
     });
   }
