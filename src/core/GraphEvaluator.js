@@ -37,7 +37,7 @@ class GraphEvaluator {
       if (nextEdge) {
         result.push({
           edge: true,
-          result: ' ',
+          result: nextEdge.evaluate(),
         });
         return this.run(nextEdge.to, result);
       }

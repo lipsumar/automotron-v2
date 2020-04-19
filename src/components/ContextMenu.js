@@ -7,7 +7,16 @@ function renderItems(props) {
     return (
       <>
         <MenuItem onClick={props.onInsertNode}>Insert node</MenuItem>
-        <MenuItem onClick={props.onDeleteEdge}>Delete</MenuItem>
+        <MenuItem
+          onClick={props.onToggleEdgeSpace}
+          className="react-contextmenu-item--toggle"
+        >
+          <div className="react-contextmenu-item__toggle">
+            {props.subject.edge.space ? '✔' : ''}
+          </div>
+          Add space
+        </MenuItem>
+        <MenuItem onClick={props.onDeleteEdge}>Delete link</MenuItem>
       </>
     );
   }
@@ -19,7 +28,7 @@ function renderItems(props) {
         <MenuItem onClick={props.onLinkToGenerator}>Link to generator</MenuItem>
         <MenuItem onClick={props.onAgreementLink}>Agreement link</MenuItem>
         <MenuItem onClick={props.onNodeFreeze}>Freeze</MenuItem>
-        <MenuItem onClick={props.onDeleteNode}>Delete</MenuItem>
+        <MenuItem onClick={props.onDeleteNode}>Delete node</MenuItem>
       </>
     );
   }

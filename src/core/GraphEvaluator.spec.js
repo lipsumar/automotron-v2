@@ -24,6 +24,34 @@ describe('GraphEvaluator', () => {
       });
     });
 
+    it('supports no-space edges', async () => {
+      const graph = new Graph();
+      const textNode = new TextNode([{ text: 'hell' }]);
+      const textNode2 = new TextNode([{ text: 'o' }]);
+      graph.addNode(textNode);
+      graph.addNode(textNode2);
+      graph.createEdge(graph.startNode, textNode);
+      const edge = graph.createEdge(textNode, textNode2);
+      edge.space = false;
+
+      const evaluator = new GraphEvaluator(graph);
+      const result = await evaluator.play();
+
+      expect(result.results).toBeInstanceOf(Array);
+      expect(result.results).toHaveLength(5);
+      expect(result.results[0]).toEqual({ nodeId: 1, result: null });
+      expect(result.results[1]).toEqual({ edge: true, result: ' ' });
+      expect(result.results[2]).toEqual({
+        nodeId: 2,
+        result: { text: 'hell' },
+      });
+      expect(result.results[3]).toEqual({ edge: true, result: '' });
+      expect(result.results[4]).toEqual({
+        nodeId: 3,
+        result: { text: 'o' },
+      });
+    });
+
     it('randomly chooses nodes when multiple edges from', async () => {
       seedRandom('seed_GraphEvaluator_');
       const graph = new Graph();

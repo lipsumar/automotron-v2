@@ -111,6 +111,10 @@ class EditorUiComponent extends React.Component {
     this.editorUi.resetNodeErrors();
   }
 
+  toggleEdgeSpace() {
+    this.editorUi.toggleEdgeSpace(this.state.contextMenuSubject.edge.id);
+  }
+
   undo() {
     this.editorUi.undo();
   }
@@ -148,6 +152,7 @@ class EditorUiComponent extends React.Component {
           onAgreementLink={this.linkToAgreement.bind(this)}
           onNodeFreeze={this.freezeNode.bind(this)}
           onCenterGraph={this.centerGraph.bind(this)}
+          onToggleEdgeSpace={this.toggleEdgeSpace.bind(this)}
         />
       </>
     );

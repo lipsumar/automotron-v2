@@ -15,7 +15,6 @@ class EdgeUi extends EventEmitter {
 
     this.line = new Line({
       points: this.getPoints(),
-      stroke: '#7791F9',
       strokeWidth: 8,
       lineJoin: 'round',
       bezier: true,
@@ -28,6 +27,8 @@ class EdgeUi extends EventEmitter {
         }
       });
     }
+
+    this.refresh();
 
     from.on('moved', this.boundPosition);
   }
@@ -43,6 +44,11 @@ class EdgeUi extends EventEmitter {
   position() {
     this.line.points(this.getPoints());
     this.emit('draw');
+  }
+
+  refresh() {
+    if (!this.edge) return;
+    this.line.stroke(this.edge.space ? '#7791F9' : '#b2bff6');
   }
 
   getPoints() {

@@ -3,11 +3,21 @@
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
   padding:10px 0;
   border-radius: 5px;
+  min-width: 200px;
 }
 
 .react-contextmenu-item{
   padding:6px 10px;
   cursor: default;
+  padding-left:30px;
+  display: flex;
+}
+.react-contextmenu-item--toggle{
+  padding-left: 0;
+}
+.react-contextmenu-item__toggle{
+  width: 30px;
+  text-align: center;
 }
 
 .react-contextmenu-item:hover{

@@ -8,6 +8,7 @@ import RemoveEdgeCommand from './commands/RemoveEdge';
 import InsertNodeCommand from './commands/InsertNode';
 import SetNodeTitleCommand from './commands/SetNodeTitle';
 import FreezeNodeCommand from './commands/FreezeNode';
+import ToggleEdgeSpaceCommand from './commands/ToggleEdgeSpace';
 
 const commands = {
   createNode: CreateNodeCommand,
@@ -19,6 +20,7 @@ const commands = {
   insertNode: InsertNodeCommand,
   setNodeTitle: SetNodeTitleCommand,
   freezeNode: FreezeNodeCommand,
+  toggleEdgeSpace: ToggleEdgeSpaceCommand,
 };
 
 class CommandInvoker extends EventEmitter {

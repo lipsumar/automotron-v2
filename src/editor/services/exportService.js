@@ -14,6 +14,7 @@ export default {
           from: { id: edge.from.id },
           to: { id: edge.to.id },
           type: edge.type,
+          space: edge.space,
         };
       }),
     };

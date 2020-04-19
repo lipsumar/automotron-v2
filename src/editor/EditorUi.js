@@ -130,6 +130,10 @@ class EditorUi extends EventEmitter {
     this.graphUi.refreshNode(fromUiNode);
   }
 
+  toggleEdgeSpace(edgeId) {
+    this.commandInvoker.execute('toggleEdgeSpace', { edgeId });
+  }
+
   insertNode(edgeId) {
     this.commandInvoker.execute('insertNode', {
       edgeId,

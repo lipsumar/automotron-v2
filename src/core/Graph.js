@@ -37,7 +37,8 @@ class Graph {
       } else if (edge.type === 'agreement') {
         graph.createAgreementEdge(edge.from, edge.to);
       } else {
-        graph.createEdge(edge.from, edge.to);
+        const createdEdge = graph.createEdge(edge.from, edge.to);
+        if (edge.space === false) createdEdge.space = false;
       }
     });
     return graph;

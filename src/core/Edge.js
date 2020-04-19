@@ -7,6 +7,8 @@ class Edge {
 
   id;
 
+  space = true;
+
   constructor(from, to) {
     this.from = from;
     this.to = to;
@@ -14,6 +16,14 @@ class Edge {
 
   setId(id) {
     this.id = id;
+  }
+
+  toggleSpace() {
+    this.space = !this.space;
+  }
+
+  evaluate() {
+    return this.space ? ' ' : '';
   }
 }
 
