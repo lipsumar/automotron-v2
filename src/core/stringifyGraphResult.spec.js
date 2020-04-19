@@ -7,7 +7,7 @@ describe('stringifyGraphResult()', () => {
         { result: { text: 'nope' } },
         { result: ' ' },
         { result: { text: 'hello' } },
-        { result: { text: ' ' } },
+        { result: ' ' },
         { result: { text: 'world' } },
       ],
     };
@@ -50,5 +50,23 @@ describe('stringifyGraphResult()', () => {
       ],
     };
     expect(stringifyGraphResult(result)).toBe(' world');
+  });
+
+  it('transforms \\n in new line', () => {
+    const result = {
+      results: [
+        { result: { text: 'nope' } },
+        { result: ' ' },
+        { result: { text: 'hey' } },
+        { result: ' ' },
+        { result: { text: '\\n' } },
+        { result: ' ' },
+        { result: { text: 'new\\nline' } },
+        { result: ' ' },
+        { result: { text: 'hello' } },
+      ],
+    };
+    const text = stringifyGraphResult(result);
+    expect(text).toBe('hey \n new\nline hello');
   });
 });
