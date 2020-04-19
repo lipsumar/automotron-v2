@@ -1,5 +1,5 @@
 import React, { createRef } from 'react';
-
+import * as Sentry from '@sentry/browser';
 import EditorUiComponent from '../EditorUi';
 import Graph from '../../core/Graph';
 import client from '../../client';
@@ -69,6 +69,7 @@ class Editor extends React.Component {
         });
       })
       .catch(err => {
+        Sentry.captureException(err);
         this.setState({
           result: null,
           error: err,
