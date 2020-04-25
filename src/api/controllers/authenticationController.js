@@ -1,9 +1,9 @@
-const { Router } = require('express');
-const passport = require('passport');
+import { Router } from 'express';
+import passport from 'passport';
+import User from '../models/User';
+import { hashPassword } from '../utils';
 
 const router = new Router();
-const User = require('../models/User');
-const { hashPassword } = require('../utils');
 
 router.post('/login', passport.authenticate('local'), (req, res) => {
   res.send({

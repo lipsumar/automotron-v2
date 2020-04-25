@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const shortid = require('shortid');
+import mongoose from 'mongoose';
+import shortid from 'shortid';
 
 const GeneratorSchema = new mongoose.Schema({
   _id: {

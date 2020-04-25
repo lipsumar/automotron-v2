@@ -5,4 +5,4 @@ RUN yarn install
 COPY . .
 EXPOSE 5000
 RUN yarn build
-CMD ["node", "src/server.js"]
+CMD ["npm", "start"]

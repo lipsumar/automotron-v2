@@ -1,4 +1,4 @@
-const Generator = require('../models/Generator');
+import Generator from '../models/Generator';
 
 module.exports = {
   async save(generator, userId) {

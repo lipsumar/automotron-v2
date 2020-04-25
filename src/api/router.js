@@ -1,12 +1,14 @@
-const { Router } = require('express');
-const passport = require('passport');
-const bodyParser = require('body-parser');
-const expressSession = require('express-session');
-const MongoStore = require('connect-mongo')(expressSession);
-const generatorController = require('./controllers/generatorController');
-const authenticationController = require('./controllers/authenticationController');
-require('./passport');
-const db = require('./mongoose');
+import { Router } from 'express';
+import passport from 'passport';
+import bodyParser from 'body-parser';
+import expressSession from 'express-session';
+import ConnectMongo from 'connect-mongo';
+import generatorController from './controllers/generatorController';
+import authenticationController from './controllers/authenticationController';
+import './passport';
+import db from './mongoose';
+
+const MongoStore = ConnectMongo(expressSession);
 
 const router = new Router();
 
@@ -29,6 +31,9 @@ db.once('open', () => {
   router.use(authenticationController);
 
   router.use('/generators', generatorController);
+  router.get('*', (req, res) => {
+    res.status(404).send({ error: 'no resource match this url' });
+  });
 });
 
 module.exports = router;

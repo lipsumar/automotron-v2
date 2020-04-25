@@ -1,9 +1,9 @@
-const { Router } = require('express');
-const ensureLoggedIn = require('../middlewares/ensureLoggedIn');
+import { Router } from 'express';
+import ensureLoggedIn from '../middlewares/ensureLoggedIn';
+import generatorService from '../services/generatorService';
+import previewService from '../services/previewService';
 
 const router = new Router();
-const generatorService = require('../services/generatorService');
-const previewService = require('../services/previewService');
 
 router.get('/', async (req, res) => {
   if (!req.query.userId) {
@@ -24,6 +24,11 @@ router.get('/', async (req, res) => {
 router.get('/:generatorId', async (req, res) => {
   const generator = await generatorService.get(req.params.generatorId);
   res.send(generator);
+});
+
+router.get('/:generatorId/run', async (req, res) => {
+  const generator = await generatorService.get(req.params.generatorId);
+  res.send('run!');
 });
 
 router.post('/', ensureLoggedIn, async (req, res) => {

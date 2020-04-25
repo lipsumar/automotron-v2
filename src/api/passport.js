@@ -1,9 +1,9 @@
-const passport = require('passport');
-const { Strategy } = require('passport-local');
+import passport from 'passport';
+import { Strategy } from 'passport-local';
 
-const User = require('./models/User');
+import User from './models/User';
 
-const { hashPassword } = require('./utils');
+import { hashPassword } from './utils';
 
 passport.use(
   new Strategy((username, password, cb) => {
