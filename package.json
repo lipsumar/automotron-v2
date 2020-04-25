@@ -39,7 +39,7 @@
   "scripts": {
     "start": "node api-build/server.js",
     "watch": "react-scripts start",
-    "server:watch": "nodemon src/server.js",
+    "server:watch": "babel-watch src/api/server.js",
     "start-dev-db": "docker-compose -f docker-compose-dev.yml up -d mongo",
     "build": "react-scripts build && babel src/api -d api-build",
     "test": "react-scripts test",
@@ -64,6 +64,7 @@
   "devDependencies": {
     "@babel/preset-env": "^7.9.5",
     "@types/jest": "^25.1.3",
+    "babel-watch": "^7.0.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-prettier": "^6.10.0",
@@ -74,7 +75,6 @@
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.18.3",
     "eslint-plugin-react-hooks": "^1.7.0",
-    "nodemon": "^2.0.2",
     "prettier": "^1.19.1"
   }
 }
