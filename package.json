@@ -38,11 +38,11 @@
     "shortid": "^2.2.15"
   },
   "scripts": {
-    "start": "node api-build/server.js",
+    "start": "node src-build/api/server.js",
     "watch": "react-scripts start",
     "server:watch": "babel-watch src/api/server.js",
     "start-dev-db": "docker-compose -f docker-compose-dev.yml up -d mongo",
-    "build": "react-scripts build && babel src/api -d api-build",
+    "build": "react-scripts build && babel src/api -d src-build/api && babel src/core -d src-build/core",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint . --ext ts,js,json --ignore-path .gitignore"
