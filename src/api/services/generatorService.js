@@ -1,4 +1,6 @@
 import Generator from '../models/Generator';
+import GraphEvaluator from '../../core/GraphEvaluator';
+import Graph from '../../core/Graph';
 
 module.exports = {
   async save(generator, userId) {
@@ -40,5 +42,12 @@ module.exports = {
 
   async delete(generatorId) {
     await Generator.deleteOne({ _id: generatorId });
+  },
+
+  async run(generator) {
+    const graph = Graph.fromJSON(generator.graph);
+    const evaluator = new GraphEvaluator(graph);
+    const result = await evaluator.play();
+    return result;
   },
 };

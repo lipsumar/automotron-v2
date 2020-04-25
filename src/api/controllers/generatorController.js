@@ -2,6 +2,7 @@ import { Router } from 'express';
 import ensureLoggedIn from '../middlewares/ensureLoggedIn';
 import generatorService from '../services/generatorService';
 import previewService from '../services/previewService';
+import stringifyGraphResult from '../../core/stringifyGraphResult';
 
 const router = new Router();
 
@@ -27,8 +28,12 @@ router.get('/:generatorId', async (req, res) => {
 });
 
 router.get('/:generatorId/run', async (req, res) => {
-  const generator = await generatorService.get(req.params.generatorId);
-  res.send('run!');
+  const generatorModel = await generatorService.get(req.params.generatorId);
+  const result = await generatorService.run(generatorModel);
+  res.send({
+    text: stringifyGraphResult(result),
+    result,
+  });
 });
 
 router.post('/', ensureLoggedIn, async (req, res) => {
