@@ -5,7 +5,7 @@ const router = new Router();
 const generatorService = require('../services/generatorService');
 const previewService = require('../services/previewService');
 
-router.get('/', ensureLoggedIn, async (req, res) => {
+router.get('/', async (req, res) => {
   if (!req.query.userId) {
     throw new Error('userId must be given');
   }
