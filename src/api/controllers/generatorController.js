@@ -6,7 +6,10 @@ const generatorService = require('../services/generatorService');
 const previewService = require('../services/previewService');
 
 router.get('/', ensureLoggedIn, async (req, res) => {
-  const generators = await generatorService.findForUser(req.user._id);
+  if (!req.query.userId) {
+    throw new Error('userId must be given');
+  }
+  const generators = await generatorService.findForUser(req.query.userId);
   res.send(
     generators.map(generator => {
       return {

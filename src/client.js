@@ -148,8 +148,8 @@ export default {
   logout() {
     return ax.post(`/api/logout`).then(resp => resp.data);
   },
-  getGenerators() {
-    return ax.get('/api/generators').then(resp => resp.data);
+  getGenerators(userId) {
+    return ax.get(`/api/generators?userId=${userId}`).then(resp => resp.data);
   },
   getGenerator(id) {
     if (id === 'new') {

@@ -1,9 +1,10 @@
 import React, { createRef } from 'react';
 import { Link } from 'react-router-dom';
-import { FiTrash2 } from 'react-icons/fi';
-import client from '../../client';
+
 import Header from '../Header';
 import LoginModal from '../LoginModal';
+
+import UserGeneratorList from '../UserGeneratorList';
 
 class Home extends React.Component {
   constructor(props) {
@@ -13,12 +14,6 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    client
-      .getGenerators()
-      .then(generators => {
-        this.setState({ generators });
-      })
-      .catch(err => {});
     document.querySelector('html').style.overflow = '';
     window.document.body.style.overflow = '';
   }
@@ -35,16 +30,6 @@ class Home extends React.Component {
 
   refreshPage() {
     window.location.reload();
-  }
-
-  deleteGenerator(generatorId) {
-    if (window.confirm('Are you sure ?')) {
-      client.deleteGenerator(generatorId).then(() => {
-        this.setState({
-          generators: this.state.generators.filter(g => g._id !== generatorId),
-        });
-      });
-    }
   }
 
   render() {
@@ -69,33 +54,12 @@ class Home extends React.Component {
           </Link>
         </div>
 
-        <h2 className="section-heading">Your generators</h2>
-        <div className="grid">
-          {this.state.generators.map(generator => {
-            return (
-              <Link
-                to={`/editor/${generator._id}`}
-                className="generator-card"
-                key={generator._id}
-              >
-                <div
-                  className="generator-card__delete"
-                  onClick={e => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    this.deleteGenerator(generator._id);
-                  }}
-                >
-                  <FiTrash2 />
-                </div>
-                <div className="generator-card__image">
-                  <img src={generator.preview} alt={generator.title} />
-                </div>
-                <div className="generator-card__title">{generator.title}</div>
-              </Link>
-            );
-          })}
-        </div>
+        {this.props.user && (
+          <>
+            <h2 className="section-heading">Your generators</h2>
+            <UserGeneratorList user={this.props.user} />
+          </>
+        )}
 
         <LoginModal
           ref={this.loginModalRef}
