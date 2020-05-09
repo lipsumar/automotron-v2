@@ -10,6 +10,10 @@
   letter-spacing: -1px;
   color:#4c4c4c;
 }
+.header__center a{
+  color:currentColor;
+  text-decoration: none;
+}
 .header__left,.header__right{
   flex:1;
   display: flex;

@@ -35,6 +35,11 @@ module.exports = {
     };
   },
 
+  async getMany(generatorIds) {
+    const generators = await Generator.find({ _id: { $in: generatorIds } });
+    return generators;
+  },
+
   async userOwnsGenerator(generatorId, userId) {
     const generator = await Generator.findOne({ _id: generatorId });
     return generator.userId === userId;

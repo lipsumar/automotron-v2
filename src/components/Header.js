@@ -6,11 +6,13 @@ function Header(props) {
   return (
     <div className="header">
       <div className="header__left">
-        <Link to="/doc">Documentation</Link>
-        <Link to="/doc">Examples</Link>
+        {/* <Link to="/doc">Documentation</Link> */}
+        <Link to="/examples">Examples</Link>
       </div>
       <div className="header__center">
-        <h1>automotron</h1>
+        <h1>
+          <Link to="/">automotron</Link>
+        </h1>
       </div>
       <div className="header__right">
         {!props.user ? (

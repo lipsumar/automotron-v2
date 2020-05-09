@@ -5,3 +5,11 @@
   border-bottom: 1px solid #ddd;
   margin-bottom:20px;
 }
+
+.page-heading{
+  text-align: center;
+  font-size:36px;
+  padding: 140px 0;           
+  background:radial-gradient(circle, rgba(232,232,232,1) 0%, rgba(255,255,255,1) 64%);
+  margin:40px 0
+}

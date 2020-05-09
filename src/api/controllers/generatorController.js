@@ -22,9 +22,24 @@ router.get('/', async (req, res) => {
   );
 });
 
-router.get('/:generatorId', async (req, res) => {
-  const generator = await generatorService.get(req.params.generatorId);
-  res.send(generator);
+router.get('/:generatorIds', async (req, res) => {
+  const ids = req.params.generatorIds.split(',');
+  if (ids.length === 1) {
+    const generator = await generatorService.get(ids[0]);
+    res.send(generator);
+    return;
+  }
+
+  const generators = await generatorService.getMany(ids);
+  res.send(
+    generators.map(generator => {
+      return {
+        _id: generator._id.toString(),
+        title: generator.title,
+        preview: `${process.env.REACT_APP_API_BASE_URL}/previews/${generator._id}.png`,
+      };
+    }),
+  );
 });
 
 router.get('/:generatorId/run', async (req, res) => {

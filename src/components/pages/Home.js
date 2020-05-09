@@ -1,46 +1,18 @@
-import React, { createRef } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
-import Header from '../Header';
-import LoginModal from '../LoginModal';
-
 import UserGeneratorList from '../UserGeneratorList';
+import PageLayout from '../PageLayout';
 
 class Home extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { generators: [], showLoginModal: false };
-    this.loginModalRef = createRef();
-  }
-
-  componentDidMount() {
-    document.querySelector('html').style.overflow = '';
-    window.document.body.style.overflow = '';
-  }
-
-  showLogin() {
-    this.loginModalRef.current.switchToLogin();
-    this.setState({ showLoginModal: true });
-  }
-
-  showRegister() {
-    this.loginModalRef.current.switchToRegister();
-    this.setState({ showLoginModal: true });
-  }
-
-  refreshPage() {
-    window.location.reload();
+    this.state = { generators: [] };
   }
 
   render() {
     return (
-      <div className="container">
-        <Header
-          user={this.props.user}
-          onLoginClicked={this.showLogin.bind(this)}
-          onRegisterClicked={this.showRegister.bind(this)}
-          onLogout={this.props.onLogout}
-        />
+      <PageLayout user={this.props.user}>
         <div
           style={{
             padding: '140px 0',
@@ -60,14 +32,7 @@ class Home extends React.Component {
             <UserGeneratorList user={this.props.user} />
           </>
         )}
-
-        <LoginModal
-          ref={this.loginModalRef}
-          isOpen={this.state.showLoginModal}
-          onCloseRequest={() => this.setState({ showLoginModal: false })}
-          onLoginSuccess={this.refreshPage.bind(this)}
-        />
-      </div>
+      </PageLayout>
     );
   }
 }
