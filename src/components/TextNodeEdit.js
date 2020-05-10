@@ -164,7 +164,7 @@ class TextNodeEdit extends React.Component {
 
                   const cb = () => {
                     const cleanedValues = this.state.value.filter(v =>
-                      v.text ? v.text.trim() !== '' : true,
+                      typeof v.text === 'string' ? v.text.trim() !== '' : true,
                     );
                     this.props.onChange(
                       cleanedValues.length > 0 ? cleanedValues : [{ text: '' }],
