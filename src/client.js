@@ -15,19 +15,8 @@ const newGenerator = {
           height: 75,
         },
       },
-      {
-        id: 2,
-        type: 'text',
-        value: ['Once upon a time'],
-        ui: {
-          x: 300,
-          y: -50,
-          width: 194.1328125,
-          height: 52,
-        },
-      },
     ],
-    edges: [{ from: { id: 1 }, to: { id: 2 } }],
+    edges: [],
   },
 };
 const demoGenerator = {

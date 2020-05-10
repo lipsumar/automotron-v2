@@ -36,7 +36,7 @@ class EditorUi extends EventEmitter {
     graphUi.on('edge:created', this.setupEdge.bind(this));
     this.graphUi.stage.on('dblclick', () => {
       this.commandInvoker.execute('createNode', {
-        text: 'oooh!',
+        text: '',
         ui: {
           x: this.mouseNode.inletX(), // vite fait
           y: this.mouseNode.inletY() - 20,
@@ -112,7 +112,7 @@ class EditorUi extends EventEmitter {
 
   createNode() {
     this.commandInvoker.execute('createNode', {
-      text: 'wow!',
+      text: '',
       ui: {
         x: this.mouseNode.inletX(), // vite fait
         y: this.mouseNode.inletY() - 20,
@@ -281,7 +281,7 @@ class EditorUi extends EventEmitter {
         return;
       }
       this.commandInvoker.execute('createNode', {
-        text: 'aaah!',
+        text: '',
         ui: {
           x: this.mouseNode.inletX(), // vite fait
           y: this.mouseNode.inletY() - 20,
