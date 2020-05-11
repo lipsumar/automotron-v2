@@ -133,56 +133,66 @@ class TextNodeEdit extends React.Component {
 
   render() {
     return (
-      <div
-        className={`text-node-edit ${
-          this.state.value.length > 1 ? 'text-node-edit--multi' : ''
-        }`}
-        style={
-          this.state.fullSize
-            ? getTopLeft(this.props.bbox, this.state.fullSize)
-            : {}
-        }
-        ref={this.linesParentRef}
-      >
-        {this.state.value.map((oneValue, i) => {
-          return (
-            <div
-              className="text-node-edit__line"
-              style={{ ...this.state.size[i], width: this.state.width }}
-              key={i}
-            >
-              <textarea
-                ref={i === 0 ? this.focusRef : null}
-                className={`text-node-edit__textarea ${
-                  this.state.size[i].textHeight > 20
-                    ? ''
-                    : 'text-node-edit__textarea--single-line'
-                }`}
-                value={oneValue.rawText}
-                onChange={e => {
-                  const text = e.target.value;
+      <>
+        <div
+          className="text-node-edit-overlay"
+          onClick={this.props.onClose}
+        ></div>
+        <div
+          className={`text-node-edit ${
+            this.state.value.length > 1 ? 'text-node-edit--multi' : ''
+          }`}
+          style={
+            this.state.fullSize
+              ? getTopLeft(this.props.bbox, this.state.fullSize)
+              : {}
+          }
+          ref={this.linesParentRef}
+        >
+          {this.state.value.map((oneValue, i) => {
+            return (
+              <div
+                className="text-node-edit__line"
+                style={{ ...this.state.size[i], width: this.state.width }}
+                key={i}
+              >
+                <textarea
+                  ref={i === 0 ? this.focusRef : null}
+                  className={`text-node-edit__textarea ${
+                    this.state.size[i].textHeight > 20
+                      ? ''
+                      : 'text-node-edit__textarea--single-line'
+                  }`}
+                  value={oneValue.rawText}
+                  onChange={e => {
+                    const text = e.target.value;
 
-                  const cb = () => {
-                    const cleanedValues = this.state.value.filter(v =>
-                      typeof v.text === 'string' ? v.text.trim() !== '' : true,
-                    );
-                    this.props.onChange(
-                      cleanedValues.length > 0 ? cleanedValues : [{ text: '' }],
-                    );
-                  };
+                    const cb = () => {
+                      const cleanedValues = this.state.value.filter(v =>
+                        typeof v.text === 'string'
+                          ? v.text.trim() !== ''
+                          : true,
+                      );
+                      this.props.onChange(
+                        cleanedValues.length > 0
+                          ? cleanedValues
+                          : [{ text: '' }],
+                      );
+                    };
 
-                  if (text.includes('\n')) {
-                    this.setMultipleValues(text.split('\n'), i, cb);
-                  } else {
-                    this.setOneValue(text, i, cb);
-                  }
-                }}
-                onKeyDown={e => this.onKeyDown(e, i + 1)}
-              ></textarea>
-            </div>
-          );
-        })}
-      </div>
+                    if (text.includes('\n')) {
+                      this.setMultipleValues(text.split('\n'), i, cb);
+                    } else {
+                      this.setOneValue(text, i, cb);
+                    }
+                  }}
+                  onKeyDown={e => this.onKeyDown(e, i + 1)}
+                ></textarea>
+              </div>
+            );
+          })}
+        </div>
+      </>
     );
   }
 }

@@ -22,24 +22,16 @@ class EditorUiComponent extends React.Component {
       this.stageRef.current,
       this.props.graph,
       {
-        openNodeEditor: (bbox, value) => {
+        openNodeEditor: (bbox, node) => {
           this.setState({
             nodeEdit: {
               bbox,
-              value,
+              value: node.value,
             },
             graphBlur: true,
-            nodeEditValue: value,
+            nodeEditValue: node.value,
+            nodeEditId: node.id,
           });
-        },
-        closeNodeEditor: () => {
-          this.setState({
-            nodeEdit: false,
-            graphBlur: false,
-          });
-        },
-        getNodeEditorValue: () => {
-          return this.state.nodeEditValue;
         },
       },
       {
@@ -115,6 +107,15 @@ class EditorUiComponent extends React.Component {
     this.editorUi.toggleEdgeSpace(this.state.contextMenuSubject.edge.id);
   }
 
+  setNodeValue() {
+    this.editorUi.setNodeValue(this.state.nodeEditId, this.state.nodeEditValue);
+    // close editor
+    this.setState({
+      nodeEdit: false,
+      graphBlur: false,
+    });
+  }
+
   undo() {
     this.editorUi.undo();
   }
@@ -138,6 +139,7 @@ class EditorUiComponent extends React.Component {
             bbox={nodeEdit.bbox}
             value={nodeEdit.value}
             onChange={value => this.setState({ nodeEditValue: value })}
+            onClose={this.setNodeValue.bind(this)}
           />
         )}
         <ContextMenu

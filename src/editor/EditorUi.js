@@ -24,8 +24,6 @@ class EditorUi extends EventEmitter {
 
     this.selection = [];
 
-    this.activeNodeEditId = null;
-
     this.commandInvoker.on('command', () => {
       this.emit('graph:change');
     });
@@ -56,23 +54,6 @@ class EditorUi extends EventEmitter {
     });
 
     this.graphUi.stage.on('click', () => {
-      if (this.activeNodeEditId) {
-        const uiNode = this.graphUi.getNode(this.activeNodeEditId);
-        if (!uiNode) return;
-        const newValue = this.actions.getNodeEditorValue();
-
-        if (JSON.stringify(uiNode.node.value) !== JSON.stringify(newValue)) {
-          this.commandInvoker.execute('setNodeValue', {
-            nodeId: this.activeNodeEditId,
-            value: newValue,
-          });
-        }
-
-        this.actions.closeNodeEditor();
-        this.activeNodeEditId = null;
-        return;
-      }
-
       if (this.generatorEdgeToMouse) {
         this.abortEdgeToGenerator();
         return;
@@ -144,6 +125,18 @@ class EditorUi extends EventEmitter {
         y: this.mouseNode.inletY() - 20,
       },
     });
+  }
+
+  setNodeValue(nodeId, newValue) {
+    const uiNode = this.graphUi.getNode(nodeId);
+    if (!uiNode) return;
+
+    if (JSON.stringify(uiNode.node.value) !== JSON.stringify(newValue)) {
+      this.commandInvoker.execute('setNodeValue', {
+        nodeId,
+        value: newValue,
+      });
+    }
   }
 
   initiateEdgeToGenerator(nodeId) {
@@ -339,10 +332,9 @@ class EditorUi extends EventEmitter {
       if (uiNode.node.type === 'graph') {
         return;
       }
-      this.activeNodeEditId = uiNode.node.id;
       this.actions.openNodeEditor(
         this.graphUi.getNodeBoundingBox(uiNode),
-        uiNode.node.value,
+        uiNode.node,
       );
     });
 
