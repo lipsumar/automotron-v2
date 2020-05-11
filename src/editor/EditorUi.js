@@ -58,6 +58,7 @@ class EditorUi extends EventEmitter {
     this.graphUi.stage.on('click', () => {
       if (this.activeNodeEditId) {
         const uiNode = this.graphUi.getNode(this.activeNodeEditId);
+        if (!uiNode) return;
         const newValue = this.actions.getNodeEditorValue();
 
         if (JSON.stringify(uiNode.node.value) !== JSON.stringify(newValue)) {
