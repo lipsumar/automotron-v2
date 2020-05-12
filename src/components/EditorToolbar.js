@@ -1,32 +1,61 @@
 import React from 'react';
+import UndoIcon from './icons/UndoIcon';
+import SaveIcon from './icons/SaveIcon';
 import LoggedInStatus from './LoggedInStatus';
+import Logo from './icons/Logo';
+import EditorMenu from './EditorMenu';
 
 class EditorToolbar extends React.Component {
   promptGeneratorTitle() {
     const title = window.prompt('Generator title');
     if (title) {
-    this.props.setGeneratorTitle(title);
-  }
+      this.props.setGeneratorTitle(title);
+    }
   }
 
   render() {
     if (!this.props.generator) return null;
     return (
       <div className="editor-toolbar">
-        <div
-          className="editor-toolbar__title"
-          onClick={this.promptGeneratorTitle.bind(this)}
-        >
-          {this.props.generator.title}
+        <div className="editor-toolbar__logo">
+          <Logo />
         </div>
-        <div className="editor-toolbar__tools">
-          <button onClick={this.props.onRun}>Run</button>
-          <button onClick={this.props.onSave}>Save</button>
-          <div className="editor-toolbar__separator"></div>
-          <button onClick={this.props.onUndo}>Undo</button>
-          <button onClick={this.props.onRedo}>Redo</button>
+        <div className="editor-toolbar__left">
+          <div
+            className="editor-toolbar__title"
+            onClick={this.promptGeneratorTitle.bind(this)}
+          >
+            {this.props.generator.title}
+          </div>
+          <div className="editor-toolbar__menu">
+            <EditorMenu
+              onSave={this.props.onSave}
+              onUndo={this.props.onUndo}
+              onRedo={this.props.onRedo}
+              onInsertText={this.props.onInsertText}
+            />
+          </div>
         </div>
-        <div className="editor-toolbar__user">
+
+        <div className="editor-toolbar__right">
+          <button
+            className="btn btn--icon btn--toolbar"
+            onClick={this.props.onUndo}
+          >
+            <UndoIcon />
+          </button>
+          <button
+            className="btn btn--icon btn--toolbar"
+            onClick={this.props.onSave}
+          >
+            <SaveIcon />
+          </button>
+          <button
+            className="btn btn--primary btn--toolbar"
+            onClick={this.props.onRun}
+          >
+            Run
+          </button>
           {this.props.user && (
             <LoggedInStatus
               user={this.props.user}

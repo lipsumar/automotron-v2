@@ -8,11 +8,9 @@ export default function LoggedInStatus({ user, onLogout }) {
       className="logged-in-status"
       onClick={() => setDropdownOpen(!dropdownOpen)}
     >
-      <div className="logged-in-status__username">{user.username}</div>
+      {/* <div className="logged-in-status__username">{user.username}</div> */}
       <div className="logged-in-status__icon">
-        <div className="icon--circled">
-          <FiUser />
-        </div>
+        <FiUser />
       </div>
 
       {dropdownOpen && (

@@ -51,7 +51,28 @@
   text-decoration: underline;
   padding:0;
 }
+.btn--icon{
+  font-size:24px !important;
+  padding:0 0.3em;
+  display: flex;
+  text-align: center;
+  align-items: center;
+}
 
 .btn+.btn{
   margin-left:10px
+}
+
+.btn--toolbar{
+  height:43px;
+  font-size:14px;
+  text-transform: uppercase;
+  border-color:#dedac7;
+  color:#333;
+}
+.btn--toolbar.btn--icon{
+  width:44px;
+  display: flex;
+  justify-content: center;
+  padding:0;
 }

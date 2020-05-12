@@ -9,6 +9,17 @@
   padding-right:0.5em;
 }
 
+.logged-in-status__icon{
+  width:40px;
+  height:40px;
+  border:1px solid currentColor;
+  border-radius: 100px;
+  font-size:24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .logged-in-status__dropdown{
   position: absolute;
   top:35px;

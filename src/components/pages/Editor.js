@@ -140,6 +140,10 @@ class Editor extends React.Component {
     }
   }
 
+  insertTextNode() {
+    this.editorUiRef.current.createNode();
+  }
+
   undo() {
     this.editorUiRef.current.undo();
   }
@@ -162,6 +166,7 @@ class Editor extends React.Component {
             onRedo={() => this.redo()}
             onLogout={this.props.onLogout}
             setGeneratorTitle={this.setGeneratorTitle.bind(this)}
+            onInsertText={() => this.insertTextNode()}
           />
         </div>
         <div className="editor__body">
