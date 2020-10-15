@@ -140,6 +140,9 @@ export default {
   getUserGenerators(userId) {
     return ax.get(`/api/generators?userId=${userId}`).then(resp => resp.data);
   },
+  getUser(userId) {
+    return ax.get(`/api/users/${userId}`).then(resp => resp.data);
+  },
   getGenerators(generatorIds) {
     return ax
       .get(`/api/generators/${generatorIds.join(',')}`)
@@ -161,9 +164,9 @@ export default {
   deleteGenerator(generatorId) {
     return ax.delete(`/api/generators/${generatorId}`).then(resp => resp.data);
   },
-  // getUsers() {
-  //   return ax.get('/admin/users').then(resp => resp.data);
-  // },
+  getUsers() {
+    return ax.get('/api/users').then(resp => resp.data);
+  },
   // getUserAndGraphs(userId) {
   //   return ax.get(`/admin/users/${userId}`).then(resp => resp.data);
   // },
