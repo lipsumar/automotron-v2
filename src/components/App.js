@@ -7,6 +7,8 @@ import Help from './pages/Help';
 import Editor from './pages/Editor';
 import Examples from './pages/Examples';
 import View from './pages/View';
+import Admin from './pages/Admin';
+import User from './pages/User';
 import client from '../client';
 
 Modal.setAppElement('#root');
@@ -51,6 +53,13 @@ class App extends React.Component {
           <Route path="/view">
             <View />
           </Route>
+          <Route path="/admin">
+            <Admin user={user} />
+          </Route>
+          <Route
+            path="/user/:userId"
+            render={props => <User {...props} user={user} />}
+          ></Route>
           <Route path="/">
             <Home user={user} />
           </Route>

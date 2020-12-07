@@ -27,11 +27,23 @@ class Home extends React.Component {
         </div>
 
         {this.props.user && (
-          <>
+          <div style={{ marginBottom: 40 }}>
             <h2 className="section-heading">Your generators</h2>
             <UserGeneratorList user={this.props.user} />
-          </>
+          </div>
         )}
+
+        <div style={{ maxWidth: 600, margin: '0 auto' }}>
+          <div className="responsive-video">
+            <iframe
+              src="https://www.youtube.com/embed/vr03bWKJKBA"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              title="Tuto Automotron"
+            ></iframe>
+          </div>
+        </div>
       </PageLayout>
     );
   }
