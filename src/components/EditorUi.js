@@ -163,4 +163,4 @@ class EditorUiComponent extends React.Component {
   }
 }
 
-export default withTranslation()(EditorUiComponent);
+export default withTranslation(undefined, { withRef: true })(EditorUiComponent);
