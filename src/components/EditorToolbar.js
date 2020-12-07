@@ -13,8 +13,19 @@ class EditorToolbar extends React.Component {
     }
   }
 
+  canSave() {
+    if (!this.props.user) {
+      return !this.props.generator._id;
+    }
+    return (
+      this.props.user._id === this.props.generator.userId ||
+      !this.props.generator._id
+    );
+  }
+
   render() {
     if (!this.props.generator) return null;
+    const canSave = this.canSave();
     return (
       <div className="editor-toolbar">
         <div className="editor-toolbar__logo">
@@ -33,6 +44,7 @@ class EditorToolbar extends React.Component {
               onUndo={this.props.onUndo}
               onRedo={this.props.onRedo}
               onInsertText={this.props.onInsertText}
+              canSave={canSave}
             />
           </div>
         </div>

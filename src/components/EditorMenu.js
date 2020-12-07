@@ -11,9 +11,11 @@ export default function EditorMenu(props) {
       <div className="editor-menu__item">
         File
         <div className="editor-menu__menu">
-          <div className="editor-menu__menu-item" onClick={props.onSave}>
-            Save
-          </div>
+          {props.canSave && (
+            <div className="editor-menu__menu-item" onClick={props.onSave}>
+              Save
+            </div>
+          )}
           <div className="editor-menu__menu-item">Create a copy</div>
           <div className="editor-menu__menu-item">Share</div>
         </div>
@@ -27,9 +29,9 @@ export default function EditorMenu(props) {
           <div className="editor-menu__menu-item" onClick={props.onRedo}>
             Redo
           </div>
-          <div className="editor-menu__menu-separator"></div>
+          {/* <div className="editor-menu__menu-separator"></div>
           <div className="editor-menu__menu-item">Copy</div>
-          <div className="editor-menu__menu-item">Paste</div>
+          <div className="editor-menu__menu-item">Paste</div> */}
         </div>
       </div>
       <div className="editor-menu__item">

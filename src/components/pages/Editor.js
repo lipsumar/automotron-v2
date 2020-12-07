@@ -20,7 +20,6 @@ class Editor extends React.Component {
       result: null,
       error: null,
       showLoginModal: false,
-      user: null,
       ready: false,
       possibilityCount: null,
     };
@@ -88,6 +87,7 @@ class Editor extends React.Component {
             generator: {
               ...this.state.generator,
               _id: result._id,
+              userId: this.props.user._id,
             },
           });
           this.props.history.replace(`/editor/${result._id}`);
