@@ -1,6 +1,8 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 function ResultPanel(props) {
+  const { t } = useTranslation();
   return (
     <div className="result-panel">
       {props.error ? (
@@ -14,7 +16,7 @@ function ResultPanel(props) {
 
       {props.count ? (
         <div className="result-panel__possibility-count">
-          {props.count.toLocaleString()} possibilities
+          {props.count.toLocaleString()} {t('editor.sidebar.possibilities')}
         </div>
       ) : (
         ''

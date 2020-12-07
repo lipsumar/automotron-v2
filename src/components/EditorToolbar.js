@@ -1,4 +1,5 @@
 import React from 'react';
+import { Trans } from 'react-i18next';
 import UndoIcon from './icons/UndoIcon';
 import SaveIcon from './icons/SaveIcon';
 import LoggedInStatus from './LoggedInStatus';
@@ -66,7 +67,7 @@ class EditorToolbar extends React.Component {
             className="btn btn--primary btn--toolbar"
             onClick={this.props.onRun}
           >
-            Run
+            <Trans>editor.action.run</Trans>
           </button>
           {this.props.user && (
             <LoggedInStatus

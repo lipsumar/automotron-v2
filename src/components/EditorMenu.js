@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export default function EditorMenu(props) {
   const [active, setActive] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <div
@@ -9,25 +11,27 @@ export default function EditorMenu(props) {
       onClick={() => setActive(!active)}
     >
       <div className="editor-menu__item">
-        File
+        {t('editor.menu.file.title')}
         <div className="editor-menu__menu">
           {props.canSave && (
             <div className="editor-menu__menu-item" onClick={props.onSave}>
-              Save
+              {t('editor.menu.file.items.save')}
             </div>
           )}
-          <div className="editor-menu__menu-item">Create a copy</div>
-          <div className="editor-menu__menu-item">Share</div>
+          <div className="editor-menu__menu-item">
+            {t('editor.menu.file.items.createCopy')}
+          </div>
+          {/* <div className="editor-menu__menu-item">Share</div> */}
         </div>
       </div>
       <div className="editor-menu__item">
-        Edit
+        {t('editor.menu.edit.title')}
         <div className="editor-menu__menu">
           <div className="editor-menu__menu-item" onClick={props.onUndo}>
-            Undo
+            {t('editor.menu.edit.items.undo')}
           </div>
           <div className="editor-menu__menu-item" onClick={props.onRedo}>
-            Redo
+            {t('editor.menu.edit.items.redo')}
           </div>
           {/* <div className="editor-menu__menu-separator"></div>
           <div className="editor-menu__menu-item">Copy</div>
@@ -35,31 +39,31 @@ export default function EditorMenu(props) {
         </div>
       </div>
       <div className="editor-menu__item">
-        Insert
+        {t('editor.menu.insert.title')}
         <div className="editor-menu__menu">
           <div className="editor-menu__menu-item" onClick={props.onInsertText}>
-            Text
+            {t('editor.menu.insert.items.text')}
           </div>
         </div>
       </div>
       <div className="editor-menu__item">
-        Export
+        {t('editor.menu.export.title')}
         <div className="editor-menu__menu">
           <div
             className="editor-menu__menu-item"
             onClick={() => props.onExport('text')}
           >
-            As text
+            {t('editor.menu.export.items.text')}
           </div>
           <div
             className="editor-menu__menu-item"
             onClick={() => props.onExport('html')}
           >
-            As HTML
+            {t('editor.menu.export.items.html')}
           </div>
         </div>
       </div>
-      <div className="editor-menu__item">Help</div>
+      <div className="editor-menu__item">{t('editor.menu.help.title')}</div>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './styles/index.css';
 import * as Sentry from '@sentry/browser';
+import './i18n';
 import App from './components/App';
 
 Sentry.init({
