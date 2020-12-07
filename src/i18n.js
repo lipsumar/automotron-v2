@@ -52,6 +52,18 @@ const resources = {
         sidebar: {
           possibilities: 'possibilités',
         },
+        contextMenu: {
+          insertNode: 'Insérer un bloc',
+          addSpace: 'Ajouter un espace',
+          deleteEdge: 'Supprimer le câble',
+          setTitle: 'Ajouter un titre',
+          linkToGenerator: 'Connecter au générateur',
+          agreementLink: 'Connection d’accord',
+          freeze: 'Geler',
+          deleteNode: 'Supprimer',
+          createNode: 'Ajouter un bloc',
+          centerGraph: 'Ajuster à l’écran',
+        },
       },
     },
   },
