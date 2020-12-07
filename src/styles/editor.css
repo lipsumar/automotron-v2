@@ -40,6 +40,8 @@
   padding:10px 30px;
   font-size: 18px;
   line-height: 1.4;
+  overflow-y: overlay;
+  white-space: pre-wrap;
 }
 .sidebar__footer{
   padding:5px;
