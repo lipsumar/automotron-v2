@@ -1,3 +1,4 @@
+import { colors } from './constants';
 import EdgeUi from './EdgeUi';
 
 class GeneratorEdgeUi extends EdgeUi {
@@ -6,7 +7,7 @@ class GeneratorEdgeUi extends EdgeUi {
     this.line.bezier(false);
     this.line.dash([15, 7]);
     this.line.strokeWidth(4);
-    this.line.stroke('#b35fff');
+    this.line.stroke(colors.generatorEdge);
   }
 
   getPoints() {

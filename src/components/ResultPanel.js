@@ -11,14 +11,6 @@ function ResultPanel(props) {
       ) : (
         <div className="result-panel__output">{props.output}</div>
       )}
-
-      {props.count ? (
-        <div className="result-panel__possibility-count">
-          {props.count.toLocaleString()} possibilities
-        </div>
-      ) : (
-        ''
-      )}
     </div>
   );
 }

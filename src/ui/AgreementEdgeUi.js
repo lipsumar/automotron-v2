@@ -1,10 +1,11 @@
+import { colors } from './constants';
 import EdgeUi from './EdgeUi';
 
 class AgreementEdgeUi extends EdgeUi {
   constructor(from, to, edge, opts) {
     super(from, to, edge, opts);
     this.line.strokeWidth(4);
-    this.line.stroke('#3ee164');
+    this.line.stroke(colors.agreementEdge);
   }
 
   getPoints() {

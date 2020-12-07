@@ -1,4 +1,5 @@
 import { Path, Text, Rect, Group, Line } from 'konva';
+import { colors } from './constants';
 import NodeUi from './NodeUi';
 import { measureTextHeight, measureTextWidth } from './utils';
 
@@ -19,7 +20,7 @@ class TextListNodeUi extends NodeUi {
     });
     this.group.add(this.titleGroup);
     this.titleRect = new Rect({
-      fill: '#F3D31C',
+      fill: colors.nodeTitle,
       cornerRadius: 3,
       height: 17,
       // width: 25,
@@ -38,7 +39,7 @@ class TextListNodeUi extends NodeUi {
       data: this.getPath(),
       x: 0,
       y: 0,
-      fill: '#fff',
+      fill: colors.node,
       shadowColor: 'black',
       shadowBlur: 5,
       shadowOffset: { x: 0, y: 0 },
@@ -68,7 +69,7 @@ class TextListNodeUi extends NodeUi {
   }
 
   backgroundColor() {
-    return this.isGenerated() ? '#e5d4f5' : '#fff';
+    return this.isGenerated() ? colors.nodeGenerated : colors.node;
   }
 
   refresh() {
@@ -203,7 +204,7 @@ class TextListNodeUi extends NodeUi {
       if (i > 0) {
         const line = new Line({
           points: [arrowWidth + 4, height, largest + 2, height],
-          stroke: '#d7e2ee',
+          stroke: colors.nodeMultiValueSeparator,
         });
         this.valuesLines.push(line);
         this.listGroup.add(line);
