@@ -1,6 +1,6 @@
 import { Group, Circle } from 'konva';
 import { EventEmitter } from 'events';
-import { GRID_SIZE } from './constants';
+import { colors, GRID_SIZE } from './constants';
 import { clampValue } from './utils';
 
 class NodeUi extends EventEmitter {
@@ -78,7 +78,8 @@ class NodeUi extends EventEmitter {
   createOutlet(opts) {
     const circle = new Circle({
       radius: 7,
-      fill: '#7791F9',
+      fill: colors.nodeOutlet,
+      stroke: colors.nodeOutletOutline,
       ...opts,
       opacity: 0,
       draggable: true,
@@ -110,7 +111,7 @@ class NodeUi extends EventEmitter {
   setSelected(selected) {
     this.selected = selected;
     if (selected) {
-      this.rect.stroke('#65a8f0');
+      this.rect.stroke(colors.userSelection);
     } else {
       this.rect.stroke('transparent');
     }

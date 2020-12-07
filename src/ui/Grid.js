@@ -1,5 +1,5 @@
 import { Line } from 'konva';
-import { GRID_SIZE } from './constants';
+import { colors, GRID_SIZE } from './constants';
 import { clampValue } from './utils';
 
 class Grid {
@@ -154,7 +154,7 @@ class Grid {
     const points = [x, y, x, height];
     const line = new Line({
       points,
-      stroke: '#DCDCCB',
+      stroke: colors.gridLine,
       strokeWidth: 1, // x % (this.space * 4) === 0 ? 2 : 1,
     });
     this.verticalGridLines[method]({ x, line });
@@ -166,7 +166,7 @@ class Grid {
     const points = [x, y, width, y];
     const line = new Line({
       points,
-      stroke: '#DCDCCB',
+      stroke: colors.gridLine,
       strokeWidth: 1, // y % (this.space * 4) === 0 ? 2 : 1,
     });
     this.horizontalGridLines[method]({ y, line });

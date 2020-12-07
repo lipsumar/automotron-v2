@@ -1,5 +1,6 @@
 import { Line } from 'konva';
 import { EventEmitter } from 'events';
+import { colors } from './constants';
 
 function distance(x1, y1, x2, y2) {
   return Math.hypot(x2 - x1, y2 - y1);
@@ -48,10 +49,10 @@ class EdgeUi extends EventEmitter {
 
   refresh() {
     if (!this.edge) {
-      this.line.stroke('#7791F9');
+      this.line.stroke(colors.edge);
       return;
     }
-    this.line.stroke(this.edge.space ? '#7791F9' : '#b2bff6');
+    this.line.stroke(this.edge.space ? colors.edge : colors.edgeNoSpace);
   }
 
   getPoints() {

@@ -196,7 +196,7 @@ class GraphUi extends EventEmitter {
     );
     const width = mostRight - mostLeft;
     const height = mostBottom - mostTop;
-    const maxWidth = this.stage.width() - this.opts.panelWidth;
+    const maxWidth = this.stage.width(); // - this.opts.panelWidth;
     const maxHeight = this.stage.height();
     let scale = maxWidth / width;
     if (height * scale > maxHeight) {

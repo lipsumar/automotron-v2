@@ -1,4 +1,5 @@
 import { Path } from 'konva';
+import { colors } from './constants';
 import NodeUi from './NodeUi';
 
 class StartNodeUi extends NodeUi {
@@ -29,7 +30,7 @@ class StartNodeUi extends NodeUi {
   }
 
   backgroundColor() {
-    return '#91fbcf';
+    return colors.startNode;
   }
 
   outletX() {
