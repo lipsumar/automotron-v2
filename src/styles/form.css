@@ -34,12 +34,13 @@
   color:#7791F9;
   text-decoration: none;
   cursor: pointer;
+  background-color: transparent;
 }
 .btn:active, .btn:focus{
   outline:none;
 }
 .btn.btn--primary{
-  background-color: #7791F9;
+  background-color: #5069cd;
   color:#FFF;  
 }
 .btn--large{

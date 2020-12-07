@@ -11,7 +11,7 @@
 .editor__head{
   border-bottom: 1px solid #dbdce0;
   padding: 0 5px;
-  min-height: 80px;
+  min-height: 68px;
 }
 .editor__body{
   flex:1;
@@ -30,7 +30,7 @@
 }
 
 .sidebar__head{
-  height:80px;
+  height:68px;
   display: flex;
   align-items: center;
   padding-left:24px;
@@ -63,7 +63,8 @@
   align-items: center;
 }
 .editor-toolbar__logo{
-  margin-right:12px
+  margin-right:12px;
+  color:#5069cd;
 }
 .editor-toolbar__left{
   flex-direction: column;
@@ -80,10 +81,12 @@
 .editor-toolbar__title{
   padding-left:6px; /* visually align with menu */
   padding-right:2em;
+  padding-top:6px;
   display: flex;
   align-items: center;
   font-size: 24px;
   font-weight: 500;
+  color:#5069cd;
 }
 .editor-toolbar__menu{
   

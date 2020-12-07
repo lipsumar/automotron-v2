@@ -12,7 +12,7 @@
 .logged-in-status__icon{
   width:40px;
   height:40px;
-  border:1px solid currentColor;
+  border:1px solid #dedac7;
   border-radius: 100px;
   font-size:24px;
   display: flex;
