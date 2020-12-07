@@ -1,6 +1,6 @@
 import React, { createRef } from 'react';
 import * as Sentry from '@sentry/browser';
-import { Trans } from 'react-i18next';
+import { Trans, withTranslation } from 'react-i18next';
 import EditorUiComponent from '../EditorUi';
 import Graph from '../../core/Graph';
 import client from '../../client';
@@ -104,6 +104,16 @@ class Editor extends React.Component {
       });
   }
 
+  export(format) {
+    if (!this.state.generator._id) {
+      alert(this.props.t('editor.message.saveNeeded'));
+      return;
+    }
+    window.open(
+      `${process.env.REACT_APP_API_BASE_URL}/api/generators/${this.state.generator._id}/run?format=${format}`,
+    );
+  }
+
   setGeneratorTitle(title) {
     this.setState(
       {
@@ -169,6 +179,7 @@ class Editor extends React.Component {
               onLogout={this.props.onLogout}
               setGeneratorTitle={this.setGeneratorTitle.bind(this)}
               onInsertText={() => this.insertTextNode()}
+              onExport={format => this.export(format)}
             />
           </div>
           <div className="editor__body">
@@ -218,4 +229,4 @@ class Editor extends React.Component {
   }
 }
 
-export default Editor;
+export default withTranslation()(Editor);

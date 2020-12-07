@@ -45,10 +45,30 @@ router.get('/:generatorIds', async (req, res) => {
 router.get('/:generatorId/run', async (req, res) => {
   const generatorModel = await generatorService.get(req.params.generatorId);
   const result = await generatorService.run(generatorModel);
-  res.send({
-    text: stringifyGraphResult(result),
-    result,
-  });
+  const format = req.query.format;
+  if (format === 'text') {
+    res.set('content-type', 'text/plain').send(stringifyGraphResult(result));
+  } else if (format === 'html') {
+    res.set('content-type', 'text/html').send(`<!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>${generatorModel.title}</title>
+      </head>
+      <body>
+        <div>
+        ${stringifyGraphResult(result)}
+        </div>
+      </body>
+      </html>`);
+  } else {
+    // json (default)
+    res.send({
+      text: stringifyGraphResult(result),
+      result,
+    });
+  }
 });
 
 router.post('/', ensureLoggedIn, async (req, res) => {

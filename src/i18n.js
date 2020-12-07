@@ -10,6 +10,9 @@ const resources = {
   fr: {
     translation: {
       editor: {
+        message: {
+          saveNeeded: 'Veuillez sauvegarder le generateur.',
+        },
         action: {
           run: 'Générer',
         },
@@ -37,8 +40,9 @@ const resources = {
           export: {
             title: 'Exporter',
             items: {
-              text: 'Texte',
-              html: 'HTML',
+              text: 'Format texte',
+              html: 'Format HTML',
+              json: 'Format JSON',
             },
           },
           help: {

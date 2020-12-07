@@ -61,6 +61,12 @@ export default function EditorMenu(props) {
           >
             {t('editor.menu.export.items.html')}
           </div>
+          <div
+            className="editor-menu__menu-item"
+            onClick={() => props.onExport('json')}
+          >
+            {t('editor.menu.export.items.json')}
+          </div>
         </div>
       </div>
       <div className="editor-menu__item">{t('editor.menu.help.title')}</div>
