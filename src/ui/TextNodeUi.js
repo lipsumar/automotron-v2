@@ -14,27 +14,6 @@ class TextListNodeUi extends NodeUi {
     this.valuesTexts = [];
     this.valuesLines = [];
 
-    this.titleGroup = new Group({
-      y: -14,
-      x: 1,
-    });
-    this.group.add(this.titleGroup);
-    this.titleRect = new Rect({
-      fill: colors.nodeTitle,
-      cornerRadius: 3,
-      height: 17,
-      // width: 25,
-    });
-    this.titleGroup.add(this.titleRect);
-    this.titleText = new Text({
-      // text: 'label',
-      fontSize: 12,
-      y: 2,
-      x: 3,
-      opacity: 0.6,
-    });
-    this.titleGroup.add(this.titleText);
-
     this.rect = new Path({
       data: this.getPath(),
       x: 0,
@@ -50,12 +29,39 @@ class TextListNodeUi extends NodeUi {
 
     this.listGroup = new Group({});
     this.group.add(this.listGroup);
-    this.listRect = new Rect({
+
+    this.titleGroup = new Group({
+      y: -30,
       x: 1,
-      y: 0,
-      width: this.width,
     });
-    this.listGroup.add(this.listRect);
+    this.group.add(this.titleGroup);
+    this.titleRect = new Rect({
+      fill: colors.nodeTitle,
+      cornerRadius: 3,
+      height: 30,
+      width: this.width,
+      shadowColor: 'black',
+      shadowBlur: 5,
+      shadowOffset: { x: 0, y: 0 },
+      shadowOpacity: 0.2,
+    });
+    this.titleGroup.add(this.titleRect);
+    this.titleRectBottom = new Rect({
+      x: 0,
+      y: 25,
+      height: 8,
+      width: this.width,
+      fill: colors.nodeTitle,
+    });
+    this.titleGroup.add(this.titleRectBottom);
+    this.titleText = new Text({
+      fontSize: 18,
+      y: 7,
+      x: padding,
+      width: this.width,
+      fill: colors.nodeTitleText,
+    });
+    this.titleGroup.add(this.titleText);
 
     if (opts.editable) {
       this.registerOutlet('right');
@@ -80,7 +86,6 @@ class TextListNodeUi extends NodeUi {
     this.titleGroup.visible(!!this.node.title);
     if (this.node.title) {
       this.titleText.text(this.node.title);
-      this.titleRect.width(measureTextWidth(this.node.title, 12) + 4);
     }
 
     // temporary, does not look great
@@ -137,13 +142,15 @@ class TextListNodeUi extends NodeUi {
   resize() {
     const valuesSize = this.resizeValues(50 - arrowWidth);
 
-    this.width = valuesSize.width + arrowWidth + 2;
-    this.height = Math.max(52, valuesSize.height);
+    this.width = valuesSize.width + arrowWidth;
+    this.height = Math.max(52, valuesSize.height - 5);
 
-    this.listRect.width(this.width - 2);
     this.listGroup.y(this.isMulti() ? 0 : 2);
 
-    this.rect.data(this.getPath(this.width - 2, this.height - 2));
+    this.rect.data(this.getPath(this.width, this.height));
+
+    this.titleRect.width(this.width);
+    this.titleRectBottom.width(this.width);
 
     this.emit('resized');
     this.emit('moved');
@@ -171,11 +178,11 @@ class TextListNodeUi extends NodeUi {
     this.getValueToShow().forEach(value => {
       const text = new Text({
         text: value.text,
-        x: arrowWidth,
+        x: arrowWidth + padding,
         y,
         width: 500,
         height: 25,
-        align: 'center',
+        align: 'left',
         verticalAlign: 'middle',
         fontSize: 20,
         fontFamily: 'Open Sans',
@@ -197,13 +204,18 @@ class TextListNodeUi extends NodeUi {
     });
 
     const largest = Math.max(minWidth, ...sizes.map(size => size.width));
-    let height = padding / 2 - 2;
+    let height = padding / 2;
     sizes.forEach((size, i) => {
       this.valuesTexts[i].width(largest);
 
       if (i > 0) {
         const line = new Line({
-          points: [arrowWidth + 4, height, largest + 2, height],
+          points: [
+            arrowWidth + padding - 2,
+            height,
+            largest - padding / 2,
+            height,
+          ],
           stroke: colors.nodeMultiValueSeparator,
         });
         this.valuesLines.push(line);
@@ -212,7 +224,6 @@ class TextListNodeUi extends NodeUi {
       height += size.height;
     });
     height += padding / 2;
-    this.listRect.height(height);
     return { width: largest, height };
   }
 

@@ -4,6 +4,7 @@ const colorsDefinitions = {
   primary: '#7791F9',
   primaryDark: '#5069cd',
   primaryLight: '#b2bff6',
+  white: '#fff',
 };
 
 export const colors = {
@@ -16,7 +17,8 @@ export const colors = {
   nodeOutlet: colorsDefinitions.primary,
   nodeOutletOutline: '#fff',
   userSelection: '#65a8f0',
-  nodeTitle: '#F3D31C',
+  nodeTitle: colorsDefinitions.primaryDark,
+  nodeTitleText: colorsDefinitions.white,
   node: '#fff',
   nodeGenerated: '#e5d4f5',
   nodeMultiValueSeparator: '#d7e2ee',
