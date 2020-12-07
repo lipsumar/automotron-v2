@@ -1,5 +1,6 @@
 import React, { createRef } from 'react';
 import * as Sentry from '@sentry/browser';
+import { Trans } from 'react-i18next';
 import EditorUiComponent from '../EditorUi';
 import Graph from '../../core/Graph';
 import client from '../../client';
@@ -155,39 +156,62 @@ class Editor extends React.Component {
   render() {
     const { generator, result, showLoginModal, ready } = this.state;
     return (
-      <div className="editor">
-        <div className="editor__head">
-          <EditorToolbar
-            generator={generator}
-            user={this.props.user}
-            onRun={() => this.runGenerator()}
-            onSave={() => this.saveGenerator()}
-            onUndo={() => this.undo()}
-            onRedo={() => this.redo()}
-            onLogout={this.props.onLogout}
-            setGeneratorTitle={this.setGeneratorTitle.bind(this)}
-            onInsertText={() => this.insertTextNode()}
-          />
-        </div>
-        <div className="editor__body">
-          {generator && ready && (
-            <EditorUiComponent
-              ref={this.editorUiRef}
-              graph={generator.graph}
-              onGraphChange={this.onGraphChange.bind(this)}
-              panelWidth={this.state.panelWidth}
+      <div className="editor-wrapper">
+        <div className="editor">
+          <div className="editor__head">
+            <EditorToolbar
+              generator={generator}
+              user={this.props.user}
+              onRun={() => this.runGenerator()}
+              onSave={() => this.saveGenerator()}
+              onUndo={() => this.undo()}
+              onRedo={() => this.redo()}
+              onLogout={this.props.onLogout}
+              setGeneratorTitle={this.setGeneratorTitle.bind(this)}
+              onInsertText={() => this.insertTextNode()}
             />
-          )}
-          <ResultPanel
-            output={result}
-            error={this.state.error}
-            count={this.state.possibilityCount}
-          />
-          <LoginModal
-            isOpen={showLoginModal}
-            onCloseRequest={() => this.setState({ showLoginModal: false })}
-            onLoginSuccess={this.onLoginSuccess.bind(this)}
-          />
+          </div>
+          <div className="editor__body">
+            {generator && ready && (
+              <EditorUiComponent
+                ref={this.editorUiRef}
+                graph={generator.graph}
+                onGraphChange={this.onGraphChange.bind(this)}
+                panelWidth={this.state.panelWidth}
+              />
+            )}
+
+            <LoginModal
+              isOpen={showLoginModal}
+              onCloseRequest={() => this.setState({ showLoginModal: false })}
+              onLoginSuccess={this.onLoginSuccess.bind(this)}
+            />
+          </div>
+        </div>
+        <div className="sidebar">
+          <div className="sidebar__head">
+            <button
+              className="btn btn--primary btn--toolbar"
+              onClick={() => this.runGenerator()}
+            >
+              <Trans>editor.action.run</Trans>
+            </button>
+          </div>
+          <div className="sidebar__body">
+            <ResultPanel
+              output={result}
+              error={this.state.error}
+              count={this.state.possibilityCount}
+            />
+          </div>
+          <div className="sidebar__footer">
+            {this.state.possibilityCount && (
+              <>
+                {this.state.possibilityCount.toLocaleString()}{' '}
+                <Trans>editor.sidebar.possibilities</Trans>
+              </>
+            )}
+          </div>
         </div>
       </div>
     );

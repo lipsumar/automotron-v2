@@ -1,7 +1,12 @@
+.editor-wrapper{
+  display: flex;
+}
+
 .editor{
   display: flex;
   flex-direction: column;
   height:100vh;
+  flex:1;
 }
 .editor__head{
   border-bottom: 1px solid #dbdce0;
@@ -17,6 +22,31 @@
   width: 100%;
 }
 
+.sidebar{
+  flex-basis:400px;
+  border-left:1px solid #DCDCCB;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar__head{
+  height:80px;
+  display: flex;
+  align-items: center;
+  padding-left:24px;
+}
+.sidebar__body{
+  flex:1;
+  padding:10px 30px;
+  font-size: 18px;
+  line-height: 1.4;
+}
+.sidebar__footer{
+  padding:5px;
+  font-size: 14px;
+  color:#999;
+  text-align: right;
+}
 
 /* Editor toolbar */
 
@@ -119,39 +149,6 @@
 
 
 
-
-
-
-
-
-
-/* Result panel */
-.result-panel{
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  bottom: 20px;
-  width: 23vw;
-  min-width: 350px;
-  max-width: 500px;
-  background-color: #fff;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-  padding:18px 20px 20px 20px;
-  font-size: 18px;
-  line-height: 1.4;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-.result-panel__output{
-  overflow-y: overlay;
-  white-space: pre-wrap;
-}
-.result-panel__possibility-count{
-  font-size: 14px;
-  color:#999;
-  text-align: right;
-}
 
 
 /* TextNode edit */

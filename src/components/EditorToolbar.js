@@ -63,12 +63,6 @@ class EditorToolbar extends React.Component {
           >
             <SaveIcon />
           </button>
-          <button
-            className="btn btn--primary btn--toolbar"
-            onClick={this.props.onRun}
-          >
-            <Trans>editor.action.run</Trans>
-          </button>
           {this.props.user && (
             <LoggedInStatus
               user={this.props.user}
