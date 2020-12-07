@@ -13,6 +13,10 @@ const resources = {
         message: {
           saveNeeded: 'Veuillez sauvegarder le generateur.',
         },
+        prompt: {
+          generatorTitle: 'Titre du générateur',
+          setNodeTitle: 'Titre',
+        },
         action: {
           run: 'Générer',
         },

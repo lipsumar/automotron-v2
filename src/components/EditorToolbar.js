@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trans } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import UndoIcon from './icons/UndoIcon';
 import SaveIcon from './icons/SaveIcon';
 import LoggedInStatus from './LoggedInStatus';
@@ -8,7 +8,8 @@ import EditorMenu from './EditorMenu';
 
 class EditorToolbar extends React.Component {
   promptGeneratorTitle() {
-    const title = window.prompt('Generator title');
+    // eslint-disable-next-line no-alert
+    const title = window.prompt(this.props.t('editor.prompt.generatorTitle'));
     if (title) {
       this.props.setGeneratorTitle(title);
     }
@@ -76,4 +77,4 @@ class EditorToolbar extends React.Component {
   }
 }
 
-export default EditorToolbar;
+export default withTranslation()(EditorToolbar);

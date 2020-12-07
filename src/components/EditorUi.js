@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { ContextMenuTrigger } from 'react-contextmenu';
+import { withTranslation } from 'react-i18next';
 import ContextMenu from './ContextMenu';
 import TextNodeEdit from './TextNodeEdit';
 import EditorUi from '../editor/EditorUi';
@@ -83,7 +84,8 @@ class EditorUiComponent extends React.Component {
   }
 
   setNodeTitle() {
-    const title = window.prompt('Title');
+    // eslint-disable-next-line no-alert
+    const title = window.prompt(this.props.t('editor.prompt.setNodeTitle'));
     this.editorUi.setNodeTitle(this.state.contextMenuSubject.node.id, title);
   }
 
@@ -161,4 +163,4 @@ class EditorUiComponent extends React.Component {
   }
 }
 
-export default EditorUiComponent;
+export default withTranslation()(EditorUiComponent);
