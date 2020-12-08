@@ -32,6 +32,14 @@ class Editor extends React.Component {
     // dev utility
     window.exportGraph = () =>
       exportService.exportGenerator(this.state.generator);
+
+    window.addEventListener('beforeunload', e => {
+      if (!this.state.changesSaved) {
+        const msg = this.props.t('editor.prompt.unsavedChanges');
+        e.returnValue = msg;
+        return msg;
+      }
+    });
   }
 
   componentDidMount() {
