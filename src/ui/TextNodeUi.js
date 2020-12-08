@@ -1,7 +1,7 @@
 import { Path, Text, Rect, Group, Line, Circle } from 'konva';
 import { colors } from './constants';
 import NodeUi from './NodeUi';
-import { measureTextHeight, measureTextWidth } from './utils';
+import { measureTextHeight } from './utils';
 
 const padding = 10;
 const arrowWidth = 6;
