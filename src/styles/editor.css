@@ -64,7 +64,7 @@
 }
 .editor-toolbar__logo{
   margin-right:12px;
-  color:#5069cd;
+  color:var(--primary-dark);
 }
 .editor-toolbar__left{
   flex-direction: column;
@@ -86,7 +86,7 @@
   align-items: center;
   font-size: 24px;
   font-weight: 500;
-  color:#5069cd;
+  color:var(--primary-dark);
 }
 .editor-toolbar__menu{
   

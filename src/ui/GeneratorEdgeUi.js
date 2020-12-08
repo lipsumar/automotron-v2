@@ -5,8 +5,8 @@ class GeneratorEdgeUi extends EdgeUi {
   constructor(from, to, edge, opts) {
     super(from, to, edge, opts);
     this.line.bezier(false);
-    this.line.dash([15, 7]);
-    this.line.strokeWidth(4);
+    this.line.dash([5, 7]);
+    this.line.strokeWidth(3);
     this.line.stroke(colors.generatorEdge);
   }
 
