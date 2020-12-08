@@ -87,12 +87,16 @@ class NodeUi extends EventEmitter {
       draggable: true,
     });
     circle.on('mouseenter', () => {
+      this.group.clearCache();
       circle.opacity(1);
       this.emit('draw');
+      this.group.cache();
     });
     circle.on('mouseleave', () => {
+      this.group.clearCache();
       circle.opacity(0);
       this.emit('draw');
+      this.group.cache();
     });
     circle.on('dragstart', () => {
       circle.opacity(0);

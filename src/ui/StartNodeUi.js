@@ -23,7 +23,6 @@ class StartNodeUi extends NodeUi {
       strokeWidth: 3,
     });
     this.group.add(this.rect);
-    this.group.cache();
 
     if (opts.editable) {
       this.registerOutlet('right');
