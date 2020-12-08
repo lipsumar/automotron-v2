@@ -65,7 +65,9 @@ class NodeUi extends EventEmitter {
   }
 
   draw() {
+    this.group.clearCache();
     this.emit('draw');
+    this.group.cache();
   }
 
   registerOutlet(side) {
