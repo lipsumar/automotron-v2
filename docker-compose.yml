@@ -4,10 +4,10 @@ services:
   app:
     build: .
     labels:
-      - "traefik.http.routers.automotron-v2.rule=Host(`automotron.io`)"
-      - "traefik.http.routers.automotron-v2.tls.certresolver=le"
-      - "traefik.http.routers.automotron-v2.entrypoints=websecure"
-      - "traefik.docker.network=traefik-external"
+      - 'traefik.http.routers.automotron-v2.rule=Host(`automotron.io`)'
+      - 'traefik.http.routers.automotron-v2.tls.certresolver=le'
+      - 'traefik.http.routers.automotron-v2.entrypoints=websecure'
+      - 'traefik.docker.network=traefik-external'
     volumes:
       - ./previews:/usr/src/app/previews
     environment:
@@ -15,17 +15,17 @@ services:
     networks:
       - traefik-external
       - internal
-    depends_on: 
+    depends_on:
       - mongo
 
   mongo:
     image: mongo
     volumes:
       - ./data:/data/db
-    networks: 
+    networks:
       - internal
     labels:
-      - "traefik.enable=false"
+      - 'traefik.enable=false'
 
 networks:
   traefik-external:
