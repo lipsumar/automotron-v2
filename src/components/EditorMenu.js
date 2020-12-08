@@ -37,9 +37,9 @@ export default function EditorMenu(props) {
               />
             </div>
           )}
-          <div className="editor-menu__menu-item">
+          <div className="editor-menu__menu-item" onClick={props.onFork}>
             <MenuItem
-              label={t('editor.menu.file.items.createCopy')}
+              label={t('editor.menu.file.items.fork')}
               icon={<DuplicateIcon />}
             />
           </div>

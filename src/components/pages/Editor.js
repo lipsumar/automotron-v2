@@ -108,6 +108,21 @@ class Editor extends React.Component {
       });
   }
 
+  forkGenerator() {
+    const original = exportService.exportGenerator(this.state.generator);
+    const forked = {
+      ...original,
+      title: `(${this.props.t('editor.forkTitlePrepend')}) ${original.title}`,
+      userId: undefined,
+      _id: undefined,
+    };
+
+    client.saveGenerator(forked).then(result => {
+      this.setState({ changesSaved: true });
+      window.location.href = `/editor/${result._id}`;
+    });
+  }
+
   export(format) {
     if (!this.state.generator._id) {
       alert(this.props.t('editor.message.saveNeeded'));
@@ -194,6 +209,7 @@ class Editor extends React.Component {
               setGeneratorTitle={this.setGeneratorTitle.bind(this)}
               onInsertText={() => this.insertTextNode()}
               onExport={format => this.export(format)}
+              onFork={() => this.forkGenerator()}
               changesSaved={changesSaved}
             />
           </div>

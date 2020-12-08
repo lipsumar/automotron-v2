@@ -10,6 +10,7 @@ const resources = {
   fr: {
     translation: {
       editor: {
+        forkTitlePrepend: 'copie',
         message: {
           saveNeeded: 'Veuillez sauvegarder le generateur.',
         },
@@ -27,7 +28,7 @@ const resources = {
             title: 'Fichier',
             items: {
               save: 'Sauvegarder',
-              createCopy: 'Créer une copie',
+              fork: 'Créer une copie',
             },
           },
           edit: {
