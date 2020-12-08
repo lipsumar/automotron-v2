@@ -43,16 +43,20 @@ class EdgeUi extends EventEmitter {
   }
 
   position() {
+    this.line.clearCache();
     this.line.points(this.getPoints());
     this.emit('draw');
+    this.line.cache();
   }
 
   refresh() {
+    this.line.clearCache();
     if (!this.edge) {
       this.line.stroke(colors.edge);
       return;
     }
     this.line.stroke(this.edge.space ? colors.edge : colors.edgeNoSpace);
+    this.line.cache();
   }
 
   getPoints() {

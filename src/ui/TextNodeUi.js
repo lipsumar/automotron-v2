@@ -79,6 +79,7 @@ class TextListNodeUi extends NodeUi {
   }
 
   refresh() {
+    this.group.clearCache();
     NodeUi.prototype.refresh.call(this);
 
     this.rect.fill(this.backgroundColor());
@@ -100,6 +101,7 @@ class TextListNodeUi extends NodeUi {
     }
 
     this.resize();
+    this.group.cache();
     this.emit('draw');
   }
 
