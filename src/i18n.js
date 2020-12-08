@@ -16,6 +16,8 @@ const resources = {
         prompt: {
           generatorTitle: 'Titre du générateur',
           setNodeTitle: 'Titre',
+          unsavedChanges:
+            '⚠️ Les dernières modifications ne sont pas sauvées !\nÊtes vous sûr de vouloir continuer ?',
         },
         action: {
           run: 'Générer',

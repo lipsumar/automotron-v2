@@ -65,6 +65,7 @@ class EditorToolbar extends React.Component {
             onClick={this.props.onSave}
           >
             <SaveIcon />
+            {!this.props.changesSaved && <div className="red-dot"></div>}
           </button>
           {this.props.user && (
             <LoggedInStatus

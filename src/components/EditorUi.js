@@ -19,6 +19,7 @@ class EditorUiComponent extends React.Component {
   }
 
   componentDidMount() {
+    const { onChange } = this.props;
     this.editorUi = new EditorUi(
       this.stageRef.current,
       this.props.graph,
@@ -33,6 +34,9 @@ class EditorUiComponent extends React.Component {
             nodeEditValue: node.value,
             nodeEditId: node.id,
           });
+        },
+        onChange() {
+          onChange();
         },
       },
       {

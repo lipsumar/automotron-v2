@@ -26,6 +26,7 @@ class EditorUi extends EventEmitter {
 
     this.commandInvoker.on('command', () => {
       this.emit('graph:change');
+      this.actions.onChange();
     });
 
     graphUi.nodes.forEach(this.setupNode.bind(this));

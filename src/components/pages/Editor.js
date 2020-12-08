@@ -1,6 +1,7 @@
 import React, { createRef } from 'react';
 import * as Sentry from '@sentry/browser';
 import { Trans, withTranslation } from 'react-i18next';
+import { Prompt } from 'react-router-dom';
 import EditorUiComponent from '../EditorUi';
 import Graph from '../../core/Graph';
 import client from '../../client';
@@ -23,6 +24,7 @@ class Editor extends React.Component {
       showLoginModal: false,
       ready: false,
       possibilityCount: null,
+      changesSaved: true,
     };
     this.afterLoginSuccess = null;
     this.editorUiRef = createRef();
@@ -83,6 +85,8 @@ class Editor extends React.Component {
     client
       .saveGenerator(exportService.exportGenerator(this.state.generator))
       .then(result => {
+        this.setState({ changesSaved: true });
+
         if (!this.state.generator._id) {
           this.setState({
             generator: {
@@ -164,9 +168,19 @@ class Editor extends React.Component {
   }
 
   render() {
-    const { generator, result, showLoginModal, ready } = this.state;
+    const {
+      generator,
+      result,
+      showLoginModal,
+      ready,
+      changesSaved,
+    } = this.state;
     return (
       <div className="editor-wrapper">
+        <Prompt
+          when={!changesSaved}
+          message={() => this.props.t('editor.prompt.unsavedChanges')}
+        />
         <div className="editor">
           <div className="editor__head">
             <EditorToolbar
@@ -180,6 +194,7 @@ class Editor extends React.Component {
               setGeneratorTitle={this.setGeneratorTitle.bind(this)}
               onInsertText={() => this.insertTextNode()}
               onExport={format => this.export(format)}
+              changesSaved={changesSaved}
             />
           </div>
           <div className="editor__body">
@@ -189,6 +204,9 @@ class Editor extends React.Component {
                 graph={generator.graph}
                 onGraphChange={this.onGraphChange.bind(this)}
                 panelWidth={this.state.panelWidth}
+                onChange={() => {
+                  this.setState({ changesSaved: false });
+                }}
               />
             )}
 
