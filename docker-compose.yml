@@ -4,7 +4,7 @@ services:
   app:
     build: .
     labels:
-      - 'traefik.http.routers.automotron-v2.rule=Host(`automotron.io`) && Path(`/editor`)'
+      - 'traefik.http.routers.automotron-v2.rule=Host(`automotron.io`) && PathPrefix(`/editor`)'
       - 'traefik.http.routers.automotron-v2.tls.certresolver=le'
       - 'traefik.http.routers.automotron-v2.entrypoints=websecure'
       - 'traefik.docker.network=traefik-external'
