@@ -1,4 +1,4 @@
-import { Path, Text, Rect, Group, Line } from 'konva';
+import { Path, Text, Rect, Group, Line, Circle } from 'konva';
 import { colors } from './constants';
 import NodeUi from './NodeUi';
 import { measureTextHeight, measureTextWidth } from './utils';
@@ -13,6 +13,7 @@ class TextListNodeUi extends NodeUi {
     this.height = 50;
     this.valuesTexts = [];
     this.valuesLines = [];
+    this.agreementMarkers = [];
 
     this.rect = new Path({
       data: this.getPath(),
@@ -173,6 +174,7 @@ class TextListNodeUi extends NodeUi {
   resizeValues(minWidth) {
     this.valuesTexts.forEach(text => text.destroy());
     this.valuesLines.forEach(line => line.destroy());
+    this.agreementMarkers.forEach(marker => marker.destroy());
     this.valuesTexts = [];
     this.valuesLines = [];
     const sizes = [];
@@ -201,7 +203,21 @@ class TextListNodeUi extends NodeUi {
 
       const textWidth = text.getTextWidth();
       const textHeight = measureTextHeight(value.text);
-      const width = textWidth + padding * 2;
+
+      let agreementMarkerWidth = 0;
+      if (value.agreement) {
+        const marker = new Circle({
+          x: text.x() + textWidth + 8,
+          y: y + 19,
+          radius: 3,
+          fill: colors.agreementMarker,
+        });
+        this.agreementMarkers.push(marker);
+        this.listGroup.add(marker);
+        agreementMarkerWidth = 10;
+      }
+
+      const width = textWidth + padding * 2 + agreementMarkerWidth;
 
       const height = textHeight + padding * 2;
       text.height(height);

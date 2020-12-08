@@ -5,13 +5,14 @@ const colorsDefinitions = {
   primaryDark: '#5069cd',
   primaryLight: '#b2bff6',
   white: '#fff',
+  agreement: '#3ee164',
 };
 
 export const colors = {
   edge: colorsDefinitions.primary,
   edgeNoSpace: colorsDefinitions.primaryLight,
   startNode: colorsDefinitions.primaryDark,
-  agreementEdge: '#3ee164',
+  agreementEdge: colorsDefinitions.agreement,
   generatorEdge: '#b35fff',
   gridLine: '#DCDCCB',
   nodeOutlet: colorsDefinitions.primary,
@@ -22,4 +23,5 @@ export const colors = {
   node: '#fff',
   nodeGenerated: '#e5d4f5',
   nodeMultiValueSeparator: '#d7e2ee',
+  agreementMarker: colorsDefinitions.agreement,
 };
