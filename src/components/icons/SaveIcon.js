@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function UndoIcon() {
+export default function SaveIcon() {
   return (
     <svg
       width="1em"

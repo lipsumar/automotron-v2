@@ -1,5 +1,21 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import UndoIcon from './icons/UndoIcon';
+import RedoIcon from './icons/RedoIcon';
+import DuplicateIcon from './icons/DuplicateIcon';
+import SaveIcon from './icons/SaveIcon';
+import TextIcon from './icons/TextIcon';
+import HtmlIcon from './icons/HtmlIcon';
+import JsonIcon from './icons/JsonIcon';
+
+function MenuItem({ icon, label }) {
+  return (
+    <div className="editor-menu-item">
+      <div className="editor-menu-item__icon">{icon}</div>
+      <div className="editor-menu-item__label">{label}</div>
+    </div>
+  );
+}
 
 export default function EditorMenu(props) {
   const [active, setActive] = useState(false);
@@ -15,11 +31,17 @@ export default function EditorMenu(props) {
         <div className="editor-menu__menu">
           {props.canSave && (
             <div className="editor-menu__menu-item" onClick={props.onSave}>
-              {t('editor.menu.file.items.save')}
+              <MenuItem
+                label={t('editor.menu.file.items.save')}
+                icon={<SaveIcon />}
+              />
             </div>
           )}
           <div className="editor-menu__menu-item">
-            {t('editor.menu.file.items.createCopy')}
+            <MenuItem
+              label={t('editor.menu.file.items.createCopy')}
+              icon={<DuplicateIcon />}
+            />
           </div>
           {/* <div className="editor-menu__menu-item">Share</div> */}
         </div>
@@ -28,10 +50,16 @@ export default function EditorMenu(props) {
         {t('editor.menu.edit.title')}
         <div className="editor-menu__menu">
           <div className="editor-menu__menu-item" onClick={props.onUndo}>
-            {t('editor.menu.edit.items.undo')}
+            <MenuItem
+              label={t('editor.menu.edit.items.undo')}
+              icon={<UndoIcon />}
+            />
           </div>
           <div className="editor-menu__menu-item" onClick={props.onRedo}>
-            {t('editor.menu.edit.items.redo')}
+            <MenuItem
+              label={t('editor.menu.edit.items.redo')}
+              icon={<RedoIcon />}
+            />
           </div>
           {/* <div className="editor-menu__menu-separator"></div>
           <div className="editor-menu__menu-item">Copy</div>
@@ -42,7 +70,7 @@ export default function EditorMenu(props) {
         {t('editor.menu.insert.title')}
         <div className="editor-menu__menu">
           <div className="editor-menu__menu-item" onClick={props.onInsertText}>
-            {t('editor.menu.insert.items.text')}
+            <MenuItem label={t('editor.menu.insert.items.text')} />
           </div>
         </div>
       </div>
@@ -53,19 +81,28 @@ export default function EditorMenu(props) {
             className="editor-menu__menu-item"
             onClick={() => props.onExport('text')}
           >
-            {t('editor.menu.export.items.text')}
+            <MenuItem
+              label={t('editor.menu.export.items.text')}
+              icon={<TextIcon />}
+            />
           </div>
           <div
             className="editor-menu__menu-item"
             onClick={() => props.onExport('html')}
           >
-            {t('editor.menu.export.items.html')}
+            <MenuItem
+              label={t('editor.menu.export.items.html')}
+              icon={<HtmlIcon />}
+            />
           </div>
           <div
             className="editor-menu__menu-item"
             onClick={() => props.onExport('json')}
           >
-            {t('editor.menu.export.items.json')}
+            <MenuItem
+              label={t('editor.menu.export.items.json')}
+              icon={<JsonIcon />}
+            />
           </div>
         </div>
       </div>

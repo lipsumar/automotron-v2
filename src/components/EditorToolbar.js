@@ -1,7 +1,7 @@
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import UndoIcon from './icons/UndoIcon';
+import UndoBtnIcon from './icons/UndoBtnIcon';
 import SaveIcon from './icons/SaveIcon';
 import LoggedInStatus from './LoggedInStatus';
 import Logo from './icons/Logo';
@@ -58,7 +58,7 @@ class EditorToolbar extends React.Component {
             className="btn btn--icon btn--toolbar"
             onClick={this.props.onUndo}
           >
-            <UndoIcon />
+            <UndoBtnIcon />
           </button>
           <button
             className="btn btn--icon btn--toolbar"
