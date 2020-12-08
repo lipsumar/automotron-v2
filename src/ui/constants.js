@@ -10,10 +10,11 @@ export const GRID_SIZE = 25;
 // };
 
 const colorsDefinitions = {
-  primary: '#9A78FE',
+  primary: '#8F69FF',
   primaryDark: '#36295F',
   primaryLight: '#E3DCF6',
   white: '#fff',
+  black: '#232323',
   accent: '#F78110',
 };
 
@@ -22,15 +23,17 @@ export const colors = {
   edgeNoSpace: colorsDefinitions.primaryLight,
   startNode: colorsDefinitions.primaryDark,
   agreementEdge: colorsDefinitions.accent,
-  generatorEdge: colorsDefinitions.primary,
+  generatorEdge: '#A9A570', // colorsDefinitions.primary,
   gridLine: '#DCDCCB',
   nodeOutlet: colorsDefinitions.primary,
   nodeOutletOutline: '#fff',
   userSelection: '#65a8f0',
-  nodeTitle: colorsDefinitions.primaryDark,
-  nodeTitleText: colorsDefinitions.white,
+  nodeTitle: colorsDefinitions.primaryLight,
+  nodeTitleText: colorsDefinitions.primaryDark,
   node: '#fff',
   nodeGenerated: colorsDefinitions.primaryLight,
-  nodeMultiValueSeparator: '#d7e2ee',
+  nodeMultiValueSeparator: '#D4D4D4',
   agreementMarker: colorsDefinitions.accent,
+  sidebarBackground: colorsDefinitions.black,
+  sidebarText: colorsDefinitions.white,
 };

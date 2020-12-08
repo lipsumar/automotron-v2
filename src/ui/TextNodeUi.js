@@ -60,6 +60,7 @@ class TextListNodeUi extends NodeUi {
       x: padding,
       width: this.width,
       fill: colors.nodeTitleText,
+      fontStyle: 'italic',
     });
     this.titleGroup.add(this.titleText);
 

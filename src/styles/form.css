@@ -46,8 +46,9 @@
   outline:none;
 }
 .btn.btn--primary{
-  background-color: var(--primary-dark);
-  color:#FFF;  
+  background-color: var(--primary);
+  color:#FFF;
+  border-color:transparent;  
 }
 .btn--large{
   font-size: 18px;

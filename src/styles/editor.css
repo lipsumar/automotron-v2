@@ -27,6 +27,8 @@
   border-left:1px solid #DCDCCB;
   display: flex;
   flex-direction: column;
+  background-color: var(--black);
+  color: #fff;
 }
 
 .sidebar__head{
@@ -64,7 +66,7 @@
 }
 .editor-toolbar__logo{
   margin-right:12px;
-  color:var(--primary-dark);
+  color:var(--primary);
 }
 .editor-toolbar__left{
   flex-direction: column;
@@ -86,7 +88,7 @@
   align-items: center;
   font-size: 24px;
   font-weight: 500;
-  color:var(--primary-dark);
+  color:var(--primary);
 }
 .editor-toolbar__menu{
   
@@ -121,7 +123,7 @@
   position: relative;
 }
 .editor-menu__item:hover{
-  background-color: #eee;
+  background-color: var(--grey-lightest);
 }
 .editor-menu__menu-separator{
   background-color: #ddd;
@@ -152,7 +154,7 @@
   
 }
 .editor-menu__menu-item:hover{
-  background-color:#eee;
+  background-color:var(--grey-lightest);
 }
 
 .editor-menu-item{
