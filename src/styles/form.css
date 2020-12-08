@@ -37,6 +37,11 @@
   cursor: pointer;
   background-color: transparent;
 }
+.btn:disabled{
+  opacity: 0.6;
+  background-color: #ddd;
+  cursor: not-allowed;
+}
 .btn:active, .btn:focus{
   outline:none;
 }

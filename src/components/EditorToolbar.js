@@ -64,6 +64,7 @@ class EditorToolbar extends React.Component {
           <button
             className="btn btn--icon btn--toolbar"
             onClick={this.props.onSave}
+            disabled={!canSave}
           >
             <SaveIcon />
             {!this.props.changesSaved && <div className="red-dot"></div>}
