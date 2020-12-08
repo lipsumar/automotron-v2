@@ -40,16 +40,6 @@ class App extends React.Component {
           <Route path="/examples">
             <Examples user={user} />
           </Route>
-          <Route
-            path="/editor/:generatorId"
-            render={props => (
-              <Editor
-                {...props}
-                user={user}
-                onLogin={theUser => this.setState({ user: theUser })}
-              />
-            )}
-          />
           <Route path="/view">
             <View />
           </Route>
@@ -60,9 +50,16 @@ class App extends React.Component {
             path="/user/:userId"
             render={props => <User {...props} user={user} />}
           ></Route>
-          <Route path="/">
-            <Home user={user} />
-          </Route>
+          <Route
+            path="/:generatorId"
+            render={props => (
+              <Editor
+                {...props}
+                user={user}
+                onLogin={theUser => this.setState({ user: theUser })}
+              />
+            )}
+          />
         </Switch>
       </Router>
     );
