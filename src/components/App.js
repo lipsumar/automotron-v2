@@ -32,7 +32,7 @@ class App extends React.Component {
   render() {
     const { user } = this.state;
     return (
-      <Router>
+      <Router basename="/editor">
         <Switch>
           <Route path="/help">
             <Help />
