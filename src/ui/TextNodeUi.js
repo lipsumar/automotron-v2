@@ -31,14 +31,14 @@ class TextListNodeUi extends NodeUi {
     this.group.add(this.listGroup);
 
     this.titleGroup = new Group({
-      y: -30,
+      y: 1,
       x: 1,
     });
     this.group.add(this.titleGroup);
     this.titleRect = new Rect({
       fill: colors.nodeTitle,
       cornerRadius: 3,
-      height: 30,
+      height: 25,
       width: this.width,
       shadowColor: 'black',
       shadowBlur: 5,
@@ -48,7 +48,7 @@ class TextListNodeUi extends NodeUi {
     this.titleGroup.add(this.titleRect);
     this.titleRectBottom = new Rect({
       x: 0,
-      y: 25,
+      y: 20,
       height: 8,
       width: this.width,
       fill: colors.nodeTitle,
@@ -56,7 +56,7 @@ class TextListNodeUi extends NodeUi {
     this.titleGroup.add(this.titleRectBottom);
     this.titleText = new Text({
       fontSize: 18,
-      y: 7,
+      y: 5,
       x: padding,
       width: this.width,
       fill: colors.nodeTitleText,
@@ -115,14 +115,15 @@ class TextListNodeUi extends NodeUi {
   // original path (100x75)
   // 'M4,1 L98,1 C99.6568542,1 101,2.34314575 101,4 L101,29 L101,29 L107,38 L101,47 L101,73 C101,74.6568542 99.6568542,76 98,76 L4,76 C2.34314575,76 1,74.6568542 1,73 L1,47 L1,47 L7,38 L1,29 L1,4 C1,2.34314575 2.34314575,1 4,1 Z'
   getPath(width = 100, height = 75) {
-    const middle = this.outletY(false);
+    const outletY = this.outletY(false);
     const path = ['M4,1']; // start top-left, after corner
     path.push(`L${width - 2},1`); // line to top-right
     path.push(`C${width - 0.3431},1 ${width + 1},2.34314575 ${width + 1},4`); // top-right corner
     path.push(
-      `L${width + 1},${middle - 8.5} L${width + 1},${middle - 8.5} L${width +
+      `L${width + 1},${outletY - 8.5} L${width + 1},${outletY - 8.5} L${width +
         arrowWidth +
-        1},${middle} L${width + 1},${middle + 8.5} L${width + 1},${height - 2}`,
+        1},${outletY} L${width + 1},${outletY + 8.5} L${width + 1},${height -
+        2}`,
     ); // right side
     path.push(
       `C${width + 1},${height - 0.3431} ${width - 0.3431},${height +
@@ -132,8 +133,8 @@ class TextListNodeUi extends NodeUi {
 
     path.push(`C2.34314575,${height + 1} 1,${height - 0.3431} 1,${height - 2}`); // bottom-left corner
     path.push(
-      `L1,${middle + 8.5} L1,${middle + 8.5} L${arrowWidth +
-        1},${middle} L1,${middle - 8.5} L1,4`,
+      `L1,${outletY + 8.5} L1,${outletY + 8.5} L${arrowWidth +
+        1},${outletY} L1,${outletY - 8.5} L1,4`,
     ); // left side
     path.push('C1,2.34314575 2.34314575,1 4,1'); // top-left corner
     path.push('Z'); // end
@@ -177,6 +178,10 @@ class TextListNodeUi extends NodeUi {
     const sizes = [];
     let y = padding / 2;
 
+    if (this.node.title) {
+      y += 20;
+    }
+
     this.getValueToShow().forEach(value => {
       const text = new Text({
         text: value.text,
@@ -207,6 +212,10 @@ class TextListNodeUi extends NodeUi {
 
     const largest = Math.max(minWidth, ...sizes.map(size => size.width));
     let height = padding / 2;
+    if (this.node.title) {
+      height += 20;
+    }
+
     sizes.forEach((size, i) => {
       this.valuesTexts[i].width(largest);
 
@@ -234,7 +243,11 @@ class TextListNodeUi extends NodeUi {
   }
 
   outletY(absolute = true) {
-    return (absolute ? this.y() : 0) + 50 / 2 - 1;
+    let y = (absolute ? this.y() : 0) + 50 / 2 - 1;
+    if (this.node.title) {
+      y += 20;
+    }
+    return y;
   }
 
   inletX() {
@@ -242,7 +255,11 @@ class TextListNodeUi extends NodeUi {
   }
 
   inletY() {
-    return this.y() + 50 / 2 - 1;
+    let y = this.y() + 50 / 2 - 1;
+    if (this.node.title) {
+      y += 20;
+    }
+    return y;
   }
 
   bottomY() {
