@@ -2,6 +2,7 @@ import React, { createRef } from 'react';
 import * as Sentry from '@sentry/browser';
 import { Trans, withTranslation } from 'react-i18next';
 import { Prompt } from 'react-router-dom';
+import Loader from 'react-loaders';
 import EditorUiComponent from '../EditorUi';
 import Graph from '../../core/Graph';
 import client from '../../client';
@@ -222,7 +223,7 @@ class Editor extends React.Component {
             />
           </div>
           <div className="editor__body">
-            {generator && ready && (
+            {generator && ready ? (
               <EditorUiComponent
                 ref={this.editorUiRef}
                 graph={generator.graph}
@@ -232,6 +233,13 @@ class Editor extends React.Component {
                   this.setState({ changesSaved: false });
                 }}
               />
+            ) : (
+              <div>
+                <Loader
+                  type="ball-scale-ripple-multiple"
+                  style={{ marginLeft: '50%', marginTop: '40vh' }}
+                />
+              </div>
             )}
 
             <LoginModal
