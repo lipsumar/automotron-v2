@@ -67,6 +67,7 @@ class TextListNodeUi extends NodeUi {
     if (opts.editable) {
       this.registerOutlet('right');
       this.group.on('dblclick', e => {
+        if (e.evt.button === 2) return;
         e.cancelBubble = true;
         this.emit('edit:start');
       });

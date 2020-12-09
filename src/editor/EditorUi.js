@@ -32,7 +32,8 @@ class EditorUi extends EventEmitter {
     graphUi.on('node:created', this.setupNode.bind(this));
     graphUi.edges.forEach(this.setupEdge.bind(this));
     graphUi.on('edge:created', this.setupEdge.bind(this));
-    this.graphUi.stage.on('dblclick', () => {
+    this.graphUi.stage.on('dblclick', e => {
+      if (e.evt.button === 2) return;
       this.commandInvoker.execute('createNode', {
         text: '',
         ui: {
