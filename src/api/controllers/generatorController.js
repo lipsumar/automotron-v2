@@ -6,20 +6,30 @@ import stringifyGraphResult from '../../core/stringifyGraphResult';
 
 const router = new Router();
 
-router.get('/', async (req, res) => {
+async function getGeneratorsForUser(userId) {
+  const generators = await generatorService.findForUser(userId);
+  return generators.map(generator => {
+    return {
+      _id: generator._id.toString(),
+      title: generator.title,
+      preview: `${process.env.REACT_APP_API_BASE_URL}/previews/${generator._id}.png`,
+    };
+  });
+}
+
+router.get('/', async (req, res, next) => {
   if (!req.query.userId) {
-    throw new Error('userId must be given');
+    next(new Error('userId must be given'));
   }
-  const generators = await generatorService.findForUser(req.query.userId);
-  res.send(
-    generators.map(generator => {
-      return {
-        _id: generator._id.toString(),
-        title: generator.title,
-        preview: `${process.env.REACT_APP_API_BASE_URL}/previews/${generator._id}.png`,
-      };
-    }),
-  );
+  res.send(await getGeneratorsForUser(req.query.userId));
+});
+
+router.get('/my', async (req, res) => {
+  const userId = req.user._id.toString();
+  if (!userId) {
+    res.status(401).end();
+  }
+  res.send(await getGeneratorsForUser(userId));
 });
 
 router.get('/:generatorIds', async (req, res) => {
