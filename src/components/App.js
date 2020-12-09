@@ -1,8 +1,12 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from 'react-router-dom';
 import Modal from 'react-modal';
 import * as Sentry from '@sentry/browser';
-import Home from './pages/Home';
 import Help from './pages/Help';
 import Editor from './pages/Editor';
 import Examples from './pages/Examples';
@@ -60,6 +64,9 @@ class App extends React.Component {
               />
             )}
           />
+          <Route path="/">
+            <Redirect to="/new" />
+          </Route>
         </Switch>
       </Router>
     );
