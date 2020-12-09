@@ -104,6 +104,7 @@ class EditorUi extends EventEmitter {
   }
 
   removeNode(nodeId) {
+    this.removeNodeFromSelection(this.graphUi.getNode(nodeId));
     this.commandInvoker.execute('removeNode', { nodeId });
   }
 
@@ -411,6 +412,7 @@ class EditorUi extends EventEmitter {
   }
 
   removeNodeFromSelection(uiNode) {
+    console.log('remove from selection', uiNode.node.id);
     const newSelection = [];
     this.selection.forEach(item => {
       if (item.isNode() && item.node.id === uiNode.node.id) {
