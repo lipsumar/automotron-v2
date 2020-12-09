@@ -15,7 +15,7 @@ app.use(
     credentials: true,
   }),
 );
-app.use(express.static(path.join(__dirname, '../../build')));
+app.use('/editor', express.static(path.join(__dirname, '../../build')));
 app.use('/previews', express.static(path.join(__dirname, '../../previews')));
 app.use('/api', apiRouter);
 app.get('/*', (req, res) => {

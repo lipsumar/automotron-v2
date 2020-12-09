@@ -1,8 +1,12 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from 'react-router-dom';
 import Modal from 'react-modal';
 import * as Sentry from '@sentry/browser';
-import Home from './pages/Home';
 import Help from './pages/Help';
 import Editor from './pages/Editor';
 import Examples from './pages/Examples';
@@ -32,7 +36,7 @@ class App extends React.Component {
   render() {
     const { user } = this.state;
     return (
-      <Router>
+      <Router basename="/editor">
         <Switch>
           <Route path="/help">
             <Help />
@@ -40,16 +44,6 @@ class App extends React.Component {
           <Route path="/examples">
             <Examples user={user} />
           </Route>
-          <Route
-            path="/editor/:generatorId"
-            render={props => (
-              <Editor
-                {...props}
-                user={user}
-                onLogin={theUser => this.setState({ user: theUser })}
-              />
-            )}
-          />
           <Route path="/view">
             <View />
           </Route>
@@ -60,8 +54,18 @@ class App extends React.Component {
             path="/user/:userId"
             render={props => <User {...props} user={user} />}
           ></Route>
+          <Route
+            path="/:generatorId"
+            render={props => (
+              <Editor
+                {...props}
+                user={user}
+                onLogin={theUser => this.setState({ user: theUser })}
+              />
+            )}
+          />
           <Route path="/">
-            <Home user={user} />
+            <Redirect to="/new" />
           </Route>
         </Switch>
       </Router>
