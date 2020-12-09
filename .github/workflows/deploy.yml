@@ -22,4 +22,4 @@ jobs:
           script: |
             cd automotron-v2
             git pull
-            docker-compose up -d
+            docker-compose up --build -d
