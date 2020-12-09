@@ -20,29 +20,22 @@ class EditorUiComponent extends React.Component {
 
   componentDidMount() {
     const { onChange } = this.props;
-    this.editorUi = new EditorUi(
-      this.stageRef.current,
-      this.props.graph,
-      {
-        openNodeEditor: (bbox, node) => {
-          this.setState({
-            nodeEdit: {
-              bbox,
-              value: node.value,
-            },
-            graphBlur: true,
-            nodeEditValue: node.value,
-            nodeEditId: node.id,
-          });
-        },
-        onChange() {
-          onChange();
-        },
+    this.editorUi = new EditorUi(this.stageRef.current, this.props.graph, {
+      openNodeEditor: (bbox, node) => {
+        this.setState({
+          nodeEdit: {
+            bbox,
+            value: node.value,
+          },
+          graphBlur: true,
+          nodeEditValue: node.value,
+          nodeEditId: node.id,
+        });
       },
-      {
-        panelWidth: this.props.panelWidth,
+      onChange() {
+        onChange();
       },
-    );
+    });
 
     this.editorUi.on('node:contextmenu', uiNode => {
       this.setState({ contextMenuSubject: uiNode });

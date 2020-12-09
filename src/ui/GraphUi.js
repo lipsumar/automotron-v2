@@ -1,5 +1,6 @@
 import { Stage, Layer } from 'konva';
 import throttle from 'lodash.throttle';
+import debounce from 'lodash.debounce';
 import { EventEmitter } from 'events';
 import Grid from './Grid';
 import StartNodeUi from './StartNodeUi';
@@ -45,6 +46,11 @@ class GraphUi extends EventEmitter {
     });
     this.width = this.stage.width();
     this.height = this.stage.height();
+
+    window.addEventListener(
+      'resize',
+      debounce(this.onWindowResize.bind(this), 100),
+    );
 
     this.gridLayer = new Layer();
     this.stage.add(this.gridLayer);
@@ -196,7 +202,7 @@ class GraphUi extends EventEmitter {
     );
     const width = mostRight - mostLeft;
     const height = mostBottom - mostTop;
-    const maxWidth = this.stage.width(); // - this.opts.panelWidth;
+    const maxWidth = this.stage.width();
     const maxHeight = this.stage.height();
     let scale = maxWidth / width;
     if (height * scale > maxHeight) {
@@ -220,6 +226,19 @@ class GraphUi extends EventEmitter {
 
     if (this.grid) {
       this.grid.reposition();
+    }
+  }
+
+  onWindowResize() {
+    const newWidth = this.stage.attrs.container.offsetWidth;
+    const newHeight = this.stage.attrs.container.offsetHeight;
+    this.stage.width(newWidth);
+    this.stage.height(newHeight);
+    this.width = this.stage.width();
+    this.height = this.stage.height();
+    if (this.grid) {
+      this.grid.reposition();
+      this.stage.batchDraw();
     }
   }
 

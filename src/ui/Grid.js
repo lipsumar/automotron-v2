@@ -52,6 +52,8 @@ class Grid {
   }
 
   reposition() {
+    this.width = this.stage.width();
+    this.height = this.stage.height();
     const { scale, x, y, width, height } = this.getNormalizedGeo();
 
     if (this.oldScale < 5 && scale > 5) {
