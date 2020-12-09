@@ -90,6 +90,10 @@ class EditorUiComponent extends React.Component {
     this.editorUi.freezeNode(this.state.contextMenuSubject.node.id);
   }
 
+  unfreezeNode() {
+    this.editorUi.unfreezeNode(this.state.contextMenuSubject.node.id);
+  }
+
   centerGraph() {
     this.editorUi.centerGraph();
   }
@@ -152,6 +156,7 @@ class EditorUiComponent extends React.Component {
           onSetNodeTitle={this.setNodeTitle.bind(this)}
           onAgreementLink={this.linkToAgreement.bind(this)}
           onNodeFreeze={this.freezeNode.bind(this)}
+          onNodeUnfreeze={this.unfreezeNode.bind(this)}
           onCenterGraph={this.centerGraph.bind(this)}
           onToggleEdgeSpace={this.toggleEdgeSpace.bind(this)}
         />

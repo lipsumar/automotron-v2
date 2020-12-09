@@ -67,6 +67,7 @@ const resources = {
           linkToGenerator: 'Connecter au générateur',
           agreementLink: 'Connection d’accord',
           freeze: 'Geler',
+          unfreeze: 'Dégeler',
           deleteNode: 'Supprimer',
           createNode: 'Ajouter un bloc',
           centerGraph: 'Ajuster à l’écran',

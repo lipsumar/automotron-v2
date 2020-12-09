@@ -8,6 +8,7 @@ import RemoveEdgeCommand from './commands/RemoveEdge';
 import InsertNodeCommand from './commands/InsertNode';
 import SetNodeTitleCommand from './commands/SetNodeTitle';
 import FreezeNodeCommand from './commands/FreezeNode';
+import UnfreezeNodeCommand from './commands/UnfreezeNode';
 import ToggleEdgeSpaceCommand from './commands/ToggleEdgeSpace';
 
 const commands = {
@@ -20,6 +21,7 @@ const commands = {
   insertNode: InsertNodeCommand,
   setNodeTitle: SetNodeTitleCommand,
   freezeNode: FreezeNodeCommand,
+  unfreezeNode: UnfreezeNodeCommand,
   toggleEdgeSpace: ToggleEdgeSpaceCommand,
 };
 

@@ -43,9 +43,16 @@ function MenuItems(props) {
         <MenuItem onClick={props.onAgreementLink}>
           {t('editor.contextMenu.agreementLink')}
         </MenuItem>
-        <MenuItem onClick={props.onNodeFreeze}>
-          {t('editor.contextMenu.freeze')}
-        </MenuItem>
+        {props.subject.node.frozen ? (
+          <MenuItem onClick={props.onNodeUnfreeze}>
+            {t('editor.contextMenu.unfreeze')}
+          </MenuItem>
+        ) : (
+          <MenuItem onClick={props.onNodeFreeze}>
+            {t('editor.contextMenu.freeze')}
+          </MenuItem>
+        )}
+
         <MenuItem onClick={props.onDeleteNode}>
           {t('editor.contextMenu.deleteNode')}
         </MenuItem>

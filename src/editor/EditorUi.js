@@ -237,6 +237,12 @@ class EditorUi extends EventEmitter {
     });
   }
 
+  unfreezeNode(nodeId) {
+    this.commandInvoker.execute('unfreezeNode', {
+      nodeId,
+    });
+  }
+
   centerGraph() {
     this.graphUi.centerGraph();
     this.graphUi.draw();
