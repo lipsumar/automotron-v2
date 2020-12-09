@@ -54,6 +54,9 @@ const resources = {
           },
           help: {
             title: 'Aide',
+            items: {
+              documentation: 'Documentation',
+            },
           },
         },
         sidebar: {

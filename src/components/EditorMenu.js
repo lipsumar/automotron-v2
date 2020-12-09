@@ -106,7 +106,17 @@ export default function EditorMenu(props) {
           </div>
         </div>
       </div>
-      <div className="editor-menu__item">{t('editor.menu.help.title')}</div>
+      <div className="editor-menu__item">
+        {t('editor.menu.help.title')}
+        <div className="editor-menu__menu">
+          <div
+            className="editor-menu__menu-item"
+            onClick={() => window.open('/doc')}
+          >
+            <MenuItem label={t('editor.menu.help.items.documentation')} />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
