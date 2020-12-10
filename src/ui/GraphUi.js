@@ -230,7 +230,7 @@ class GraphUi extends EventEmitter {
   }
 
   onWindowResize() {
-    const newWidth = this.stage.attrs.container.offsetWidth;
+    const newWidth = document.body.offsetWidth - 400;
     const newHeight = this.stage.attrs.container.offsetHeight;
     this.stage.width(newWidth);
     this.stage.height(newHeight);
