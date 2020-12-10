@@ -2,7 +2,7 @@ import axios from 'axios';
 import cloneDeep from 'lodash.clonedeep';
 
 const newGenerator = {
-  title: 'New generator',
+  title: 'Nouveau générateur',
   graph: {
     nodes: [
       {
