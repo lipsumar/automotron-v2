@@ -31,9 +31,9 @@ class EditorToolbar extends React.Component {
     const canSave = this.canSave();
     return (
       <div className="editor-toolbar">
-        <Link to={`/`} className="editor-toolbar__logo">
+        <a href="/" className="editor-toolbar__logo">
           <Logo />
-        </Link>
+        </a>
         <div className="editor-toolbar__left">
           <div
             className="editor-toolbar__title"
