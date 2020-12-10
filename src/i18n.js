@@ -60,6 +60,7 @@ const resources = {
           },
         },
         sidebar: {
+          possibility: 'possibilité',
           possibilities: 'possibilités',
         },
         contextMenu: {

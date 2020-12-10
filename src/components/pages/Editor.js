@@ -266,11 +266,17 @@ class Editor extends React.Component {
             />
           </div>
           <div className="sidebar__footer">
-            {this.state.possibilityCount && (
+            {this.state.possibilityCount && this.state.possibilityCount > 0 ? (
               <>
                 {this.state.possibilityCount.toLocaleString()}{' '}
-                <Trans>editor.sidebar.possibilities</Trans>
+                {this.props.t(
+                  this.state.possibilityCount === 1
+                    ? 'editor.sidebar.possibility'
+                    : 'editor.sidebar.possibilities',
+                )}
               </>
+            ) : (
+              ''
             )}
           </div>
         </div>
