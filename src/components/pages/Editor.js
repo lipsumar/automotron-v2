@@ -40,6 +40,7 @@ class Editor extends React.Component {
         e.returnValue = msg;
         return msg;
       }
+      return null;
     });
   }
 
