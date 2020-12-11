@@ -52,6 +52,19 @@
   text-align: right;
 }
 
+@media (max-width:768px){
+  .editor-wrapper{
+    display: block;
+  }
+  .editor{
+    width:100vw;
+    height:65vh;
+  }
+  .sidebar{
+    height: 35vh;
+  }
+}
+
 /* Editor toolbar */
 
 .editor-toolbar{
