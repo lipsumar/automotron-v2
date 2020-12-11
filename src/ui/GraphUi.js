@@ -196,6 +196,9 @@ class GraphUi extends EventEmitter {
     const scaleBy = 1.1;
     this.stage.scale({ x: oldScale * scaleBy, y: oldScale * scaleBy });
     this.stage.batchDraw();
+    if (this.grid) {
+      this.grid.reposition();
+    }
   }
 
   zoomOut() {
@@ -203,6 +206,9 @@ class GraphUi extends EventEmitter {
     const scaleBy = 1.1;
     this.stage.scale({ x: oldScale / scaleBy, y: oldScale / scaleBy });
     this.stage.batchDraw();
+    if (this.grid) {
+      this.grid.reposition();
+    }
   }
 
   draw() {
