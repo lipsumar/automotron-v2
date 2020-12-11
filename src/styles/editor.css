@@ -62,6 +62,10 @@
   }
   .sidebar{
     height: 35vh;
+    border-left:none;
+  }
+  .sidebar__body{
+    font-size: 16px;
   }
 }
 
