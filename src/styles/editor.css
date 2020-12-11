@@ -52,6 +52,8 @@
   text-align: right;
 }
 
+.mobile-zoom{display:none;}
+
 @media (max-width:768px){
   .editor-wrapper{
     display: block;
@@ -66,6 +68,28 @@
   }
   .sidebar__body{
     font-size: 16px;
+  }
+
+  .mobile-zoom{
+    display:block;
+    position: absolute;
+    bottom:15px;
+    right:15px;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+  }
+  .mobile-zoom__plus,.mobile-zoom__minus{
+    width:50px;
+    height:50px;
+    font-size:30px;
+    color:#ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .mobile-zoom__plus{
+    border-bottom:1px solid #eee;
   }
 }
 

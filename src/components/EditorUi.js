@@ -127,6 +127,14 @@ class EditorUiComponent extends React.Component {
     this.editorUi.redo();
   }
 
+  zoomIn() {
+    this.editorUi.zoomIn();
+  }
+
+  zoomOut() {
+    this.editorUi.zoomOut();
+  }
+
   render() {
     const { graphBlur, nodeEdit } = this.state;
     return (
@@ -160,6 +168,14 @@ class EditorUiComponent extends React.Component {
           onCenterGraph={this.centerGraph.bind(this)}
           onToggleEdgeSpace={this.toggleEdgeSpace.bind(this)}
         />
+        <div className="mobile-zoom">
+          <div className="mobile-zoom__plus" onClick={() => this.zoomIn()}>
+            +
+          </div>
+          <div className="mobile-zoom__minus" onClick={() => this.zoomOut()}>
+            -
+          </div>
+        </div>
       </>
     );
   }

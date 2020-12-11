@@ -191,6 +191,20 @@ class GraphUi extends EventEmitter {
     this.nodes.forEach(uiNode => uiNode.setError(null));
   }
 
+  zoomIn() {
+    const oldScale = this.stage.scaleX();
+    const scaleBy = 1.1;
+    this.stage.scale({ x: oldScale * scaleBy, y: oldScale * scaleBy });
+    this.stage.batchDraw();
+  }
+
+  zoomOut() {
+    const oldScale = this.stage.scaleX();
+    const scaleBy = 1.1;
+    this.stage.scale({ x: oldScale / scaleBy, y: oldScale / scaleBy });
+    this.stage.batchDraw();
+  }
+
   draw() {
     this.stage.batchDraw();
   }

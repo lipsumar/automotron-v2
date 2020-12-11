@@ -11,8 +11,9 @@ import AgreementEdgeUi from '../ui/AgreementEdgeUi';
 class EditorUi extends EventEmitter {
   constructor(graphUiEl, graph, actions) {
     super();
+    this.editable = window.document.body.offsetWidth > 768;
     const graphUi = new GraphUi(graphUiEl, graph, {
-      editable: true,
+      editable: this.editable,
     });
     this.mouseNode = new MouseNode(graphUi.stage);
     this.generatorEdgeToMouse = null;
@@ -32,16 +33,19 @@ class EditorUi extends EventEmitter {
     graphUi.on('node:created', this.setupNode.bind(this));
     graphUi.edges.forEach(this.setupEdge.bind(this));
     graphUi.on('edge:created', this.setupEdge.bind(this));
-    this.graphUi.stage.on('dblclick', e => {
-      if (e.evt.button === 2) return;
-      this.commandInvoker.execute('createNode', {
-        text: '',
-        ui: {
-          x: this.mouseNode.inletX(), // vite fait
-          y: this.mouseNode.inletY() - 20,
-        },
+
+    if (this.editable) {
+      this.graphUi.stage.on('dblclick', e => {
+        if (e.evt.button === 2) return;
+        this.commandInvoker.execute('createNode', {
+          text: '',
+          ui: {
+            x: this.mouseNode.inletX(), // vite fait
+            y: this.mouseNode.inletY() - 20,
+          },
+        });
       });
-    });
+    }
 
     let posAtMouseDown = null;
     this.graphUi.stage.on('mousedown', e => {
@@ -254,6 +258,14 @@ class EditorUi extends EventEmitter {
 
   resetNodeErrors() {
     this.graphUi.resetNodeErrors();
+  }
+
+  zoomIn() {
+    this.graphUi.zoomIn();
+  }
+
+  zoomOut() {
+    this.graphUi.zoomOut();
   }
 
   setupNode(uiNode) {
