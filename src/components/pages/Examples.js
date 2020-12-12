@@ -22,7 +22,7 @@ export default class Examples extends React.Component {
   render() {
     return (
       <PageLayout user={this.props.user}>
-        <h2 class="page-heading">Examples</h2>
+        <h2 className="page-heading">Examples</h2>
         {this.state.generators.length > 0 ? (
           <div className="grid">
             {this.state.generators.map(generator => {

@@ -18,7 +18,7 @@ export default class Examples extends React.Component {
   render() {
     return (
       <PageLayout user={this.props.user}>
-        <h2 class="page-heading">Admin</h2>
+        <h2 className="page-heading">Admin</h2>
         {this.state.users.length > 0 ? (
           <ul className="list">
             {this.state.users.map(user => (
