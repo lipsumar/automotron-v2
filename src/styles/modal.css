@@ -13,7 +13,7 @@
 }
 
 .modal__header{
-  background-color: #7791F9;
+  background-color: var(--primary-dark);
   padding:20px;
   font-size: 25px;
   color:#fff;
