@@ -1,4 +1,5 @@
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import Login from './Login';
 import Register from './Register';
@@ -26,7 +27,7 @@ class LoginModal extends React.Component {
     return (
       <Modal isOpen={isOpen} className="modal" onRequestClose={onCloseRequest}>
         <div className="modal__header">
-          {showRegister ? 'Create an account' : 'Login'}
+          {this.props.t(showRegister ? 'register.title' : 'login.title')}
         </div>
         <div className="modal__body">
           {showRegister ? (
@@ -46,4 +47,4 @@ class LoginModal extends React.Component {
   }
 }
 
-export default LoginModal;
+export default withTranslation()(LoginModal);

@@ -23,7 +23,7 @@ export default class Examples extends React.Component {
           <ul className="list">
             {this.state.users.map(user => (
               <li>
-                <Link to={`/user/${user._id}`}>{user.username}</Link>
+                <Link to={`/user/${user._id}`}>{user.email}</Link>
               </li>
             ))}
           </ul>

@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
     users.map(generator => {
       return {
         _id: generator._id.toString(),
-        username: generator.username,
+        email: generator.email,
         role: generator.role,
       };
     }),

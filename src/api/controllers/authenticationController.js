@@ -8,7 +8,7 @@ const router = new Router();
 router.post('/login', passport.authenticate('local'), (req, res) => {
   res.send({
     _id: req.user._id,
-    username: req.user.username,
+    email: req.user.email,
     role: req.user.role,
   });
 });
@@ -17,7 +17,7 @@ router.post('/logged-in', (req, res) => {
   if (req.user) {
     res.send({
       _id: req.user._id,
-      username: req.user.username,
+      email: req.user.email,
       role: req.user.role,
     });
     return;
@@ -26,14 +26,16 @@ router.post('/logged-in', (req, res) => {
 });
 
 router.post('/register', (req, res) => {
-  const { username, password } = req.body;
-  User.findOne({ username }).then(existingUser => {
+  const { email, password } = req.body;
+  User.findOne({ email }).then(existingUser => {
     if (existingUser) {
-      res.send({ error: true, message: 'username already exists' });
+      res
+        .status(500)
+        .send({ error: true, message: 'register.error.emailAlreadyExist' });
       return;
     }
 
-    const user = new User({ username, password: hashPassword(password) });
+    const user = new User({ email, password: hashPassword(password) });
     user.save().then(() => {
       req.login(user, err => {
         if (err) {
@@ -41,7 +43,7 @@ router.post('/register', (req, res) => {
           console.log(err);
           return;
         }
-        res.send(user);
+        res.send({ ...user, password: undefined });
       });
     });
   });

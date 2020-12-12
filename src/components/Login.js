@@ -1,29 +1,30 @@
 import React, { createRef } from 'react';
+import { withTranslation } from 'react-i18next';
 import client from '../client';
 
 class Login extends React.Component {
   constructor(props) {
     super(props);
-    this.usernameInputRef = createRef();
-    this.state = { username: '', password: '', error: false };
+    this.emailInputRef = createRef();
+    this.state = { email: '', password: '', error: false };
   }
 
   componentDidMount() {
-    this.usernameInputRef.current.focus();
+    this.emailInputRef.current.focus();
   }
 
   login(e) {
     this.setState({ error: false });
     e.preventDefault();
     client
-      .login(this.state.username, this.state.password)
+      .login(this.state.email, this.state.password)
       .then(user => {
         this.props.onLoginSuccess(user);
       })
       .catch(err => {
-        let error = 'An error occured';
+        let error = this.props.t('login.error.loginFailed');
         if (err.response && err.response.status === 401) {
-          error = 'Wrong credentials';
+          error = this.props.t('login.error.wrongCredentials');
         }
         this.setState({ error });
       });
@@ -35,23 +36,23 @@ class Login extends React.Component {
   }
 
   render() {
-    const { username, password, error } = this.state;
+    const { email, password, error } = this.state;
     return (
       <div className="login">
         {error && <p className="alert alert--error">{error}</p>}
 
         <form className="form" onSubmit={this.login.bind(this)}>
           <div className="form__field">
-            <label>Username</label>
+            <label>{this.props.t('login.field.email')}</label>
             <input
               type="text"
-              value={username}
-              onChange={e => this.setState({ username: e.target.value })}
-              ref={this.usernameInputRef}
+              value={email}
+              onChange={e => this.setState({ email: e.target.value })}
+              ref={this.emailInputRef}
             />
           </div>
           <div className="form__field">
-            <label>Password</label>
+            <label>{this.props.t('login.field.password')}</label>
             <input
               type="password"
               value={password}
@@ -60,13 +61,13 @@ class Login extends React.Component {
           </div>
           <div className="form__action flex jc-sb ai-c">
             <button type="submit" className="btn btn--primary btn--large">
-              Login
+              {this.props.t('login.button.login')}
             </button>
             <button
               className="btn btn--link"
               onClick={this.createAccount.bind(this)}
             >
-              Create an account
+              {this.props.t('login.button.createAccount')}
             </button>
           </div>
         </form>
@@ -75,4 +76,4 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+export default withTranslation()(Login);

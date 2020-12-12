@@ -27,7 +27,7 @@ class App extends React.Component {
   componentDidMount() {
     client.loggedIn().then(user => {
       Sentry.configureScope(scope => {
-        scope.setUser({ username: user.username, id: user._id });
+        scope.setUser({ username: user.email, id: user._id });
       });
       this.setState({ user });
     });

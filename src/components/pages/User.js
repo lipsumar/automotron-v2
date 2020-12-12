@@ -22,7 +22,7 @@ export default class Examples extends React.Component {
   render() {
     return (
       <PageLayout user={this.props.user}>
-        <h2 class="page-heading">{this.state.user?.username}</h2>
+        <h2 class="page-heading">{this.state.user?.email}</h2>
         {this.state.generators ? (
           <div className="grid">
             {this.state.generators.map(generator => {

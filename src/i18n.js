@@ -9,6 +9,38 @@ const resources = {
   },
   fr: {
     translation: {
+      register: {
+        title: 'Créer un compte',
+        error: {
+          invalidEmail: 'L’email n’est pas valide',
+          passwordTooShort: 'Le mot de passe est trop court',
+          registerFailed: 'Une erreur s’est produite',
+          emailAlreadyExist: 'Un compte existe déjà pour cet email',
+        },
+        button: {
+          createAccount: 'Créer un compte',
+          login: 'Connexion',
+        },
+        field: {
+          email: 'Email',
+          password: 'Mot de passe',
+        },
+      },
+      login: {
+        title: 'Connexion',
+        error: {
+          loginFailed: 'Une erreur s’est produite',
+          wrongCredentials: 'Email ou mot de passe invalide',
+        },
+        button: {
+          createAccount: 'Créer un compte',
+          login: 'Connexion',
+        },
+        field: {
+          email: 'Email',
+          password: 'Mot de passe',
+        },
+      },
       editor: {
         forkTitlePrepend: 'copie',
         message: {

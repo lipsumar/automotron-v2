@@ -7,7 +7,7 @@ import { hashPassword } from './utils';
 
 passport.use(
   new Strategy((username, password, cb) => {
-    User.findOne({ username }).then(user => {
+    User.findOne({ email: username }).then(user => {
       if (user && user.password === hashPassword(password)) {
         cb(null, user);
       } else {

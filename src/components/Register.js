@@ -1,20 +1,21 @@
 import React, { createRef } from 'react';
+import emailValidator from 'email-validator';
+import { withTranslation } from 'react-i18next';
 import client from '../client';
 
 class Register extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: '',
+      email: '',
       password: '',
-      passwordConfirm: '',
       error: false,
     };
-    this.usernameInputRef = createRef();
+    this.emailInputRef = createRef();
   }
 
   componentDidMount() {
-    this.usernameInputRef.current.focus();
+    this.emailInputRef.current.focus();
   }
 
   login(e) {
@@ -24,20 +25,25 @@ class Register extends React.Component {
 
   createAccount(e) {
     e.preventDefault();
-    const { username, password, passwordConfirm } = this.state;
-    if (password !== passwordConfirm) {
-      this.setState({ error: 'passwords don’t match' });
+    this.setState({ error: false });
+    const { email, password } = this.state;
+    if (!emailValidator.validate(email)) {
+      this.setState({ error: this.props.t('register.error.invalidEmail') });
+      return;
+    }
+    if (password.length < 4) {
+      this.setState({ error: this.props.t('register.error.passwordTooShort') });
       return;
     }
     client
-      .register(username, password)
+      .register(email, password)
       .then(user => {
         this.props.onRegisterSuccess(user);
       })
       .catch(err => {
-        let error = 'an error occured';
+        let error = this.props.t('register.error.registerFailed');
         if (err.response && err.response.data && err.response.data.error) {
-          error = err.response.data.message;
+          error = this.props.t(err.response.data.message);
         }
         this.setState({ error });
         console.log(err);
@@ -45,42 +51,34 @@ class Register extends React.Component {
   }
 
   render() {
-    const { username, password, passwordConfirm, error } = this.state;
+    const { email, password, error } = this.state;
     return (
       <div className="register">
         {error && <p className="alert alert--error">{error}</p>}
         <form className="form" onSubmit={this.createAccount.bind(this)}>
           <div className="form__field">
-            <label>Username</label>
+            <label>{this.props.t('register.field.email')}</label>
             <input
               type="text"
-              value={username}
-              onChange={e => this.setState({ username: e.target.value })}
-              ref={this.usernameInputRef}
+              value={email}
+              onChange={e => this.setState({ email: e.target.value })}
+              ref={this.emailInputRef}
             />
           </div>
           <div className="form__field">
-            <label>Password</label>
+            <label>{this.props.t('register.field.password')}</label>
             <input
               type="password"
               value={password}
               onChange={e => this.setState({ password: e.target.value })}
             />
           </div>
-          <div className="form__field">
-            <label>Confirm password</label>
-            <input
-              type="password"
-              value={passwordConfirm}
-              onChange={e => this.setState({ passwordConfirm: e.target.value })}
-            />
-          </div>
           <div className="form__action flex jc-sb ai-c">
             <button type="submit" className="btn btn--primary btn--large">
-              Create account
+              {this.props.t('register.button.createAccount')}
             </button>
             <button className="btn btn--link" onClick={this.login.bind(this)}>
-              Login
+              {this.props.t('register.button.login')}
             </button>
           </div>
         </form>
@@ -89,4 +87,4 @@ class Register extends React.Component {
   }
 }
 
-export default Register;
+export default withTranslation()(Register);

@@ -54,7 +54,6 @@ class Editor extends React.Component {
         document.querySelector('.result-panel').getBoundingClientRect().x,
     });
     document.querySelector('html').style.overflow = 'hidden';
-    window.document.body.style.overflow = 'hidden';
     const { generatorId } = this.props.match.params;
     client.getGenerator(generatorId).then(generatorData => {
       this.setState(
@@ -105,7 +104,7 @@ class Editor extends React.Component {
               userId: this.props.user._id,
             },
           });
-          this.props.history.replace(`/editor/${result._id}`);
+          this.props.history.replace(`/${result._id}`);
         }
       })
       .catch(err => {

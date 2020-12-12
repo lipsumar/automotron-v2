@@ -121,14 +121,14 @@ const ax = axios.create({
 });
 
 export default {
-  login(username, password) {
+  login(email, password) {
     return ax
-      .post('/api/login', { username, password })
+      .post('/api/login', { username: email, password })
       .then(resp => resp.data);
   },
-  register(username, password) {
+  register(email, password) {
     return ax
-      .post('/api/register', { username, password })
+      .post('/api/register', { email, password })
       .then(resp => resp.data);
   },
   loggedIn() {
