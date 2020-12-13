@@ -108,7 +108,11 @@ class Editor extends React.Component {
               userId: this.props.user._id,
             },
           });
-          this.props.history.replace(`/${result._id}`);
+          this.props.history.replace(
+            `${this.props.i18n.language === 'fr' ? '/fr' : ''}/editor/${
+              result._id
+            }`,
+          );
         }
       })
       .catch(err => {
@@ -132,7 +136,9 @@ class Editor extends React.Component {
 
     client.saveGenerator(forked).then(result => {
       this.setState({ changesSaved: true });
-      window.location.href = `/editor/${result._id}`;
+      window.location.href = `${
+        this.props.i18n.language === 'fr' ? '/fr' : ''
+      }/editor/${result._id}`;
     });
   }
 
