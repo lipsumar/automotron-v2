@@ -304,6 +304,10 @@ class EditorUi extends EventEmitter {
       });
     });
 
+    uiNode.on('drag:start', () => {
+      this.selectNode(uiNode);
+    });
+
     uiNode.on('drag:move', () => {
       const moveDelta = {
         x: uiNode.x() - uiNode.dragStartedAt.x,
@@ -359,6 +363,7 @@ class EditorUi extends EventEmitter {
     });
 
     uiNode.on('contextmenu', () => {
+      this.selectNode(uiNode);
       this.emit('node:contextmenu', uiNode);
     });
 

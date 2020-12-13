@@ -23,6 +23,7 @@ class NodeUi extends EventEmitter {
           x: this.x(),
           y: this.y(),
         };
+        this.emit('drag:start');
       });
       this.group.on('dragend', () => {
         this.snapToGrid();
