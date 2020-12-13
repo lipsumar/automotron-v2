@@ -40,6 +40,9 @@ const resources = {
           email: 'Email',
           password: 'Mot de passe',
         },
+        link: {
+          forgotPassword: 'Mot de passe oublié?',
+        },
       },
       editor: {
         forkTitlePrepend: 'copie',

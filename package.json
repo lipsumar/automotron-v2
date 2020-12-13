@@ -25,6 +25,7 @@
     "lodash.clonedeep": "^4.5.0",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
+    "mailgun-js": "^0.22.0",
     "md5": "^2.2.1",
     "mongoose": "^5.9.4",
     "passport": "^0.4.1",

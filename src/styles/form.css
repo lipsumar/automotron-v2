@@ -17,6 +17,8 @@
   text-transform: uppercase;
   
   color:#788390;
+  display: flex;
+  justify-content: space-between;
 }
 
 .form .form__field{
@@ -83,4 +85,13 @@
   display: flex;
   justify-content: center;
   padding:0;
+}
+
+
+.label-aside{
+  font-size: 0.8em;
+  text-transform: none;
+}
+.label-aside a{
+  text-decoration: none;
 }

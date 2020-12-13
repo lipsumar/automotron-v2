@@ -52,7 +52,14 @@ class Login extends React.Component {
             />
           </div>
           <div className="form__field">
-            <label>{this.props.t('login.field.password')}</label>
+            <label>
+              {this.props.t('login.field.password')}
+              <div className="label-aside">
+                <a href="/reset-password">
+                  {this.props.t('login.link.forgotPassword')}
+                </a>
+              </div>
+            </label>
             <input
               type="password"
               value={password}
