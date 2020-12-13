@@ -1,6 +1,5 @@
 import React from 'react';
 import { withTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import UndoBtnIcon from './icons/UndoBtnIcon';
 import SaveIcon from './icons/SaveIcon';
 import LoggedInStatus from './LoggedInStatus';
@@ -31,7 +30,10 @@ class EditorToolbar extends React.Component {
     const canSave = this.canSave();
     return (
       <div className="editor-toolbar">
-        <a href="/" className="editor-toolbar__logo">
+        <a
+          href={this.props.i18n.language === 'fr' ? '/fr' : '/'}
+          className="editor-toolbar__logo"
+        >
           <Logo />
         </a>
         <div className="editor-toolbar__left">

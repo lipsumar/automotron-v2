@@ -36,7 +36,7 @@ class App extends React.Component {
   render() {
     const { user } = this.state;
     return (
-      <Router basename="/editor">
+      <Router>
         <Switch>
           <Route path="/help">
             <Help />
@@ -55,17 +55,32 @@ class App extends React.Component {
             render={props => <User {...props} user={user} />}
           ></Route>
           <Route
-            path="/:generatorId"
+            path="/fr/editor/:generatorId"
             render={props => (
               <Editor
                 {...props}
                 user={user}
+                language="fr"
                 onLogin={theUser => this.setState({ user: theUser })}
               />
             )}
           />
-          <Route path="/">
-            <Redirect to="/new" />
+          <Route
+            path="/editor/:generatorId"
+            render={props => (
+              <Editor
+                {...props}
+                user={user}
+                language="en"
+                onLogin={theUser => this.setState({ user: theUser })}
+              />
+            )}
+          />
+          <Route path="/fr/editor">
+            <Redirect to="/fr/editor/new" />
+          </Route>
+          <Route path="/editor">
+            <Redirect to="/editor/new" />
           </Route>
         </Switch>
       </Router>

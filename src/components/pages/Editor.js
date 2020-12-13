@@ -30,6 +30,10 @@ class Editor extends React.Component {
     this.afterLoginSuccess = null;
     this.editorUiRef = createRef();
 
+    if (window.location.href.match('/fr/')) {
+      this.props.i18n.changeLanguage('fr');
+    }
+
     // dev utility
     window.exportGraph = () =>
       exportService.exportGenerator(this.state.generator);
