@@ -65,8 +65,11 @@ module.exports = {
         ctx.stroke();
       } else {
         const points = this.edgePoints(
-          ...adjust(from.ui.x + from.ui.width, from.ui.y + 25),
-          ...adjust(to.ui.x, to.ui.y + 25),
+          ...adjust(
+            from.ui.x + from.ui.width,
+            from.ui.y + 25 + (from.title ? 25 : 0),
+          ),
+          ...adjust(to.ui.x, to.ui.y + 25 + (to.title ? 25 : 0)),
         );
         ctx.beginPath();
         ctx.moveTo(points[0], points[1]);
