@@ -9,13 +9,25 @@ const DEFAULT_SIZE = {
   textHeight: 20,
 };
 
-function getTopLeft(bbox, size) {
+const EDITOR_OFFSET_Y = 69;
+
+function getTopLeft(bbox, size, bodyHeight) {
   const bboxCenterX = bbox.x + bbox.width / 2;
   const bboxCenterY = bbox.y + bbox.height / 2;
-  return {
+  const pos = {
     top: bboxCenterY - size.height / 2,
     left: bboxCenterX - size.width / 2,
   };
+
+  const absoluteTop = pos.top + EDITOR_OFFSET_Y;
+  if (absoluteTop + size.height > bodyHeight) {
+    pos.top -= absoluteTop + size.height - bodyHeight;
+  }
+  if (absoluteTop < 0) {
+    pos.top += -absoluteTop;
+  }
+
+  return pos;
 }
 
 class TextNodeEdit extends React.Component {
@@ -31,6 +43,11 @@ class TextNodeEdit extends React.Component {
     };
     this.focusRef = createRef();
     this.linesParentRef = createRef();
+    this.bodyHeight = document.body.offsetHeight;
+    this.resizeListener = () => {
+      this.bodyHeight = document.body.offsetHeight;
+    };
+    window.addEventListener('resize', this.resizeListener);
   }
 
   componentDidMount() {
@@ -47,6 +64,10 @@ class TextNodeEdit extends React.Component {
     });
 
     this.focusRef.current.focus();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resizeListener);
   }
 
   setOneValue(rawText, index, cb) {
@@ -95,7 +116,10 @@ class TextNodeEdit extends React.Component {
       size,
       fullSize: {
         width: Math.max(...this.widths) + 20,
-        height: this.heights.reduce((acc, h) => acc + h, 0),
+        height: Math.min(
+          this.heights.reduce((acc, h) => acc + h, 0),
+          this.bodyHeight,
+        ),
       },
     });
   }
@@ -144,7 +168,11 @@ class TextNodeEdit extends React.Component {
           }`}
           style={
             this.state.fullSize
-              ? getTopLeft(this.props.bbox, this.state.fullSize)
+              ? getTopLeft(
+                  this.props.bbox,
+                  this.state.fullSize,
+                  this.bodyHeight,
+                )
               : {}
           }
           ref={this.linesParentRef}
