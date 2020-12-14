@@ -38,7 +38,7 @@ class TextListNodeUi extends NodeUi {
     this.titleRect = new Rect({
       fill: colors.nodeTitle,
       cornerRadius: 3,
-      height: 25,
+      height: 22,
       width: this.width,
       shadowColor: 'black',
       shadowBlur: 5,
@@ -48,7 +48,7 @@ class TextListNodeUi extends NodeUi {
     this.titleGroup.add(this.titleRect);
     this.titleRectBottom = new Rect({
       x: 0,
-      y: 20,
+      y: 17,
       height: 8,
       width: this.width,
       fill: colors.nodeTitle,
@@ -56,7 +56,7 @@ class TextListNodeUi extends NodeUi {
     this.titleGroup.add(this.titleRectBottom);
     this.titleText = new Text({
       fontSize: 18,
-      y: 5,
+      y: 4,
       x: padding,
       fill: colors.nodeTitleText,
       fontStyle: 'italic',
@@ -147,9 +147,7 @@ class TextListNodeUi extends NodeUi {
     const valuesSize = this.resizeValues(50 - arrowWidth);
 
     this.width = valuesSize.width + arrowWidth;
-    this.height = Math.max(52, valuesSize.height - 5);
-
-    this.listGroup.y(this.isMulti() ? 0 : 2);
+    this.height = Math.max(50, valuesSize.height - 5);
 
     this.rect.data(this.getPath(this.width, this.height));
 
@@ -179,10 +177,10 @@ class TextListNodeUi extends NodeUi {
     this.valuesTexts = [];
     this.valuesLines = [];
     const sizes = [];
-    let y = padding / 2;
+    let y = padding / 2 + 3;
 
     if (this.node.title) {
-      y += 20;
+      y += 25;
     }
 
     this.getValueToShow().forEach(value => {
@@ -232,9 +230,9 @@ class TextListNodeUi extends NodeUi {
       ...sizes.map(size => size.width),
       this.titleText.width() + padding,
     );
-    let height = padding / 2;
+    let height = padding / 2 + 3;
     if (this.node.title) {
-      height += 20;
+      height += 25;
     }
 
     sizes.forEach((size, i) => {
@@ -244,9 +242,9 @@ class TextListNodeUi extends NodeUi {
         const line = new Line({
           points: [
             arrowWidth + padding - 2,
-            height,
+            height - 1,
             largest - padding / 2,
-            height,
+            height - 1,
           ],
           stroke: colors.nodeMultiValueSeparator,
         });
@@ -277,7 +275,7 @@ class TextListNodeUi extends NodeUi {
   outletY(absolute = true) {
     let y = (absolute ? this.y() : 0) + 50 / 2 - 1;
     if (this.node.title) {
-      y += 20;
+      y += 25;
     }
     return y;
   }
@@ -289,7 +287,7 @@ class TextListNodeUi extends NodeUi {
   inletY() {
     let y = this.y() + 50 / 2 - 1;
     if (this.node.title) {
-      y += 20;
+      y += 25;
     }
     return y;
   }
