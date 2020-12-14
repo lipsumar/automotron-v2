@@ -147,7 +147,7 @@ class TextListNodeUi extends NodeUi {
     const valuesSize = this.resizeValues(50 - arrowWidth);
 
     this.width = valuesSize.width + arrowWidth;
-    this.height = Math.max(50, valuesSize.height - 5);
+    this.height = Math.max(this.node.title ? 75 : 50, valuesSize.height - 5);
 
     this.rect.data(this.getPath(this.width, this.height));
 
