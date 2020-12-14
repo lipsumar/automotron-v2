@@ -58,7 +58,6 @@ class TextListNodeUi extends NodeUi {
       fontSize: 18,
       y: 5,
       x: padding,
-      width: this.width,
       fill: colors.nodeTitleText,
       fontStyle: 'italic',
     });
@@ -228,7 +227,11 @@ class TextListNodeUi extends NodeUi {
       y += height;
     });
 
-    const largest = Math.max(minWidth, ...sizes.map(size => size.width));
+    const largest = Math.max(
+      minWidth,
+      ...sizes.map(size => size.width),
+      this.titleText.width() + padding,
+    );
     let height = padding / 2;
     if (this.node.title) {
       height += 20;
