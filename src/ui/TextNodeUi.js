@@ -165,7 +165,7 @@ class TextListNodeUi extends NodeUi {
     if (this.isGenerated()) {
       return [this.node.ui.generatorValue];
     }
-    return this.node.value;
+    return this.node.value.slice(0, 5);
   }
 
   isGenerated() {
@@ -176,6 +176,7 @@ class TextListNodeUi extends NodeUi {
     this.valuesTexts.forEach(text => text.destroy());
     this.valuesLines.forEach(line => line.destroy());
     this.agreementMarkers.forEach(marker => marker.destroy());
+    if (this.moreMarker) this.moreMarker.destroy();
     this.valuesTexts = [];
     this.valuesLines = [];
     const sizes = [];
@@ -251,6 +252,17 @@ class TextListNodeUi extends NodeUi {
       }
       height += size.height;
     });
+
+    if (this.node.value.length > 5) {
+      this.moreMarker = new Text({
+        text: `+ ${this.node.value.length - 5}`,
+        y: height,
+        x: padding + arrowWidth,
+      });
+      height += 20;
+      this.listGroup.add(this.moreMarker);
+    }
+
     height += padding / 2;
     return { width: largest, height };
   }
