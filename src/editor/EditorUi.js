@@ -305,7 +305,9 @@ class EditorUi extends EventEmitter {
     });
 
     uiNode.on('drag:start', () => {
-      this.selectNode(uiNode);
+      if (!this.isNodeSelected(uiNode)) {
+        this.selectNode(uiNode);
+      }
     });
 
     uiNode.on('drag:move', () => {
@@ -451,6 +453,10 @@ class EditorUi extends EventEmitter {
       item.setSelected(false);
     });
     this.selection = [];
+  }
+
+  isNodeSelected(uiNode) {
+    return !!this.selection.find(item => item.node.id === uiNode.node.id);
   }
 
   mouseOnInlet() {
