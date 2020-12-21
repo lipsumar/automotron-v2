@@ -26,6 +26,13 @@ describe('parseRawText', () => {
     });
   });
 
+  it('supports partial positional and keyword agreement terms', () => {
+    expect(parseRawText('foo(m,color=blue)', syntax)).toEqual({
+      text: 'foo',
+      agreement: { gender: 'm', color: 'blue' },
+    });
+  });
+
   it('supports only keyword agreement terms', () => {
     expect(parseRawText('foo(color=blue)', syntax)).toEqual({
       text: 'foo',

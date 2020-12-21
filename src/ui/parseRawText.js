@@ -19,6 +19,7 @@ function parseRawText(raw, syntax = hardCodedSyntax) {
   const agreementText = m ? m[2] : null;
   let isUsingPositionalArgument = false;
   if (agreementText) {
+    agreement = {};
     // select syntax
     let syntaxName = 'default';
     let termsStr = agreementText;
@@ -26,23 +27,21 @@ function parseRawText(raw, syntax = hardCodedSyntax) {
       [syntaxName, termsStr] = agreementText.split(':');
     }
     const terms = termsStr.split(',').map(s => s.trim());
-    isUsingPositionalArgument = !!terms.find(t => !t.includes('='));
 
-    // positional arguments
-    if (isUsingPositionalArgument) {
-      agreement = syntax[syntaxName].reduce((acc, termName) => {
-        acc[termName] = terms.shift();
-        return acc;
-      }, {});
-    } else {
-      agreement = {};
-    }
-
-    // keyword arguments
     if (terms.length > 0) {
-      terms.forEach(t => {
-        const [termName, termValue] = t.split('=');
-        agreement[termName] = termValue;
+      let positional = true;
+      terms.forEach((t, i) => {
+        if (t.includes('=')) {
+          positional = false;
+        }
+
+        if (positional) {
+          agreement[syntax[syntaxName][i]] = t;
+          isUsingPositionalArgument = true;
+        } else {
+          const [termName, termValue] = t.split('=');
+          agreement[termName] = termValue;
+        }
       });
     }
   }
