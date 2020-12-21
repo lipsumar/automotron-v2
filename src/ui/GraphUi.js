@@ -102,6 +102,12 @@ class GraphUi extends EventEmitter {
       }
     }
 
+    const isGenerator = this.graph.isNodeGenerator(uiNode.node);
+    if (isGenerator) {
+      const generated = this.graph.getNodesGeneratedBy(uiNode.node);
+      generated.forEach(gen => this.refreshNode(this.getNode(gen.id)));
+    }
+
     uiNode.node.patchUi({ generatorValue });
     uiNode.refresh();
   }

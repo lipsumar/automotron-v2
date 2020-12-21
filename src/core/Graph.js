@@ -170,6 +170,10 @@ class Graph {
     return this.getEdgesFrom(node, 'generator').length > 0;
   }
 
+  isNodeGenerator(node) {
+    return this.getEdgesTo(node, 'generator').length > 0;
+  }
+
   getNodesGeneratedBy(generator) {
     return this.getEdgesTo(generator, 'generator').map(edge => edge.from);
   }

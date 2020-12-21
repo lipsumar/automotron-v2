@@ -5,13 +5,13 @@ class SetNodeValueCommand extends Command {
     const { graph, ui, options } = this;
     this.previousValue = graph.getNode(options.nodeId).value;
     graph.getNode(options.nodeId).value = options.value;
-    ui.getNode(options.nodeId).refresh();
+    ui.refreshNode(ui.getNode(options.nodeId));
   }
 
   undo() {
     const { graph, ui, options } = this;
     graph.getNode(options.nodeId).value = this.previousValue;
-    ui.getNode(options.nodeId).refresh();
+    ui.refreshNode(ui.getNode(options.nodeId));
   }
 }
 
