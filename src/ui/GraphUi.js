@@ -96,11 +96,15 @@ class GraphUi extends EventEmitter {
     const generator = this.graph.getGeneratorFrom(uiNode.node);
     let generatorValue = null;
     if (generator) {
-      generatorValue = generator.value[0] || { text: ' ' };
+      generatorValue = this.getNode(generator.id).getValueToShow()[0] || {
+        text: ' ',
+      };
       if (generator.title) {
-        generatorValue = { text: generator.title };
+        generatorValue.text = generator.title;
       }
     }
+
+    uiNode.node.patchUi({ generatorValue });
 
     const isGenerator = this.graph.isNodeGenerator(uiNode.node);
     if (isGenerator) {
@@ -108,7 +112,6 @@ class GraphUi extends EventEmitter {
       generated.forEach(gen => this.refreshNode(this.getNode(gen.id)));
     }
 
-    uiNode.node.patchUi({ generatorValue });
     uiNode.refresh();
   }
 
