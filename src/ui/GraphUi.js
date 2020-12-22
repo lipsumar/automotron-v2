@@ -99,6 +99,7 @@ class GraphUi extends EventEmitter {
       generatorValue = this.getNode(generator.id).getValueToShow()[0] || {
         text: ' ',
       };
+      generatorValue = { ...generatorValue };
       if (generator.title) {
         generatorValue.text = generator.title;
       }
