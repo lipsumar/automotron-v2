@@ -231,7 +231,7 @@
   border:4px solid #65a8f0;
   border-radius: 5px;
   max-height: 100vh;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .text-node-edit__line{
