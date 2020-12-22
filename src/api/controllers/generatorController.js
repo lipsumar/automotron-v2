@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import cors from 'cors';
 import ensureLoggedIn from '../middlewares/ensureLoggedIn';
 import generatorService from '../services/generatorService';
 import previewService from '../services/previewService';
@@ -52,7 +53,7 @@ router.get('/:generatorIds', async (req, res) => {
   );
 });
 
-router.get('/:generatorId/run', async (req, res) => {
+router.get('/:generatorId/run', cors(), async (req, res) => {
   const generatorModel = await generatorService.get(req.params.generatorId);
   const result = await generatorService.run(generatorModel);
   const format = req.query.format;
