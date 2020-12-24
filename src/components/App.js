@@ -47,11 +47,11 @@ class App extends React.Component {
           <Route path="/view">
             <View />
           </Route>
-          <Route path="/admin">
+          <Route path="/editor/admin">
             <Admin user={user} />
           </Route>
           <Route
-            path="/user/:userId"
+            path="/editor/user/:userId"
             render={props => <User {...props} user={user} />}
           ></Route>
           <Route
