@@ -2,7 +2,9 @@ import axios from 'axios';
 import cloneDeep from 'lodash.clonedeep';
 
 const newGenerator = {
-  title: 'Nouveau générateur',
+  title: window.location.href.match(/\/fr\//)
+    ? 'Nouveau générateur'
+    : 'New generator',
   graph: {
     nodes: [
       {
