@@ -22,7 +22,7 @@ module.exports = {
 
   async findForUser(userId) {
     return Generator.find({ userId })
-      .sort({ updated_at: 'desc' })
+      .sort({ updatedAt: 'desc' })
       .exec();
   },
 
