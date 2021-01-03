@@ -6,11 +6,12 @@ const router = new Router();
 router.get('/', async (req, res) => {
   const users = await userService.findAll();
   res.send(
-    users.map(generator => {
+    users.map(user => {
       return {
-        _id: generator._id.toString(),
-        email: generator.email,
-        role: generator.role,
+        _id: user._id.toString(),
+        email: user.email,
+        role: user.role,
+        username: user.username,
       };
     }),
   );
