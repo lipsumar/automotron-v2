@@ -21,7 +21,9 @@ module.exports = {
   },
 
   async findForUser(userId) {
-    return Generator.find({ userId });
+    return Generator.find({ userId })
+      .sort({ updated_at: 'desc' })
+      .exec();
   },
 
   async get(generatorId) {
