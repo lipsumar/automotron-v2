@@ -126,7 +126,7 @@ class TextNodeEdit extends React.Component {
 
   addValue(index) {
     const value = [...this.state.value];
-    value.splice(index, 0, '');
+    value.splice(index, 0, { rawText: '' });
     const size = [...this.state.size];
     size.splice(index, 0, { ...DEFAULT_SIZE });
     const dimensions = this.measure('');
@@ -178,6 +178,7 @@ class TextNodeEdit extends React.Component {
           ref={this.linesParentRef}
         >
           {this.state.value.map((oneValue, i) => {
+            console.log({ oneValue });
             return (
               <div
                 className="text-node-edit__line"
