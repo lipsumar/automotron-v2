@@ -25,7 +25,7 @@ class StartNodeUi extends NodeUi {
     this.group.add(this.rect);
 
     if (opts.editable) {
-      this.registerOutlet('right');
+      this.registerOutlet('default');
     }
   }
 

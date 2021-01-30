@@ -9,9 +9,10 @@ class Edge {
 
   space = true;
 
-  constructor(from, to) {
+  constructor(from, to, options = {}) {
     this.from = from;
     this.to = to;
+    this.fromOutlet = options.fromOutlet || 'default';
   }
 
   setId(id) {

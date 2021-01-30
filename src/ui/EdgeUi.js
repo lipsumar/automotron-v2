@@ -12,6 +12,7 @@ class EdgeUi extends EventEmitter {
     this.edge = edge;
     this.boundPosition = this.position.bind(this);
     this.from = from;
+    this.fromOutlet = opts.fromOutlet || 'default';
     this.setTo(to);
 
     this.line = new Line({
@@ -62,7 +63,7 @@ class EdgeUi extends EventEmitter {
   getPoints() {
     const { from, to } = this;
     const fromX = from.outletX();
-    const fromY = from.outletY();
+    const fromY = from.outletY(true, this.fromOutlet);
     const toX = to.inletX();
     const toY = to.inletY();
     const points = [fromX, fromY];

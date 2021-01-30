@@ -1,10 +1,16 @@
 import Command from './Command';
 import TextNode from '../../core/TextNode';
+import LoopNode from '../../core/LoopNode';
 
 class CreateNodeCommand extends Command {
   execute() {
     const { graph, ui, options } = this;
-    const node = new TextNode([{ text: options.text }]);
+    let node;
+    if (options.type === 'text') {
+      node = new TextNode([{ text: options.text }]);
+    } else if (options.type === 'loop') {
+      node = new LoopNode();
+    }
     node.ui = { ...options.ui };
     graph.addNode(node, this.previousId);
     this.previousId = node.id;
@@ -16,7 +22,13 @@ class CreateNodeCommand extends Command {
     });
 
     if (options.fromNodeId) {
-      const edge = graph.createEdge(graph.getNode(options.fromNodeId), node);
+      const edge = graph.createEdge(
+        {
+          node: graph.getNode(options.fromNodeId),
+          outlet: options.fromOutlet || 'default',
+        },
+        node,
+      );
       ui.createEdge(edge);
     }
 

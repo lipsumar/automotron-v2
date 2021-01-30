@@ -1,11 +1,13 @@
 import StartNode from './StartNode';
 import Edge from './Edge';
 import TextNode from './TextNode';
+import LoopNode from './LoopNode';
 import GraphNode from './GraphNode';
 
 const nodeTypes = {
   text: TextNode,
   graph: GraphNode,
+  loop: LoopNode,
 };
 
 class Graph {
@@ -37,7 +39,13 @@ class Graph {
       } else if (edge.type === 'agreement') {
         graph.createAgreementEdge(edge.from, edge.to);
       } else {
-        const createdEdge = graph.createEdge(edge.from, edge.to);
+        const createdEdge = graph.createEdge(
+          {
+            node: graph.getNode(edge.from.id),
+            outlet: edge.from.outlet || 'default',
+          },
+          edge.to,
+        );
         if (edge.space === false) createdEdge.space = false;
       }
     });
@@ -79,6 +87,12 @@ class Graph {
   }
 
   createEdge(from, to, id) {
+    console.log('cgraph.creatEdge', from);
+    let fromOutlet = 'default';
+    if (from.node && from.outlet) {
+      fromOutlet = from.outlet;
+      from = from.node;
+    }
     if (!from.id) {
       throw new Error('addEdge expects `from` to have an id');
     }
@@ -91,7 +105,10 @@ class Graph {
     if (!this.getNode(to.id)) {
       throw new Error('addEdge expects `to` to be part of graph');
     }
-    const edge = new Edge(this.getNode(from.id), this.getNode(to.id));
+    const edge = new Edge(this.getNode(from.id), this.getNode(to.id), {
+      fromOutlet,
+    });
+    console.log('=>', edge);
     if (id && id >= this.nextEdgeId) {
       this.nextEdgeId = id + 1;
     }
@@ -128,9 +145,12 @@ class Graph {
     return nextId;
   }
 
-  getEdgesFrom(node, type = null) {
+  getEdgesFrom(node, type = null, fromOutlet = 'default') {
     return this.edges.filter(
-      edge => edge.from.id === node.id && (type ? edge.type === type : true),
+      edge =>
+        edge.from.id === node.id &&
+        (type ? edge.type === type : true) &&
+        (fromOutlet ? edge.fromOutlet === fromOutlet : true),
     );
   }
 

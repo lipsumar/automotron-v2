@@ -11,6 +11,8 @@ class Node {
     return node;
   }
 
+  reset() {}
+
   setId(id) {
     this.id = id;
   }

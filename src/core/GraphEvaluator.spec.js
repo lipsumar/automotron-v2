@@ -2,6 +2,7 @@ import Graph from './Graph';
 import TextNode from './TextNode';
 import GraphEvaluator from './GraphEvaluator';
 import { seedRandom } from './utils';
+import LoopNode from './LoopNode';
 
 describe('GraphEvaluator', () => {
   describe('evaluate()', () => {
@@ -330,6 +331,45 @@ describe('GraphEvaluator', () => {
       expect(result.results[4].result.results[0].result.text).toBe('prince');
       expect(result.results[8].result.text).toBe('un');
       expect(result.results[10].result.results[0].result.text).toBe('prince');
+    });
+
+    it('supports loopNode', async () => {
+      const graph = new Graph();
+      const textNode = new TextNode([{ text: 'hello' }]);
+      graph.addNode(textNode);
+      graph.createEdge(graph.startNode, textNode);
+      const loopNode = new LoopNode();
+      graph.addNode(loopNode);
+      graph.createEdge(textNode, loopNode);
+
+      const i = new TextNode([{ text: 'i' }]);
+      graph.addNode(i);
+      graph.createEdge(loopNode, i);
+      const am = new TextNode([{ text: 'am' }]);
+      graph.addNode(am);
+      graph.createEdge(i, am);
+
+      const happy = new TextNode([{ text: 'happy' }]);
+      graph.addNode(happy);
+      graph.createEdge({ node: loopNode, outlet: 'exit' }, happy);
+
+      const evaluator = new GraphEvaluator(graph);
+      const result = await evaluator.play();
+
+      expect(result.results).toHaveLength(22);
+      // expect(result.results[0]).toEqual({ nodeId: 1, result: null });
+      // expect(result.results[1]).toEqual({ edge: true, result: ' ' });
+      // expect(result.results[2]).toEqual({
+      //   nodeId: 2,
+      //   result: {
+      //     results: [
+      //       {
+      //         nodeId: 3,
+      //         result: { text: 'generator speaking' },
+      //       },
+      //     ],
+      //   },
+      // });
     });
   });
 });

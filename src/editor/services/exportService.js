@@ -11,7 +11,7 @@ export default {
       nodes: graph.nodes,
       edges: graph.edges.map(edge => {
         return {
-          from: { id: edge.from.id },
+          from: { id: edge.from.id, outlet: edge.fromOutlet },
           to: { id: edge.to.id },
           type: edge.type,
           space: edge.space,

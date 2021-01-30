@@ -43,6 +43,7 @@ class EditorUi extends EventEmitter {
             x: this.mouseNode.inletX(), // vite fait
             y: this.mouseNode.inletY() - 20,
           },
+          type: 'text',
         });
       });
     }
@@ -97,13 +98,15 @@ class EditorUi extends EventEmitter {
     });
   }
 
-  createNode() {
+  createNode(options = {}) {
     this.commandInvoker.execute('createNode', {
       text: '',
       ui: {
         x: this.mouseNode.inletX(), // vite fait
         y: this.mouseNode.inletY() - 20,
       },
+      type: 'text',
+      ...options,
     });
   }
 
@@ -270,8 +273,10 @@ class EditorUi extends EventEmitter {
 
   setupNode(uiNode) {
     let edgeToMouse = null;
-    uiNode.on('newEdgeToMouse:start', fromUiNode => {
-      const uiEdge = new EdgeUi(fromUiNode, this.mouseNode);
+    uiNode.on('newEdgeToMouse:start', ({ node: fromUiNode, outlet }) => {
+      const uiEdge = new EdgeUi(fromUiNode, this.mouseNode, undefined, {
+        fromOutlet: outlet,
+      });
       this.graphUi.setupEdge(uiEdge);
       edgeToMouse = uiEdge;
     });
@@ -285,12 +290,14 @@ class EditorUi extends EventEmitter {
       this.graphUi.draw();
     });
     uiNode.on('newEdgeToMouse:finish', () => {
+      const fromOutlet = edgeToMouse.fromOutlet;
       edgeToMouse.destroy();
       const onUiNode = this.mouseOnInlet();
       if (onUiNode) {
         this.commandInvoker.execute('linkNode', {
           fromNodeId: uiNode.node.id,
           toNodeId: onUiNode.node.id,
+          fromOutlet,
         });
         return;
       }
@@ -301,6 +308,8 @@ class EditorUi extends EventEmitter {
           y: this.mouseNode.inletY() - 20,
         },
         fromNodeId: uiNode.node.id,
+        fromOutlet,
+        type: 'text',
       });
     });
 

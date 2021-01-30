@@ -193,6 +193,10 @@ class Editor extends React.Component {
     this.editorUiRef.current.createNode();
   }
 
+  insertLoopNode() {
+    this.editorUiRef.current.createNode({ type: 'loop' });
+  }
+
   undo() {
     this.editorUiRef.current.undo();
   }
@@ -227,6 +231,7 @@ class Editor extends React.Component {
               onLogout={this.props.onLogout}
               setGeneratorTitle={this.setGeneratorTitle.bind(this)}
               onInsertText={() => this.insertTextNode()}
+              onInsertLoop={() => this.insertLoopNode()}
               onExport={format => this.export(format)}
               onFork={() => this.forkGenerator()}
               changesSaved={changesSaved}

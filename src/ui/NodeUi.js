@@ -72,13 +72,13 @@ class NodeUi extends EventEmitter {
   }
 
   registerOutlet(side) {
-    const outlet = this.createOutlet();
+    const outlet = this.createOutlet({}, side);
     this.outlets[side] = outlet;
     this.group.add(outlet);
     this.positionOutlets();
   }
 
-  createOutlet(opts) {
+  createOutlet(opts, side) {
     const circle = new Circle({
       radius: 7,
       fill: colors.nodeOutlet,
@@ -101,7 +101,7 @@ class NodeUi extends EventEmitter {
     });
     circle.on('dragstart', () => {
       circle.opacity(0);
-      this.emit('newEdgeToMouse:start', this);
+      this.emit('newEdgeToMouse:start', { node: this, outlet: side });
     });
     circle.on('dragmove', () => {
       this.emit('newEdgeToMouse:move');
@@ -125,13 +125,13 @@ class NodeUi extends EventEmitter {
     this.draw();
   }
 
-  getOutletPos() {
-    return { x: this.width + 2, y: this.outletY(false) };
+  getOutletPos(side) {
+    return { x: this.width + 2, y: this.outletY(false, side) };
   }
 
   positionOutlets() {
     Object.keys(this.outlets).forEach(side => {
-      this.outlets[side].position(this.getOutletPos());
+      this.outlets[side].position(this.getOutletPos(side));
     });
   }
 

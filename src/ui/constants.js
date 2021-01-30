@@ -31,6 +31,7 @@ export const colors = {
   nodeTitle: colorsDefinitions.primaryLight,
   nodeTitleText: colorsDefinitions.primaryDark,
   node: '#fff',
+  loopNode: colorsDefinitions.primaryDark,
   nodeGenerated: colorsDefinitions.primaryLight,
   nodeMultiValueSeparator: '#D4D4D4',
   agreementMarker: colorsDefinitions.accent,

@@ -49,6 +49,7 @@ class EditorToolbar extends React.Component {
               onUndo={this.props.onUndo}
               onRedo={this.props.onRedo}
               onInsertText={this.props.onInsertText}
+              onInsertLoop={this.props.onInsertLoop}
               canSave={canSave}
               onExport={this.props.onExport}
               onFork={this.props.onFork}

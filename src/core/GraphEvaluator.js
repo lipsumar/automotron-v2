@@ -5,10 +5,12 @@ import combineAgreements from './combineAgreements';
 class GraphEvaluator {
   constructor(graph) {
     this.graph = graph;
+    this.loopStack = [];
   }
 
   async play() {
     this.resetNodesEvaluatedResult();
+    this.loopStack = [];
 
     const result = await this.run(this.graph.startNode);
     return result;
@@ -33,7 +35,15 @@ class GraphEvaluator {
       }
 
       result.push(element);
-      const nextEdge = this.findNextEdge(currentPointer);
+
+      const nextEdge =
+        currentPointer.type === 'loop'
+          ? this.findNextEdge(
+              currentPointer,
+              currentPointer.endReached() ? 'exit' : 'default',
+            )
+          : this.findNextEdge(currentPointer);
+
       if (nextEdge) {
         result.push({
           edge: true,
@@ -41,6 +51,8 @@ class GraphEvaluator {
         });
         return this.run(nextEdge.to, result);
       }
+      const returnTo = this.loopStack.pop();
+      return this.run(returnTo, result);
     }
     return { results: result };
   }
@@ -106,7 +118,7 @@ class GraphEvaluator {
         ? agreementNode.evaluatedResult.agreement
         : inheritedAgreement;
 
-    if (generatorNode) {
+    if (generatorNode && node.type === 'text') {
       element.result = await this.run(generatorNode, [], agreement);
       // copy the first agreement of results as agreement of the result
       element.result.agreement = element.result.results[0].result.agreement;
@@ -117,6 +129,19 @@ class GraphEvaluator {
       //     agreement,
       //   ),
       // };
+    } else if (node.type === 'loop') {
+      if (generatorNode && !node.evaluatedResult) {
+        node.evaluatedResult = await this.run(generatorNode, []);
+      }
+      let maxCount = node.maxCount();
+      if (node.evaluatedResult) {
+        maxCount = parseInt(node.evaluatedResult.results[0].result.text, 10);
+      }
+
+      node.loop();
+      if (!node.endReached(maxCount)) {
+        this.loopStack.push(node);
+      }
     } else {
       element.result = await node.evaluate(agreement);
     }
@@ -137,8 +162,12 @@ class GraphEvaluator {
     return element;
   }
 
-  findNextEdge(currentPointer) {
-    const edges = this.graph.getEdgesFrom(currentPointer, 'default');
+  findNextEdge(currentPointer, fromOutlet = 'default') {
+    const edges = this.graph.getEdgesFrom(
+      currentPointer,
+      'default',
+      fromOutlet,
+    );
     if (edges.length === 0) {
       return null;
     }
@@ -151,6 +180,7 @@ class GraphEvaluator {
     this.graph.nodes.forEach(node => {
       node.evaluatedResult = null;
       node.evaluatedCount = 0;
+      node.reset();
     });
   }
 

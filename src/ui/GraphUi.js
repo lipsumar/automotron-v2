@@ -10,11 +10,13 @@ import GeneratorEdgeUi from './GeneratorEdgeUi';
 import AgreementEdgeUi from './AgreementEdgeUi';
 import findBoundaries from '../utils/findBoundaries';
 import GraphNodeUi from './GraphNodeUi';
+import LoopNodeUi from './LoopNodeUi';
 
 const uiNodeTypes = {
   start: StartNodeUi,
   text: TextNodeUi,
   graph: GraphNodeUi,
+  loop: LoopNodeUi,
 };
 
 const uiEdgeTypes = {
@@ -149,7 +151,7 @@ class GraphUi extends EventEmitter {
       this.getNode(edge.from.id),
       this.getNode(edge.to.id),
       edge,
-      { editable: this.opts.editable },
+      { editable: this.opts.editable, fromOutlet: edge.fromOutlet },
     );
     uiEdge.edge = edge;
     this.edges.push(uiEdge);
@@ -193,6 +195,7 @@ class GraphUi extends EventEmitter {
   }
 
   setNodeError(nodeId, error) {
+    console.log(error);
     const uiNode = this.getNode(nodeId);
     uiNode.setError(error);
   }

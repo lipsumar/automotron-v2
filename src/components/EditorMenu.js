@@ -66,14 +66,17 @@ export default function EditorMenu(props) {
           <div className="editor-menu__menu-item">Paste</div> */}
         </div>
       </div>
-      {/* <div className="editor-menu__item">
+      <div className="editor-menu__item">
         {t('editor.menu.insert.title')}
         <div className="editor-menu__menu">
           <div className="editor-menu__menu-item" onClick={props.onInsertText}>
             <MenuItem label={t('editor.menu.insert.items.text')} />
           </div>
+          <div className="editor-menu__menu-item" onClick={props.onInsertLoop}>
+            <MenuItem label={t('editor.menu.insert.items.loop')} />
+          </div>
         </div>
-      </div> */}
+      </div>
       <div className="editor-menu__item">
         {t('editor.menu.export.title')}
         <div className="editor-menu__menu">

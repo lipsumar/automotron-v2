@@ -11,7 +11,10 @@ class LinkNodeCommand extends Command {
     const { graph, ui, options } = this;
 
     const edge = graph[methods[options.type || 'default']](
-      graph.getNode(options.fromNodeId),
+      {
+        node: graph.getNode(options.fromNodeId),
+        outlet: options.fromOutlet || 'default',
+      },
       graph.getNode(options.toNodeId),
       this.previousId,
     );
