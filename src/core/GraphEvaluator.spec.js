@@ -7,9 +7,9 @@ describe('GraphEvaluator', () => {
   describe('evaluate()', () => {
     it('runs the simplest graph', async () => {
       const graph = new Graph();
-      const textNode = new TextNode([{ text: 'hello' }]);
+      const textNode = new TextNode('hello');
       graph.addNode(textNode);
-      graph.createEdge(graph.startNode, textNode);
+      graph.createEdge(graph.startNode.flowOutlet, textNode.flowInlet);
 
       const evaluator = new GraphEvaluator(graph);
       const result = await evaluator.play();
@@ -26,12 +26,12 @@ describe('GraphEvaluator', () => {
 
     it('supports no-space edges', async () => {
       const graph = new Graph();
-      const textNode = new TextNode([{ text: 'hell' }]);
-      const textNode2 = new TextNode([{ text: 'o' }]);
+      const textNode = new TextNode('hell');
+      const textNode2 = new TextNode('o');
       graph.addNode(textNode);
       graph.addNode(textNode2);
-      graph.createEdge(graph.startNode, textNode);
-      const edge = graph.createEdge(textNode, textNode2);
+      graph.createEdge(graph.startNode.flowOutlet, textNode.flowInlet);
+      const edge = graph.createEdge(textNode.flowOutlet, textNode2.flowInlet);
       edge.space = false;
 
       const evaluator = new GraphEvaluator(graph);
@@ -55,15 +55,15 @@ describe('GraphEvaluator', () => {
     it('randomly chooses nodes when multiple edges from', async () => {
       seedRandom('seed_GraphEvaluator_');
       const graph = new Graph();
-      const hello = new TextNode([{ text: 'hello' }]);
-      const you = new TextNode([{ text: 'you' }]);
-      const there = new TextNode([{ text: 'there' }]);
+      const hello = new TextNode('hello');
+      const you = new TextNode('you');
+      const there = new TextNode('there');
       graph.addNode(hello);
       graph.addNode(you);
       graph.addNode(there);
-      graph.createEdge(graph.startNode, hello);
-      graph.createEdge(hello, you);
-      graph.createEdge(hello, there);
+      graph.createEdge(graph.startNode.flowOutlet, hello.flowInlet);
+      graph.createEdge(hello.flowOutlet, you.flowInlet);
+      graph.createEdge(hello.flowOutlet, there.flowInlet);
 
       const evaluator = new GraphEvaluator(graph);
       const result = await evaluator.play();
@@ -76,12 +76,12 @@ describe('GraphEvaluator', () => {
 
     it('uses generators', async () => {
       const graph = new Graph();
-      const textNode = new TextNode([{ text: 'hello' }]);
+      const textNode = new TextNode('hello');
       graph.addNode(textNode);
-      graph.createEdge(graph.startNode, textNode);
-      const generator = new TextNode([{ text: 'generator speaking' }]);
+      graph.createEdge(graph.startNode.flowOutlet, textNode.flowInlet);
+      const generator = new TextNode('generator speaking');
       graph.addNode(generator);
-      graph.createGeneratorEdge(textNode, generator);
+      graph.createEdge(generator.generatorOutlet, textNode.generatorInlet);
 
       const evaluator = new GraphEvaluator(graph);
       const result = await evaluator.play();
@@ -117,9 +117,12 @@ describe('GraphEvaluator', () => {
       ]);
       graph.addNode(textNodeA);
       graph.addNode(textNodeB);
-      graph.createEdge(graph.startNode, textNodeA);
-      graph.createEdge(textNodeA, textNodeB);
-      graph.createAgreementEdge(textNodeA, textNodeB);
+      graph.createEdge(graph.startNode.flowOutlet, textNodeA.flowInlet);
+      graph.createEdge(textNodeA.flowOutlet, textNodeB.flowInlet);
+      graph.createEdge(
+        textNodeA.agreementConnector,
+        textNodeB.agreementConnector,
+      );
 
       const evaluator = new GraphEvaluator(graph);
       const result = await evaluator.play();
@@ -151,11 +154,17 @@ describe('GraphEvaluator', () => {
       graph.addNode(textNodeA);
       graph.addNode(textNodeB);
       graph.addNode(textNodeC);
-      graph.createEdge(graph.startNode, textNodeA);
-      graph.createEdge(textNodeA, textNodeB);
-      graph.createEdge(textNodeB, textNodeC);
-      graph.createAgreementEdge(textNodeA, textNodeB);
-      graph.createAgreementEdge(textNodeB, textNodeC);
+      graph.createEdge(graph.startNode.flowOutlet, textNodeA.flowInlet);
+      graph.createEdge(textNodeA.flowOutlet, textNodeB.flowInlet);
+      graph.createEdge(textNodeB.flowOutlet, textNodeC.flowInlet);
+      graph.createEdge(
+        textNodeA.agreementConnector,
+        textNodeB.agreementConnector,
+      );
+      graph.createEdge(
+        textNodeB.agreementConnector,
+        textNodeC.agreementConnector,
+      );
 
       const evaluator = new GraphEvaluator(graph);
       const result = await evaluator.play();
@@ -176,8 +185,8 @@ describe('GraphEvaluator', () => {
       const textNodeB = new TextNode([{ text: 'poi' }]);
       graph.addNode(textNodeA);
       graph.addNode(textNodeB);
-      graph.createEdge(graph.startNode, textNodeA);
-      graph.createEdge(textNodeA, textNodeB);
+      graph.createEdge(graph.startNode.flowOutlet, textNodeA.flowInlet);
+      graph.createEdge(textNodeA.flowOutlet, textNodeB.flowInlet);
       const generator = new TextNode([
         { text: 'poisson', agreement: { gender: 'm' } },
         { text: 'fleur', agreement: { gender: 'f' } },
@@ -186,8 +195,11 @@ describe('GraphEvaluator', () => {
         { text: 'fleur', agreement: { gender: 'f' } },
       ]);
       graph.addNode(generator);
-      graph.createGeneratorEdge(textNodeB, generator);
-      graph.createAgreementEdge(textNodeA, textNodeB);
+      graph.createEdge(generator.generatorOutlet, textNodeB.generatorInlet);
+      graph.createEdge(
+        textNodeA.agreementConnector,
+        textNodeB.agreementConnector,
+      );
 
       const evaluator = new GraphEvaluator(graph);
       const result = await evaluator.play();
@@ -243,12 +255,21 @@ describe('GraphEvaluator', () => {
       graph.addNode(textNodeB);
       graph.addNode(textNodeC);
       graph.addNode(textNodeBGenerator);
-      graph.createEdge(graph.startNode, textNodeA);
-      graph.createEdge(textNodeA, textNodeB);
-      graph.createEdge(textNodeB, textNodeC);
-      graph.createAgreementEdge(textNodeA, textNodeB);
-      graph.createAgreementEdge(textNodeB, textNodeC);
-      graph.createGeneratorEdge(textNodeB, textNodeBGenerator);
+      graph.createEdge(graph.startNode.flowOutlet, textNodeA.flowInlet);
+      graph.createEdge(textNodeA.flowOutlet, textNodeB.flowInlet);
+      graph.createEdge(textNodeB.flowOutlet, textNodeC.flowInlet);
+      graph.createEdge(
+        textNodeA.agreementConnector,
+        textNodeB.agreementConnector,
+      );
+      graph.createEdge(
+        textNodeB.agreementConnector,
+        textNodeC.agreementConnector,
+      );
+      graph.createEdge(
+        textNodeBGenerator.generatorOutlet,
+        textNodeB.generatorInlet,
+      );
 
       const evaluator = new GraphEvaluator(graph);
       const result = await evaluator.play();

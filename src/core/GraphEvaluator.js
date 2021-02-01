@@ -39,7 +39,7 @@ class GraphEvaluator {
           edge: true,
           result: nextEdge.evaluate(),
         });
-        return this.run(nextEdge.to, result);
+        return this.run(nextEdge.to.node, result);
       }
     }
     return { results: result };
@@ -75,7 +75,7 @@ class GraphEvaluator {
       this.resetNodesEvaluatedResultAfter(node);
     }
 
-    const generatorNode = this.graph.getGeneratorFrom(node);
+    const generatorNode = this.graph.getGeneratorOf(node);
     let agreementNode = this.graph
       .getAgreementNodesOf(node)
       .find(agNode => !!agNode.evaluatedResult);
@@ -89,7 +89,7 @@ class GraphEvaluator {
             this.graph.isNodeGenerated(agNode) && !agNode.evaluatedResult,
         );
       if (nonEvaluatedGeneratedAgreementNode) {
-        const nonEvaluatedGeneratedAgreementNodeGenerator = this.graph.getGeneratorFrom(
+        const nonEvaluatedGeneratedAgreementNodeGenerator = this.graph.getGeneratorOf(
           nonEvaluatedGeneratedAgreementNode,
         );
         if (
@@ -138,7 +138,7 @@ class GraphEvaluator {
   }
 
   findNextEdge(currentPointer) {
-    const edges = this.graph.getEdgesFrom(currentPointer, 'default');
+    const edges = this.graph.getEdgesFrom(currentPointer, 'flow');
     if (edges.length === 0) {
       return null;
     }
@@ -156,9 +156,11 @@ class GraphEvaluator {
 
   resetNodesEvaluatedResultAfter(startAtNode) {
     startAtNode.evaluatedResult = null;
-    const nextEdges = this.graph.getEdgesFrom(startAtNode, 'default');
+    const nextEdges = this.graph.getEdgesFrom(startAtNode, 'flow');
     if (nextEdges.length > 0) {
-      nextEdges.forEach(edge => this.resetNodesEvaluatedResultAfter(edge.to));
+      nextEdges.forEach(edge =>
+        this.resetNodesEvaluatedResultAfter(edge.to.node),
+      );
     }
   }
 }

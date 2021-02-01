@@ -57,6 +57,10 @@ describe('TextNode', () => {
         { text: 'ho', agreement: { dude: 'wow' } },
       ]);
     });
+    it('accepts a string as value', () => {
+      const text = new TextNode('hello');
+      expect(text.value).toEqual([{ text: 'hello' }]);
+    });
     it('accepts options', () => {
       const text = new TextNode([{ text: 'hi' }], { title: 'ho' });
       expect(text.title).toBe('ho');

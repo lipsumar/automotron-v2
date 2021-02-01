@@ -23,7 +23,18 @@ class Graph {
     this.startNode = this.addNode(new StartNode());
   }
 
+  toJSON() {
+    return {
+      version: 2,
+      nodes: this.nodes.map(node => node.toJSON()),
+      edges: this.edges.map(edge => edge.toJSON()),
+    };
+  }
+
   static fromJSON(json) {
+    if (!json.version) {
+      return Graph.fromJSONv1(json);
+    }
     const graph = new Graph();
     graph.startNode.setUi(json.nodes.find(node => node.id === 1).ui);
     json.nodes
@@ -32,13 +43,43 @@ class Graph {
         graph.addNode(nodeTypes[node.type].fromJSON(node), node.id),
       );
     json.edges.forEach(edge => {
-      if (edge.type === 'generator') {
-        graph.createGeneratorEdge(edge.from, edge.to);
-      } else if (edge.type === 'agreement') {
-        graph.createAgreementEdge(edge.from, edge.to);
+      graph.createEdge(
+        graph.getNode(edge.from.nodeId).getConnector(edge.from.key),
+        graph.getNode(edge.to.nodeId).getConnector(edge.to.key),
+        edge.id,
+      );
+    });
+    return graph;
+  }
+
+  static fromJSONv1(json) {
+    const graph = new Graph();
+    graph.startNode.setUi(json.nodes.find(node => node.id === 1).ui);
+    json.nodes
+      .filter(node => node.id > 1)
+      .forEach(node =>
+        graph.addNode(nodeTypes[node.type].fromJSON(node), node.id),
+      );
+    json.edges.forEach(edge => {
+      const edgeType = edge.type === 'default' ? 'flow' : edge.type;
+      if (edgeType === 'generator') {
+        graph.createEdge(
+          graph.getNode(edge.to.id).getConnector(`${edgeType}Outlet`),
+          graph.getNode(edge.from.id).getConnector(`${edgeType}Inlet`),
+          edge.id,
+        );
+      } else if (edgeType === 'agreement') {
+        graph.createEdge(
+          graph.getNode(edge.to.id).getConnector(`agreementConnector`),
+          graph.getNode(edge.from.id).getConnector(`agreementConnector`),
+          edge.id,
+        );
       } else {
-        const createdEdge = graph.createEdge(edge.from, edge.to);
-        if (edge.space === false) createdEdge.space = false;
+        graph.createEdge(
+          graph.getNode(edge.from.id).getConnector(`${edgeType}Outlet`),
+          graph.getNode(edge.to.id).getConnector(`${edgeType}Inlet`),
+          edge.id,
+        );
       }
     });
     return graph;
@@ -54,16 +95,11 @@ class Graph {
   }
 
   removeNode(node) {
-    const removedEdges = [];
-    this.edges = this.edges.filter(edge => {
-      const keep = edge.from.id !== node.id && edge.to.id !== node.id;
-      if (!keep) {
-        removedEdges.push(edge);
-      }
-      return keep;
-    });
+    const edgesToRemove = this.getEdgesOf(node);
+    const edgesIdsToRemove = edgesToRemove.map(edge => edge.id);
     this.nodes = this.nodes.filter(n => n.id !== node.id);
-    return removedEdges;
+    this.edges = this.edges.filter(e => !edgesIdsToRemove.includes(e.id));
+    return edgesToRemove;
   }
 
   getNode(id) {
@@ -78,37 +114,48 @@ class Graph {
     return this.edges.find(edge => edge.id === id);
   }
 
-  createEdge(from, to, id) {
-    if (!from.id) {
-      throw new Error('addEdge expects `from` to have an id');
+  /**
+   *
+   * @param {Connector} fromConnector
+   * @param {Connector} toConnector
+   * @param {number | undefined} id
+   */
+  createEdge(fromConnector, toConnector, id) {
+    // console.log(fromConnector, toConnector);
+    const fromNode = fromConnector.node;
+    const toNode = toConnector.node;
+    if (!['out', 'in-out'].includes(fromConnector.direction)) {
+      throw new Error(
+        'addEdge expects `from` connector to have "out" direction',
+      );
     }
-    if (!this.getNode(from.id)) {
-      throw new Error('addEdge expects `from` to be part of graph');
+    if (!['in', 'in-out'].includes(toConnector.direction)) {
+      throw new Error('addEdge expects `to` connector to have "in" direction');
     }
-    if (!to.id) {
-      throw new Error('addEdge expects `to` to have an id');
+    if (fromConnector.type !== toConnector.type) {
+      throw new Error(
+        'addEdge expects `from` and `to` connectors to have the same type',
+      );
     }
-    if (!this.getNode(to.id)) {
-      throw new Error('addEdge expects `to` to be part of graph');
+    if (!fromNode.id) {
+      throw new Error('addEdge expects `from` node to have an id');
     }
-    const edge = new Edge(this.getNode(from.id), this.getNode(to.id));
+    if (!this.getNode(fromNode.id)) {
+      throw new Error('addEdge expects `from` node to be part of graph');
+    }
+    if (!toNode.id) {
+      throw new Error('addEdge expects `to` node to have an id');
+    }
+    if (!this.getNode(toNode.id)) {
+      throw new Error('addEdge expects `to` node to be part of graph');
+    }
+    const edge = new Edge(fromConnector, toConnector);
+    edge.type = fromConnector.type;
     if (id && id >= this.nextEdgeId) {
       this.nextEdgeId = id + 1;
     }
     edge.setId(id || this.getNextEdgeId());
     this.edges.push(edge);
-    return edge;
-  }
-
-  createGeneratorEdge(from, to, id) {
-    const edge = this.createEdge(from, to, id);
-    edge.type = 'generator';
-    return edge;
-  }
-
-  createAgreementEdge(from, to, id) {
-    const edge = this.createEdge(from, to, id);
-    edge.type = 'agreement';
     return edge;
   }
 
@@ -130,30 +177,26 @@ class Graph {
 
   getEdgesFrom(node, type = null) {
     return this.edges.filter(
-      edge => edge.from.id === node.id && (type ? edge.type === type : true),
+      edge => edge.isFromNode(node) && (type ? edge.type === type : true),
     );
   }
 
   getEdgesTo(node, type = null) {
     return this.edges.filter(
-      edge => edge.to.id === node.id && (type ? edge.type === type : true),
+      edge => edge.isToNode(node) && (type ? edge.type === type : true),
     );
   }
 
   getEdgesOf(node, type = null) {
     return this.edges.filter(
       edge =>
-        (edge.to.id === node.id || edge.from.id === node.id) &&
-        (type ? edge.type === type : true),
+        edge.isConnectedToNode(node) && (type ? edge.type === type : true),
     );
   }
 
-  getGeneratorFrom(node) {
-    const generatorEdge = this.getEdgesFrom(node, 'generator')[0];
-    if (!generatorEdge) {
-      return null;
-    }
-    return generatorEdge.to;
+  getGeneratorOf(node) {
+    const generatorEdge = this.getEdgesTo(node, 'generator')[0];
+    return generatorEdge ? generatorEdge.from.node : null;
   }
 
   getAgreementNodesOf(node) {
@@ -162,20 +205,20 @@ class Graph {
       return [];
     }
     return agreementEdges.map(edge => {
-      return edge.from.id === node.id ? edge.to : edge.from;
+      return edge.from.node.id === node.id ? edge.to.node : edge.from.node;
     });
   }
 
   isNodeGenerated(node) {
-    return this.getEdgesFrom(node, 'generator').length > 0;
-  }
-
-  isNodeGenerator(node) {
     return this.getEdgesTo(node, 'generator').length > 0;
   }
 
+  isNodeGenerator(node) {
+    return this.getEdgesFrom(node, 'generator').length > 0;
+  }
+
   getNodesGeneratedBy(generator) {
-    return this.getEdgesTo(generator, 'generator').map(edge => edge.from);
+    return this.getEdgesFrom(generator, 'generator').map(edge => edge.from);
   }
 }
 

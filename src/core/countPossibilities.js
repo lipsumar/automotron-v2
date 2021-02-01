@@ -30,7 +30,7 @@ class PossibilityExplorer {
     const nexts = [];
     nextEdges.forEach(edge => {
       const nextNode = edge.to;
-      const generator = this.graph.getGeneratorFrom(nextNode);
+      const generator = this.graph.getGeneratorOf(nextNode);
       if (generator) {
         total = this.explore(generator);
       }
