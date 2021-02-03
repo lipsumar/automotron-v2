@@ -23,9 +23,8 @@ class TextNode extends Node {
   agreementConnector;
 
   constructor(value = [], opts = {}) {
-    super();
-    this.value = typeof value === 'string' ? [{ text: value }] : value;
-    this.title = opts.title || null;
+    super(value, opts);
+
     this.flowInlet = this.registerConnector('flow', 'in', 'flowInlet');
     this.flowOutlet = this.registerConnector('flow', 'out', 'flowOutlet');
 
@@ -68,6 +67,10 @@ class TextNode extends Node {
       title: this.title,
       frozen: this.frozen,
     };
+  }
+
+  getOutConnector() {
+    return this.flowOutlet;
   }
 
   async evaluate(agreement = null) {

@@ -181,6 +181,10 @@ class Graph {
     );
   }
 
+  getEdgesFromConnector(connector) {
+    return this.edges.filter(edge => edge.isFromConnector(connector));
+  }
+
   getEdgesTo(node, type = null) {
     return this.edges.filter(
       edge => edge.isToNode(node) && (type ? edge.type === type : true),

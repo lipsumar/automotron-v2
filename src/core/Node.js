@@ -9,6 +9,11 @@ class Node {
 
   connectors = [];
 
+  constructor(value, opts = {}) {
+    this.value = typeof value === 'string' ? [{ text: value }] : value;
+    this.title = opts.title || null;
+  }
+
   static fromJSON(json, node = new Node()) {
     node.setId(json.id);
     node.setUi(json.ui);
@@ -31,6 +36,12 @@ class Node {
   getConnector(key) {
     return this.connectors.find(connector => connector.key === key);
   }
+
+  returnTo() {
+    return false;
+  }
+
+  reset() {}
 
   setId(id) {
     this.id = id;

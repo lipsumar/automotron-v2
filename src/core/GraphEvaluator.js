@@ -5,10 +5,13 @@ import combineAgreements from './combineAgreements';
 class GraphEvaluator {
   constructor(graph) {
     this.graph = graph;
+    this.returnStack = [];
   }
 
   async play() {
     this.resetNodesEvaluatedResult();
+    this.resetNodes();
+    this.returnStack = [];
 
     const result = await this.run(this.graph.startNode);
     return result;
@@ -41,6 +44,8 @@ class GraphEvaluator {
         });
         return this.run(nextEdge.to.node, result);
       }
+      const returnTo = this.returnStack.pop();
+      return this.run(returnTo, result);
     }
     return { results: result };
   }
@@ -110,15 +115,12 @@ class GraphEvaluator {
       element.result = await this.run(generatorNode, [], agreement);
       // copy the first agreement of results as agreement of the result
       element.result.agreement = element.result.results[0].result.agreement;
-      // node.evaluatedResult = {
-      //   ...element.result,
-      //   agreement: combineAgreements(
-      //     element.result.results[0].result.agreement,
-      //     agreement,
-      //   ),
-      // };
     } else {
       element.result = await node.evaluate(agreement);
+    }
+
+    if (node.returnTo()) {
+      this.returnStack.push(node);
     }
 
     node.evaluatedResult = {
@@ -138,13 +140,20 @@ class GraphEvaluator {
   }
 
   findNextEdge(currentPointer) {
-    const edges = this.graph.getEdgesFrom(currentPointer, 'flow');
+    const outConnector = currentPointer.getOutConnector();
+    const edges = this.graph.getEdgesFromConnector(outConnector);
     if (edges.length === 0) {
       return null;
     }
     const edge = pickRandom(edges);
 
     return edge;
+  }
+
+  resetNodes() {
+    this.graph.nodes.forEach(node => {
+      node.reset();
+    });
   }
 
   resetNodesEvaluatedResult() {

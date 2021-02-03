@@ -8,6 +8,10 @@ class StartNode extends Node {
     this.flowOutlet = this.registerConnector('flow', 'out', 'flowOutlet');
   }
 
+  getOutConnector() {
+    return this.flowOutlet;
+  }
+
   async evaluate() {
     return null;
   }
