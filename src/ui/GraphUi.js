@@ -18,7 +18,7 @@ const uiNodeTypes = {
 };
 
 const uiEdgeTypes = {
-  default: EdgeUi,
+  flow: EdgeUi,
   generator: GeneratorEdgeUi,
   agreement: AgreementEdgeUi,
 };
@@ -93,7 +93,7 @@ class GraphUi extends EventEmitter {
   }
 
   refreshNode(uiNode) {
-    const generator = this.graph.getGeneratorFrom(uiNode.node);
+    const generator = this.graph.getGeneratorOf(uiNode.node);
     let generatorValue = null;
     if (generator) {
       generatorValue = this.getNode(generator.id).getValueToShow()[0] || {
@@ -146,8 +146,8 @@ class GraphUi extends EventEmitter {
   createEdge(edge) {
     const AbstractUiEdge = uiEdgeTypes[edge.type];
     const uiEdge = new AbstractUiEdge(
-      this.getNode(edge.from.id),
-      this.getNode(edge.to.id),
+      this.getNode(edge.from.node.id),
+      this.getNode(edge.to.node.id),
       edge,
       { editable: this.opts.editable },
     );
