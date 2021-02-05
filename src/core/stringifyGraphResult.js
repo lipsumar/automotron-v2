@@ -1,4 +1,8 @@
 function stringifyElement(element) {
+  if (element.result === null) {
+    return null;
+  }
+
   if (typeof element.result === 'string') {
     return element.result;
   }

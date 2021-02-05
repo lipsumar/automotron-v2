@@ -189,8 +189,8 @@ class Editor extends React.Component {
     }
   }
 
-  insertTextNode() {
-    this.editorUiRef.current.createNode();
+  insertNode(options) {
+    this.editorUiRef.current.createNode(options);
   }
 
   undo() {
@@ -226,7 +226,7 @@ class Editor extends React.Component {
               onRedo={() => this.redo()}
               onLogout={this.props.onLogout}
               setGeneratorTitle={this.setGeneratorTitle.bind(this)}
-              onInsertText={() => this.insertTextNode()}
+              onInsertNode={options => this.insertNode(options)}
               onExport={format => this.export(format)}
               onFork={() => this.forkGenerator()}
               changesSaved={changesSaved}

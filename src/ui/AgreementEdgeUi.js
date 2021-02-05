@@ -10,10 +10,12 @@ class AgreementEdgeUi extends EdgeUi {
 
   getPoints() {
     const { from, to } = this;
-    const fromX = from.centerX();
-    const fromY = from.bottomY();
-    const toX = to.centerX();
-    const toY = to.bottomY();
+    const fromPos = from.getAbsolutePosition();
+    const fromX = fromPos.x;
+    const fromY = fromPos.y;
+    const toPos = to.getAbsolutePosition();
+    const toX = toPos.x;
+    const toY = toPos.y;
     const points = [fromX, fromY];
     points.push(fromX, fromY + 40);
     points.push(toX, toY + 40);

@@ -36,4 +36,5 @@ export const colors = {
   agreementMarker: colorsDefinitions.accent,
   sidebarBackground: colorsDefinitions.black,
   sidebarText: colorsDefinitions.white,
+  loopNode: colorsDefinitions.primaryDark,
 };

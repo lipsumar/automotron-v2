@@ -10,14 +10,17 @@ import GeneratorEdgeUi from './GeneratorEdgeUi';
 import AgreementEdgeUi from './AgreementEdgeUi';
 import findBoundaries from '../utils/findBoundaries';
 import GraphNodeUi from './GraphNodeUi';
+import LoopNodeUi from './LoopNodeUi';
+// import PuppeteerRecorder from '../test/PuppeteerRecorder/PuppeteerRecorder';
 
-const uiNodeTypes = {
+const UiNodeByType = {
   start: StartNodeUi,
   text: TextNodeUi,
   graph: GraphNodeUi,
+  loop: LoopNodeUi,
 };
 
-const uiEdgeTypes = {
+const UiEdgeByType = {
   flow: EdgeUi,
   generator: GeneratorEdgeUi,
   agreement: AgreementEdgeUi,
@@ -72,6 +75,13 @@ class GraphUi extends EventEmitter {
     this.centerGraph();
     this.grid = new Grid(this.stage, this.gridLayer);
     this.stage.draw();
+
+    stageEl.setAttribute('data-ready', 'true');
+
+    // eslint-disable-next-line no-new
+    // new PuppeteerRecorder(stageEl);
+    // puppeteerRecorder.start();
+    // window.puppeteerRecorder = puppeteerRecorder;
   }
 
   setupNodes() {
@@ -107,11 +117,8 @@ class GraphUi extends EventEmitter {
 
     uiNode.node.patchUi({ generatorValue });
 
-    const isGenerator = this.graph.isNodeGenerator(uiNode.node);
-    if (isGenerator) {
-      const generated = this.graph.getNodesGeneratedBy(uiNode.node);
-      generated.forEach(gen => this.refreshNode(this.getNode(gen.id)));
-    }
+    const generated = this.graph.getNodesGeneratedBy(uiNode.node);
+    generated.forEach(gen => this.refreshNode(this.getNode(gen.id)));
 
     uiNode.refresh();
   }
@@ -120,7 +127,7 @@ class GraphUi extends EventEmitter {
     if (this.getNode(node.id)) {
       throw new Error('nodeUi already created for node');
     }
-    const uiNode = new uiNodeTypes[node.type](node, {
+    const uiNode = new UiNodeByType[node.type](node, {
       editable: this.opts.editable,
     });
     this.graphLayer.add(uiNode.group);
@@ -144,14 +151,12 @@ class GraphUi extends EventEmitter {
   }
 
   createEdge(edge) {
-    const AbstractUiEdge = uiEdgeTypes[edge.type];
-    const uiEdge = new AbstractUiEdge(
-      this.getNode(edge.from.node.id),
-      this.getNode(edge.to.node.id),
+    const uiEdge = new UiEdgeByType[edge.type](
+      this.getNode(edge.from.node.id).getConnector(edge.from.key),
+      this.getNode(edge.to.node.id).getConnector(edge.to.key),
       edge,
       { editable: this.opts.editable },
     );
-    uiEdge.edge = edge;
     this.edges.push(uiEdge);
     this.setupEdge(uiEdge);
     this.emit('edge:created', uiEdge);
@@ -159,7 +164,7 @@ class GraphUi extends EventEmitter {
 
   removeEdge(edge) {
     this.getEdge(edge.id).destroy();
-    this.refreshNode(this.getNode(edge.from.id));
+    this.refreshNode(this.getNode(edge.from.node.id));
     this.edges = this.edges.filter(uiEdge => {
       return uiEdge.edge.id !== edge.id;
     });
@@ -180,7 +185,10 @@ class GraphUi extends EventEmitter {
 
   getEdgesConnectedTo(nodeId) {
     return this.edges.filter(uiEdge => {
-      return uiEdge.from.node.id === nodeId || uiEdge.to.node.id === nodeId;
+      return (
+        uiEdge.from.nodeUi.node.id === nodeId ||
+        uiEdge.to.nodeUi.node.id === nodeId
+      );
     });
   }
 
@@ -193,6 +201,7 @@ class GraphUi extends EventEmitter {
   }
 
   setNodeError(nodeId, error) {
+    console.log(error);
     const uiNode = this.getNode(nodeId);
     uiNode.setError(error);
   }
@@ -260,7 +269,7 @@ class GraphUi extends EventEmitter {
   }
 
   onWindowResize() {
-    const newWidth = document.body.offsetWidth - 400;
+    const newWidth = this.stage.attrs.container.offsetWidth; // document.body.offsetWidth; // - 400;
     const newHeight = this.stage.attrs.container.offsetHeight;
     this.stage.width(newWidth);
     this.stage.height(newHeight);

@@ -178,7 +178,6 @@ class TextNodeEdit extends React.Component {
           ref={this.linesParentRef}
         >
           {this.state.value.map((oneValue, i) => {
-            console.log({ oneValue });
             return (
               <div
                 className="text-node-edit__line"

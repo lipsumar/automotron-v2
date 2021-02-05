@@ -12,10 +12,12 @@ class GeneratorEdgeUi extends EdgeUi {
 
   getPoints() {
     const { from, to } = this;
-    const fromX = from.centerX();
-    const fromY = from.centerY();
-    const toX = to.centerX();
-    const toY = to.centerY();
+    const fromPos = from.getAbsolutePosition();
+    const fromX = fromPos.x;
+    const fromY = fromPos.y;
+    const toPos = to.getAbsolutePosition();
+    const toX = toPos.x;
+    const toY = toPos.y;
     const points = [fromX, fromY, toX, toY];
     return points;
   }

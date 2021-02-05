@@ -52,8 +52,8 @@ class EditorUiComponent extends React.Component {
     this.setState({ contextMenuSubject: null });
   }
 
-  createNode() {
-    this.editorUi.createNode();
+  createNode(options) {
+    this.editorUi.createNode(options);
   }
 
   removeNode() {

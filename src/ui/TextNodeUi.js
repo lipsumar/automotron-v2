@@ -64,7 +64,31 @@ class TextListNodeUi extends NodeUi {
     this.titleGroup.add(this.titleText);
 
     if (opts.editable) {
-      this.registerOutlet('right');
+      // this.registerOutlet('right');
+      this.flowInlet = this.registerConnector(node.flowInlet, {
+        x: () => arrowWidth + 2,
+        y: () => 50 / 2 - 1,
+      });
+      this.registerConnector(node.flowOutlet, {
+        x: () => this.width,
+        y: () => 50 / 2 - 1,
+      });
+      this.registerConnector(node.generatorOutlet, {
+        x: () => this.width / 2 + 12,
+        y: () => this.height,
+        color: colors.generatorEdge,
+      });
+      this.registerConnector(node.generatorInlet, {
+        x: () => this.width / 2,
+        y: () => this.height / 2,
+        hitBox: () => ({ width: this.width, height: this.height }),
+      });
+      this.registerConnector(node.agreementConnector, {
+        x: () => this.width / 2 - 12,
+        y: () => this.height,
+        hitBox: () => ({ width: this.width, height: this.height }),
+        color: colors.agreementEdge,
+      });
       this.group.on('dblclick', e => {
         if (e.evt.button === 2) return;
         e.cancelBubble = true;

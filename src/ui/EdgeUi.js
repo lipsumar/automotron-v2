@@ -31,15 +31,15 @@ class EdgeUi extends EventEmitter {
 
     this.refresh();
 
-    from.on('moved', this.boundPosition);
+    from.nodeUi.on('moved', this.boundPosition);
   }
 
   setTo(to) {
     if (this.to) {
-      this.to.off('moved', this.boundPosition);
+      this.to.nodeUi.off('moved', this.boundPosition);
     }
     this.to = to;
-    to.on('moved', this.boundPosition);
+    to.nodeUi.on('moved', this.boundPosition);
   }
 
   position() {
@@ -61,10 +61,12 @@ class EdgeUi extends EventEmitter {
 
   getPoints() {
     const { from, to } = this;
-    const fromX = from.outletX();
-    const fromY = from.outletY();
-    const toX = to.inletX();
-    const toY = to.inletY();
+    const fromPos = from.getAbsolutePosition();
+    const fromX = fromPos.x; // from.outletX();
+    const fromY = fromPos.y; // from.outletY();
+    const toPos = to.getAbsolutePosition();
+    const toX = toPos.x;
+    const toY = toPos.y;
     const points = [fromX, fromY];
 
     points.push(...[fromX + (toX - fromX) / 2, fromY]);
@@ -117,10 +119,10 @@ class EdgeUi extends EventEmitter {
 
   destroy() {
     if (this.to) {
-      this.to.off('moved', this.boundPosition);
+      this.to.nodeUi.off('moved', this.boundPosition);
     }
     if (this.from) {
-      this.from.off('moved', this.boundPosition);
+      this.from.nodeUi.off('moved', this.boundPosition);
     }
     this.line.destroy();
   }

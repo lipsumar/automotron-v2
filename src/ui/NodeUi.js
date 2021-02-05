@@ -2,6 +2,7 @@ import { Group, Circle } from 'konva';
 import { EventEmitter } from 'events';
 import { colors, GRID_SIZE } from './constants';
 import { clampValue } from './utils';
+import ConnectorUi from './ConnectorUi';
 
 class NodeUi extends EventEmitter {
   group = null;
@@ -11,6 +12,7 @@ class NodeUi extends EventEmitter {
   constructor(node, opts = {}) {
     super();
     this.node = node;
+    this.connectors = [];
     this.group = new Group({
       x: node.ui.x,
       y: node.ui.y,
@@ -18,6 +20,7 @@ class NodeUi extends EventEmitter {
     });
 
     if (opts.editable) {
+      this.outletDragging = false;
       this.group.on('dragstart', () => {
         this.dragStartedAt = {
           x: this.x(),
@@ -30,8 +33,10 @@ class NodeUi extends EventEmitter {
         this.emit('drag:finish');
       });
       this.group.on('dragmove', () => {
-        this.emit('moved');
-        this.emit('drag:move');
+        if (!this.outletDragging) {
+          this.emit('moved');
+          this.emit('drag:move');
+        }
       });
       this.group.on('mousedown', e => {
         if (e.evt.button === 2) {
@@ -71,6 +76,27 @@ class NodeUi extends EventEmitter {
     this.group.cache();
   }
 
+  registerConnector(connector, options) {
+    let connectorUi = null;
+
+    connectorUi = new ConnectorUi(connector, this, options);
+    if (connector.direction === 'out' || connector.direction === 'in-out') {
+      connectorUi.outlet = this.createOutlet(connectorUi);
+      this.group.add(connectorUi.outlet);
+    }
+
+    this.connectors.push(connectorUi);
+    this.positionOutlets();
+    return connectorUi;
+  }
+
+  getConnector(key) {
+    return this.connectors.find(
+      connectorUi => connectorUi.connector.key === key,
+    );
+  }
+
+  // @deprecated
   registerOutlet(side) {
     const outlet = this.createOutlet();
     this.outlets[side] = outlet;
@@ -78,12 +104,11 @@ class NodeUi extends EventEmitter {
     this.positionOutlets();
   }
 
-  createOutlet(opts) {
+  createOutlet(connectorUi) {
     const circle = new Circle({
       radius: 7,
-      fill: colors.nodeOutlet,
+      fill: connectorUi.color || colors.nodeOutlet,
       stroke: colors.nodeOutletOutline,
-      ...opts,
       opacity: 0,
       draggable: true,
     });
@@ -100,17 +125,19 @@ class NodeUi extends EventEmitter {
       this.group.cache();
     });
     circle.on('dragstart', () => {
+      this.outletDragging = true;
       circle.opacity(0);
-      this.emit('newEdgeToMouse:start', this);
+      this.emit('newEdgeToMouse:start', { fromConnectorUi: connectorUi });
     });
     circle.on('dragmove', () => {
-      this.emit('newEdgeToMouse:move');
+      this.emit('newEdgeToMouse:move', { fromConnectorUi: connectorUi });
     });
     circle.on('dragend', e => {
       e.cancelBubble = true;
       this.positionOutlets();
-      this.emit('newEdgeToMouse:finish');
+      this.emit('newEdgeToMouse:finish', { fromConnectorUi: connectorUi });
       this.emit('draw');
+      this.outletDragging = false;
     });
     return circle;
   }
@@ -130,9 +157,29 @@ class NodeUi extends EventEmitter {
   }
 
   positionOutlets() {
-    Object.keys(this.outlets).forEach(side => {
-      this.outlets[side].position(this.getOutletPos());
+    this.getOutConnectors().forEach(connectorUi => {
+      connectorUi.outlet.position({
+        x: connectorUi.x(),
+        y: connectorUi.y(),
+      });
     });
+  }
+
+  getOutConnectors() {
+    return this.connectors.filter(
+      connectorUi =>
+        connectorUi.connector.direction === 'out' ||
+        connectorUi.connector.direction === 'in-out',
+    );
+  }
+
+  getInletOfType(type) {
+    return this.connectors.find(
+      connectorUi =>
+        (connectorUi.connector.direction === 'in' ||
+          connectorUi.connector.direction === 'in-out') &&
+        connectorUi.connector.type === type,
+    );
   }
 
   snapToGrid() {

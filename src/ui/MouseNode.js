@@ -5,6 +5,15 @@ class MouseNode extends EventEmitter {
     super();
     this.stage = stage;
     stage.on('dragmove mousemove', this.setPoint.bind(this));
+    this.connector = {
+      nodeUi: this,
+      getAbsolutePosition: () => {
+        return {
+          x: this.point.x,
+          y: this.point.y,
+        };
+      },
+    };
   }
 
   setPoint() {

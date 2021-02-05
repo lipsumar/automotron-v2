@@ -25,7 +25,11 @@ class StartNodeUi extends NodeUi {
     this.group.add(this.rect);
 
     if (opts.editable) {
-      this.registerOutlet('right');
+      // this.registerOutlet('right');
+      this.registerConnector(node.flowOutlet, {
+        x: () => this.width + 2,
+        y: () => this.height / 2 + 5,
+      });
     }
   }
 

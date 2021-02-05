@@ -8,6 +8,12 @@ import MouseNode from '../ui/MouseNode';
 import GeneratorEdgeUi from '../ui/GeneratorEdgeUi';
 import AgreementEdgeUi from '../ui/AgreementEdgeUi';
 
+const EdgeByType = {
+  flow: EdgeUi,
+  generator: GeneratorEdgeUi,
+  agreement: AgreementEdgeUi,
+};
+
 class EditorUi extends EventEmitter {
   constructor(graphUiEl, graph, actions) {
     super();
@@ -38,6 +44,7 @@ class EditorUi extends EventEmitter {
       this.graphUi.stage.on('dblclick', e => {
         if (e.evt.button === 2) return;
         this.commandInvoker.execute('createNode', {
+          type: 'text',
           text: '',
           ui: {
             x: this.mouseNode.inletX(), // vite fait
@@ -97,13 +104,15 @@ class EditorUi extends EventEmitter {
     });
   }
 
-  createNode() {
+  createNode(options) {
     this.commandInvoker.execute('createNode', {
+      type: 'text',
       text: '',
       ui: {
         x: this.mouseNode.inletX(), // vite fait
         y: this.mouseNode.inletY() - 20,
       },
+      ...options,
     });
   }
 
@@ -270,37 +279,57 @@ class EditorUi extends EventEmitter {
 
   setupNode(uiNode) {
     let edgeToMouse = null;
-    uiNode.on('newEdgeToMouse:start', fromUiNode => {
-      const uiEdge = new EdgeUi(fromUiNode, this.mouseNode);
+    uiNode.on('newEdgeToMouse:start', ({ fromConnectorUi }) => {
+      const uiEdge = new EdgeByType[fromConnectorUi.connector.type](
+        fromConnectorUi,
+        this.mouseNode.connector,
+      );
       this.graphUi.setupEdge(uiEdge);
       edgeToMouse = uiEdge;
     });
-    uiNode.on('newEdgeToMouse:move', () => {
-      const onUiNode = this.mouseOnInlet();
-      if (onUiNode) {
-        edgeToMouse.setTo(onUiNode);
+    uiNode.on('newEdgeToMouse:move', ({ fromConnectorUi }) => {
+      const onInletUi = this.mouseOnInlet(
+        fromConnectorUi.connector.type,
+        uiNode,
+      );
+      if (onInletUi) {
+        edgeToMouse.setTo(onInletUi);
+        edgeToMouse.position();
       } else {
-        edgeToMouse.setTo(this.mouseNode);
+        edgeToMouse.setTo(this.mouseNode.connector);
       }
-      this.graphUi.draw();
     });
-    uiNode.on('newEdgeToMouse:finish', () => {
+    uiNode.on('newEdgeToMouse:finish', ({ fromConnectorUi }) => {
       edgeToMouse.destroy();
-      const onUiNode = this.mouseOnInlet();
-      if (onUiNode) {
+      const onInletUi = this.mouseOnInlet(
+        fromConnectorUi.connector.type,
+        uiNode,
+      );
+      if (onInletUi) {
         this.commandInvoker.execute('linkNode', {
-          fromNodeId: uiNode.node.id,
-          toNodeId: onUiNode.node.id,
+          from: {
+            nodeId: fromConnectorUi.connector.node.id,
+            key: fromConnectorUi.connector.key,
+          },
+          to: {
+            nodeId: onInletUi.nodeUi.node.id,
+            key: onInletUi.connector.key,
+          },
         });
         return;
       }
+      if (fromConnectorUi.connector.type !== 'flow') return;
       this.commandInvoker.execute('createNode', {
+        type: 'text',
         text: '',
         ui: {
           x: this.mouseNode.inletX(), // vite fait
           y: this.mouseNode.inletY() - 20,
         },
-        fromNodeId: uiNode.node.id,
+        from: {
+          nodeId: fromConnectorUi.connector.node.id,
+          key: fromConnectorUi.connector.key,
+        },
       });
     });
 
@@ -459,25 +488,35 @@ class EditorUi extends EventEmitter {
     return !!this.selection.find(item => item.node.id === uiNode.node.id);
   }
 
-  mouseOnInlet() {
+  mouseOnInlet(type, exceptUiNode) {
     const mouseRect = {
-      x: this.mouseNode.inletX() - 2,
-      y: this.mouseNode.inletY() - 2,
+      x: this.mouseNode.point.x - 2,
+      y: this.mouseNode.point.y - 2,
       width: 4,
       height: 4,
     };
-    return this.graphUi.nodes.find(uiNode => {
-      if (!uiNode.inletX) return false;
+    const node = this.graphUi.nodes.find(uiNode => {
+      if (
+        uiNode.node.type === 'start' ||
+        uiNode.node.id === exceptUiNode.node.id
+      )
+        return false;
 
+      const inlet = uiNode.getInletOfType(type);
+      if (!inlet) return false;
+
+      const inletPos = inlet.getAbsolutePosition();
+      const hitBox = inlet.hitBox();
       const inletRect = {
-        x: uiNode.inletX() - 15,
-        y: uiNode.inletY() - 10,
-        width: 20,
-        height: 20,
+        x: inletPos.x - hitBox.width / 2,
+        y: inletPos.y - hitBox.height / 2,
+        width: hitBox.width,
+        height: hitBox.height,
       };
 
       return hasIntersection(mouseRect, inletRect);
     });
+    return node ? node.getInletOfType(type) : null;
   }
 }
 

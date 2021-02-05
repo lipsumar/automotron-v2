@@ -2,6 +2,8 @@ import Node from './Node';
 import { pickRandom } from './utils';
 
 class LoopNode extends Node {
+  type = 'loop';
+
   constructor(value, opts = {}) {
     super(value, opts);
     this.loopOutlet = this.registerConnector('flow', 'out', 'loopOutlet');

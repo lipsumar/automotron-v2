@@ -222,7 +222,7 @@ class Graph {
   }
 
   getNodesGeneratedBy(generator) {
-    return this.getEdgesTo(generator, 'generator').map(edge => edge.from.node);
+    return this.getEdgesFrom(generator, 'generator').map(edge => edge.to.node);
   }
 }
 
