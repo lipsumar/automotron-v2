@@ -1,3 +1,4 @@
+import cloneDeep from 'lodash.clonedeep';
 import Node from './Node';
 import { pickRandom } from './utils';
 
@@ -11,6 +12,20 @@ class LoopNode extends Node {
     this.flowInlet = this.registerConnector('flow', 'in', 'flowInlet');
     this.currentCount = 0;
     this.maxCount = null;
+  }
+
+  static fromJSON(json) {
+    const { value } = json;
+    const textNode = new LoopNode(value);
+    return Node.fromJSON(json, textNode);
+  }
+
+  toJSON() {
+    const json = Node.prototype.toJSON.call(this);
+    return {
+      ...json,
+      value: cloneDeep(this.value),
+    };
   }
 
   getOutConnector() {

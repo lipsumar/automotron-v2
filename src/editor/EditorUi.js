@@ -122,7 +122,7 @@ class EditorUi extends EventEmitter {
   }
 
   removeEdge(edgeId) {
-    const fromUiNode = this.graphUi.getEdge(edgeId).from;
+    const fromUiNode = this.graphUi.getEdge(edgeId).from.nodeUi;
     this.commandInvoker.execute('removeEdge', { edgeId });
     this.graphUi.refreshNode(fromUiNode);
   }
@@ -133,6 +133,7 @@ class EditorUi extends EventEmitter {
 
   insertNode(edgeId) {
     this.commandInvoker.execute('insertNode', {
+      type: 'text',
       edgeId,
       text: '',
       ui: {
@@ -152,50 +153,6 @@ class EditorUi extends EventEmitter {
         value: newValue,
       });
     }
-  }
-
-  initiateEdgeToGenerator(nodeId) {
-    this.generatorEdgeToMouse = new GeneratorEdgeUi(
-      this.graphUi.getNode(nodeId),
-      this.mouseNode,
-    );
-    this.graphUi.setupEdge(this.generatorEdgeToMouse);
-  }
-
-  abortEdgeToGenerator() {
-    this.generatorEdgeToMouse.destroy();
-    this.generatorEdgeToMouse = null;
-    this.graphUi.draw();
-  }
-
-  finishEdgeToGenerator(toNodeUi) {
-    this.commandInvoker.execute('linkNode', {
-      fromNodeId: this.generatorEdgeToMouse.from.node.id,
-      toNodeId: toNodeUi.node.id,
-      type: 'generator',
-    });
-  }
-
-  initiateEdgeToAgreement(nodeId) {
-    this.agreementEdgeToMouse = new AgreementEdgeUi(
-      this.graphUi.getNode(nodeId),
-      this.mouseNode,
-    );
-    this.graphUi.setupEdge(this.agreementEdgeToMouse);
-  }
-
-  abortEdgeToAgreement() {
-    this.agreementEdgeToMouse.destroy();
-    this.agreementEdgeToMouse = null;
-    this.graphUi.draw();
-  }
-
-  finishEdgeToAgreement(toNodeUi) {
-    this.commandInvoker.execute('linkNode', {
-      fromNodeId: this.agreementEdgeToMouse.from.node.id,
-      toNodeId: toNodeUi.node.id,
-      type: 'agreement',
-    });
   }
 
   initiateSelectZone() {
@@ -238,9 +195,10 @@ class EditorUi extends EventEmitter {
   }
 
   setNodeTitle(nodeId, title) {
-    this.commandInvoker.execute('setNodeTitle', {
+    this.commandInvoker.execute('setNodeOption', {
       nodeId,
-      title,
+      field: 'title',
+      value: title,
     });
   }
 
@@ -422,6 +380,21 @@ class EditorUi extends EventEmitter {
       e.cancelBubble = true;
     });
 
+    uiNode.on('setNodeOption', ({ field, value }) => {
+      this.commandInvoker.execute('setNodeOption', {
+        nodeId: uiNode.node.id,
+        field,
+        value,
+      });
+    });
+
+    uiNode.on('execute', ({ command, options }) => {
+      this.commandInvoker.execute(command, {
+        ...options,
+        nodeId: uiNode.node.id,
+      });
+    });
+
     uiNode.node.patchUi({
       width: uiNode.width,
       height: uiNode.height,
@@ -495,28 +468,28 @@ class EditorUi extends EventEmitter {
       width: 4,
       height: 4,
     };
-    const node = this.graphUi.nodes.find(uiNode => {
-      if (
-        uiNode.node.type === 'start' ||
-        uiNode.node.id === exceptUiNode.node.id
-      )
-        return false;
+    return this.graphUi.nodes
+      .map(uiNode => uiNode.getInletsOfType(type))
+      .flat()
+      .find(inlet => {
+        const uiNode = inlet.nodeUi;
+        if (uiNode.node.id === exceptUiNode.node.id) return false;
 
-      const inlet = uiNode.getInletOfType(type);
-      if (!inlet) return false;
+        // const inlet = uiNode.getInletOfType(type);
+        // if (!inlet) return false;
 
-      const inletPos = inlet.getAbsolutePosition();
-      const hitBox = inlet.hitBox();
-      const inletRect = {
-        x: inletPos.x - hitBox.width / 2,
-        y: inletPos.y - hitBox.height / 2,
-        width: hitBox.width,
-        height: hitBox.height,
-      };
+        const inletPos = inlet.getAbsolutePosition();
+        const hitBox = inlet.hitBox();
+        const inletRect = {
+          x: inletPos.x - hitBox.width / 2,
+          y: inletPos.y - hitBox.height / 2,
+          width: hitBox.width,
+          height: hitBox.height,
+        };
 
-      return hasIntersection(mouseRect, inletRect);
-    });
-    return node ? node.getInletOfType(type) : null;
+        return hasIntersection(mouseRect, inletRect);
+      });
+    // return node ? node.getInletOfType(type) : null;
   }
 }
 

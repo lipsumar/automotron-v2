@@ -1,13 +1,14 @@
 import Command from './Command';
 
-class SetNodeTitleCommand extends Command {
+class SetNodeOptionCommand extends Command {
   execute() {
     const { graph, ui, options } = this;
-    const node = graph.getNode(options.nodeId);
-    this.previousTitle = node.title;
-    node.title = options.title;
+    const { nodeId, field, value } = options;
+    const node = graph.getNode(nodeId);
+    this.previousValue = node[field];
+    node[field] = value;
 
-    ui.getNode(options.nodeId).refresh();
+    ui.getNode(nodeId).refresh();
     const nodesGeneratedByNode = graph.getNodesGeneratedBy(node);
     this.prevGeneratedBy = [];
     if (nodesGeneratedByNode.length > 0) {
@@ -20,9 +21,10 @@ class SetNodeTitleCommand extends Command {
 
   undo() {
     const { graph, ui, options } = this;
-    const node = graph.getNode(options.nodeId);
-    node.title = this.previousTitle;
-    ui.getNode(options.nodeId).refresh();
+    const { nodeId, field } = options;
+    const node = graph.getNode(nodeId);
+    node[field] = this.previousValue;
+    ui.getNode(nodeId).refresh();
     if (this.prevGeneratedBy.length > 0) {
       this.prevGeneratedBy.forEach(n => {
         ui.refreshNode(ui.getNode(n.id));
@@ -31,4 +33,4 @@ class SetNodeTitleCommand extends Command {
   }
 }
 
-export default SetNodeTitleCommand;
+export default SetNodeOptionCommand;

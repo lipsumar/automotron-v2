@@ -81,6 +81,18 @@ export default function EditorMenu(props) {
           >
             <MenuItem label={t('editor.menu.insert.items.loop')} />
           </div>
+          <div
+            className="editor-menu__menu-item"
+            onClick={() => props.onInsertNode({ type: 'number' })}
+          >
+            <MenuItem label={t('editor.menu.insert.items.number')} />
+          </div>
+          <div
+            className="editor-menu__menu-item"
+            onClick={() => props.onInsertNode({ type: 'paragraph' })}
+          >
+            <MenuItem label={t('editor.menu.insert.items.paragraph')} />
+          </div>
         </div>
       </div>
       <div className="editor-menu__item">

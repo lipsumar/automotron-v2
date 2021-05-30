@@ -4,6 +4,7 @@ import GraphEvaluator from './GraphEvaluator';
 import { seedRandom } from './utils';
 import LoopNode from './LoopNode';
 import ParagraphNode from './ParagraphNode';
+import NumberGeneratorNode from './NumberGeneratorNode';
 
 describe('GraphEvaluator', () => {
   describe('evaluate()', () => {
@@ -459,6 +460,55 @@ describe('GraphEvaluator', () => {
         { nodeId: 6, result: { text: 'loop' } },
       ]);
     });
+
+    it('handles generators in loops', async () => {
+      const graph = new Graph();
+      const loop = graph.addNode(new LoopNode('2'));
+      const letv = graph.addNode(new TextNode('let v'));
+      const x = graph.addNode(new TextNode(''));
+      const eq = graph.addNode(new TextNode('=?;'));
+      const number = graph.addNode(new NumberGeneratorNode());
+
+      graph.createEdge(graph.startNode.flowOutlet, loop.flowInlet);
+      graph.createEdge(loop.loopOutlet, letv.flowInlet);
+      graph.createEdge(letv.flowOutlet, x.flowInlet);
+      graph.createEdge(x.flowOutlet, eq.flowInlet);
+      graph.createEdge(number.generatorOutlet, x.generatorInlet);
+
+      const evaluator = new GraphEvaluator(graph);
+      const { results } = await evaluator.play();
+      expect(results).toEqual([
+        { nodeId: 1, result: null },
+        { edge: true, result: ' ' },
+        { nodeId: 2, result: null },
+        { edge: true, result: ' ' },
+        { nodeId: 3, result: { text: 'let v' } },
+        { edge: true, result: ' ' },
+        {
+          nodeId: 4,
+          result: {
+            agreement: undefined,
+            results: [{ nodeId: 6, result: { text: '1' } }],
+          },
+        },
+        { edge: true, result: ' ' },
+        { nodeId: 5, result: { text: '=?;' } },
+        { nodeId: 2, result: null },
+        { edge: true, result: ' ' },
+        { nodeId: 3, result: { text: 'let v' } },
+        { edge: true, result: ' ' },
+        {
+          nodeId: 4,
+          result: {
+            agreement: undefined,
+            results: [{ nodeId: 6, result: { text: '2' } }],
+          },
+        },
+        { edge: true, result: ' ' },
+        { nodeId: 5, result: { text: '=?;' } },
+        { nodeId: 2, result: null },
+      ]);
+    });
     it('supports paragraphNode', async () => {
       const graph = new Graph();
       const hello = graph.addNode(new TextNode('hello'));
@@ -502,5 +552,19 @@ describe('GraphEvaluator', () => {
         { nodeId: 7, result: { text: 'rodrigez' } },
       ]);
     });
+  });
+
+  it('handles input connectors', async () => {
+    const graph = new Graph();
+    const number = graph.addNode(new NumberGeneratorNode());
+    const gen = graph.addNode(new TextNode('3'));
+
+    graph.createEdge(graph.startNode.flowOutlet, number.flowInlet);
+    graph.createEdge(gen.generatorOutlet, number.getConnector('minInlet'));
+
+    const evaluator = new GraphEvaluator(graph);
+    const { results } = await evaluator.play();
+
+    expect(results[2].result.text).toEqual('3');
   });
 });

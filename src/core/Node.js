@@ -3,6 +3,8 @@ import Connector from './Connector';
 class Node {
   id = null;
 
+  value;
+
   ui = null;
 
   type = null;
@@ -24,8 +26,8 @@ class Node {
     return { type: this.type, id: this.id, ui: this.ui };
   }
 
-  registerConnector(type, direction, key) {
-    const connector = new Connector(type, direction, this, key);
+  registerConnector(type, direction, key, input = null) {
+    const connector = new Connector(type, direction, this, key, input);
     if (this.getConnector(key)) {
       throw new Error('connector key must be unique');
     }

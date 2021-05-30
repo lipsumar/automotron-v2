@@ -1,6 +1,7 @@
 import cloneDeep from 'lodash.clonedeep';
 import { pickRandom } from './utils';
 import combineAgreements from './combineAgreements';
+import asyncForEach from '../utils/asyncForEach';
 
 class GraphEvaluator {
   constructor(graph) {
@@ -24,14 +25,19 @@ class GraphEvaluator {
    * @param {agreement} agreement
    * @returns {results: []}
    */
-  async run(currentPointer, result = [], agreement = null) {
+  async run(currentPointer, result = [], agreement = null, returnStack = []) {
     if (currentPointer) {
       let element;
       try {
-        element = await this.evaluateNode(currentPointer, agreement);
+        element = await this.evaluateNode(
+          currentPointer,
+          agreement,
+          returnStack,
+        );
       } catch (err) {
         err.nodeId = err.nodeId || currentPointer.id;
         console.log('error ===>', err.nodeId, err);
+        console.log(this.graph.getNode(err.nodeId));
         throw err;
       }
 
@@ -42,10 +48,10 @@ class GraphEvaluator {
           edge: true,
           result: nextEdge.evaluate(),
         });
-        return this.run(nextEdge.to.node, result);
+        return this.run(nextEdge.to.node, result, null, returnStack);
       }
-      const returnTo = this.returnStack.pop();
-      return this.run(returnTo, result);
+      const returnTo = returnStack.pop();
+      return this.run(returnTo, result, null, returnStack);
     }
     return { results: result };
   }
@@ -65,7 +71,7 @@ class GraphEvaluator {
    *  }
    * }
    */
-  async evaluateNode(node, inheritedAgreement) {
+  async evaluateNode(node, inheritedAgreement, returnStack) {
     const element = {
       nodeId: node.id,
     };
@@ -78,6 +84,18 @@ class GraphEvaluator {
     if (node.evaluatedResult) {
       // evaluating node for a second time
       this.resetNodesEvaluatedResultAfter(node);
+    }
+
+    if (node.evaluatedCount === 0) {
+      const inputs = node.connectors.filter(c => c.input !== null);
+      await asyncForEach(inputs, async input => {
+        const inputGenerators = this.graph.getNodesToConnector(input);
+        if (inputGenerators.length === 0) return;
+        const result = await this.run(inputGenerators[0]);
+        const value = result.results[0].result.text;
+        node.setOption(input.input, value);
+      });
+      node.reset();
     }
 
     const generatorNode = this.graph.getGeneratorOf(node);
@@ -120,7 +138,7 @@ class GraphEvaluator {
     }
 
     if (node.returnTo()) {
-      this.returnStack.push(node);
+      returnStack.push(node);
     }
 
     node.evaluatedResult = {

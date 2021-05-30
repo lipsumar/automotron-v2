@@ -20,10 +20,16 @@ module.exports = {
       ],
     },
     {
-      env:{
-        browser: true
+      env: {
+        browser: true,
       },
-      files: ['src/index.js', 'src/components/**/*.js', 'src/ui/**/*.js']
+      files: [
+        'src/index.js',
+        'src/index_*.js',
+        'src/components/**/*.js',
+        'src/ui/**/*.js',
+        'src/test/PuppeteerRecorder/*.js',
+      ],
     },
     {
       files: ['prettier.config.js'],
@@ -33,16 +39,12 @@ module.exports = {
       },
     },
   ],
-  parser: "babel-eslint",
+  parser: 'babel-eslint',
   parserOptions: {
     ecmaVersion: 2019,
     sourceType: 'module',
   },
-  plugins: [
-    'json',
-    'react',
-    'react-hooks',
-  ],
+  plugins: ['json', 'react', 'react-hooks'],
   rules: {
     'prettier/prettier': 'error',
     'react/jsx-uses-react': 'error',
@@ -51,6 +53,6 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'no-underscore-dangle': 'off',
     'no-param-reassign': 'off',
-    'prefer-destructuring': 'off'
+    'prefer-destructuring': 'off',
   },
 };

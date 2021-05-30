@@ -1,10 +1,14 @@
 import Command from './Command';
 import TextNode from '../../core/TextNode';
 import LoopNode from '../../core/LoopNode';
+import NumberGeneratorNode from '../../core/NumberGeneratorNode';
+import ParagraphNode from '../../core/ParagraphNode';
 
 const NodeByType = {
   text: TextNode,
   loop: LoopNode,
+  number: NumberGeneratorNode,
+  paragraph: ParagraphNode,
 };
 
 class CreateNodeCommand extends Command {

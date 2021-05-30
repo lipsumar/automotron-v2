@@ -6,7 +6,7 @@ import { measureTextHeight } from './utils';
 const padding = 10;
 const arrowWidth = 6;
 
-class TextListNodeUi extends NodeUi {
+class TextNodeUi extends NodeUi {
   constructor(node, opts) {
     super(node, opts);
     this.width = 100;
@@ -321,4 +321,4 @@ class TextListNodeUi extends NodeUi {
   }
 }
 
-export default TextListNodeUi;
+export default TextNodeUi;

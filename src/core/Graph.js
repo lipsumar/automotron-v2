@@ -2,10 +2,16 @@ import StartNode from './StartNode';
 import Edge from './Edge';
 import TextNode from './TextNode';
 import GraphNode from './GraphNode';
+import LoopNode from './LoopNode';
+import NumberGeneratorNode from './NumberGeneratorNode';
+import ParagraphNode from './ParagraphNode';
 
-const nodeTypes = {
+const NodeByType = {
   text: TextNode,
   graph: GraphNode,
+  loop: LoopNode,
+  number: NumberGeneratorNode,
+  paragraph: ParagraphNode,
 };
 
 class Graph {
@@ -40,14 +46,19 @@ class Graph {
     json.nodes
       .filter(node => node.id > 1)
       .forEach(node =>
-        graph.addNode(nodeTypes[node.type].fromJSON(node), node.id),
+        graph.addNode(NodeByType[node.type].fromJSON(node), node.id),
       );
     json.edges.forEach(edge => {
-      graph.createEdge(
-        graph.getNode(edge.from.nodeId).getConnector(edge.from.key),
-        graph.getNode(edge.to.nodeId).getConnector(edge.to.key),
-        edge.id,
-      );
+      try {
+        const createdEdge = graph.createEdge(
+          graph.getNode(edge.from.nodeId).getConnector(edge.from.key),
+          graph.getNode(edge.to.nodeId).getConnector(edge.to.key),
+          edge.id,
+        );
+        createdEdge.space = edge.space;
+      } catch (err) {
+        console.warn('Could not create edge', edge);
+      }
     });
     return graph;
   }
@@ -58,7 +69,7 @@ class Graph {
     json.nodes
       .filter(node => node.id > 1)
       .forEach(node =>
-        graph.addNode(nodeTypes[node.type].fromJSON(node), node.id),
+        graph.addNode(NodeByType[node.type].fromJSON(node), node.id),
       );
     json.edges.forEach(edge => {
       const edgeType = edge.type === 'default' ? 'flow' : edge.type;
@@ -75,11 +86,12 @@ class Graph {
           edge.id,
         );
       } else {
-        graph.createEdge(
+        const createdEdge = graph.createEdge(
           graph.getNode(edge.from.id).getConnector(`${edgeType}Outlet`),
           graph.getNode(edge.to.id).getConnector(`${edgeType}Inlet`),
           edge.id,
         );
+        createdEdge.space = edge.space;
       }
     });
     return graph;
@@ -185,6 +197,16 @@ class Graph {
     return this.edges.filter(edge => edge.isFromConnector(connector));
   }
 
+  getEdgesToConnector(connector) {
+    return this.edges.filter(edge => edge.isToConnector(connector));
+  }
+
+  getNodesToConnector(connector) {
+    return this.edges
+      .filter(edge => edge.isToConnector(connector))
+      .map(edge => edge.from.node);
+  }
+
   getEdgesTo(node, type = null) {
     return this.edges.filter(
       edge => edge.isToNode(node) && (type ? edge.type === type : true),
@@ -199,7 +221,11 @@ class Graph {
   }
 
   getGeneratorOf(node) {
-    const generatorEdge = this.getEdgesTo(node, 'generator')[0];
+    if (!node.generatorInlet) return null;
+    const generatorEdge = this.getEdgesToConnector(
+      node.generatorInlet,
+      'generator',
+    )[0];
     return generatorEdge ? generatorEdge.from.node : null;
   }
 

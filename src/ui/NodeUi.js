@@ -84,6 +84,10 @@ class NodeUi extends EventEmitter {
       connectorUi.outlet = this.createOutlet(connectorUi);
       this.group.add(connectorUi.outlet);
     }
+    if (connector.direction === 'in' && connectorUi.visible) {
+      connectorUi.inlet = this.createInlet(connectorUi);
+      this.group.add(connectorUi.inlet);
+    }
 
     this.connectors.push(connectorUi);
     this.positionOutlets();
@@ -142,6 +146,17 @@ class NodeUi extends EventEmitter {
     return circle;
   }
 
+  createInlet(connectorUi) {
+    const circle = new Circle({
+      radius: 7,
+      fill: connectorUi.color || colors.nodeOutlet,
+      stroke: colors.nodeOutletOutline,
+      opacity: 1,
+      draggable: false,
+    });
+    return circle;
+  }
+
   setSelected(selected) {
     this.selected = selected;
     if (selected) {
@@ -163,6 +178,12 @@ class NodeUi extends EventEmitter {
         y: connectorUi.y(),
       });
     });
+    this.getOptionInlets().forEach(connectorUi => {
+      connectorUi.inlet.position({
+        x: connectorUi.x(),
+        y: connectorUi.y(),
+      });
+    });
   }
 
   getOutConnectors() {
@@ -173,8 +194,15 @@ class NodeUi extends EventEmitter {
     );
   }
 
-  getInletOfType(type) {
-    return this.connectors.find(
+  getOptionInlets() {
+    return this.connectors.filter(
+      connectorUi =>
+        connectorUi.connector.direction === 'in' && connectorUi.visible,
+    );
+  }
+
+  getInletsOfType(type) {
+    return this.connectors.filter(
       connectorUi =>
         (connectorUi.connector.direction === 'in' ||
           connectorUi.connector.direction === 'in-out') &&

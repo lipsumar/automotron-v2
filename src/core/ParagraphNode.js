@@ -1,23 +1,47 @@
 import Node from './Node';
 
 class ParagraphNode extends Node {
+  type = 'paragraph';
+
   constructor(value, opts = {}) {
     super(value, opts);
     this.flowInlet = this.registerConnector('flow', 'in', 'flowInlet');
-    this.flowOutlets = [this.registerConnector('flow', 'out', 'flowOutlet_0')];
-    this.nextOutletIndex = 1;
+    this.flowOutlets = [
+      this.registerConnector('flow', 'out', 'flowOutlet_0'),
+      this.registerConnector('flow', 'out', 'flowOutlet_1'),
+      this.registerConnector('flow', 'out', 'flowOutlet_2'),
+    ];
+    this.nextOutletIndex = 3;
     this.currentOutletIndex = 0;
   }
 
+  static fromJSON(json) {
+    const paragraphNode = new ParagraphNode(null);
+    json.outletKeys.forEach(key => {
+      if (!paragraphNode.getConnector(key)) {
+        paragraphNode.addOutlet();
+      }
+    });
+    return Node.fromJSON(json, paragraphNode);
+  }
+
+  toJSON() {
+    const json = Node.prototype.toJSON.call(this);
+    return {
+      ...json,
+      outletKeys: this.flowOutlets.map(outlet => outlet.key),
+    };
+  }
+
   addOutlet() {
-    this.flowOutlets.push(
-      this.registerConnector(
-        'flow',
-        'out',
-        `flowOutlet_${this.nextOutletIndex}`,
-      ),
+    const newOutlet = this.registerConnector(
+      'flow',
+      'out',
+      `flowOutlet_${this.nextOutletIndex}`,
     );
+    this.flowOutlets.push(newOutlet);
     this.nextOutletIndex += 1;
+    return newOutlet;
   }
 
   returnTo() {

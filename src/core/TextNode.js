@@ -6,8 +6,6 @@ import filterAgreement from './filterAgreement';
 class TextNode extends Node {
   type = 'text';
 
-  value;
-
   title;
 
   frozen = false;

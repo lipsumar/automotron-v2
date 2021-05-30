@@ -1,0 +1,8 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700,800&display=swap');
+body{
+  font-family: "Open Sans",sans-serif;
+}
+.graph-ui-stage{
+  width:1024px;
+  height:768px;
+}

@@ -6,6 +6,7 @@ class ConnectorUi {
     this.x = options.x;
     this.hitBox = options.hitBox || (() => ({ width: 50, height: 50 }));
     this.color = options.color;
+    this.visible = options.visible || false;
   }
 
   getAbsolutePosition() {

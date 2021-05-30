@@ -30,6 +30,7 @@
     "mongoose": "^5.9.4",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
+    "puppeteer": "^7.0.0",
     "random": "^2.1.1",
     "react": "^16.13.0",
     "react-contextmenu": "^2.13.0",
@@ -84,6 +85,8 @@
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.18.3",
     "eslint-plugin-react-hooks": "^1.7.0",
+    "pixelmatch": "^5.2.1",
+    "pngjs": "^6.0.0",
     "prettier": "^1.19.1"
   }
 }

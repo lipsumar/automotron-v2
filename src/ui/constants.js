@@ -37,4 +37,5 @@ export const colors = {
   sidebarBackground: colorsDefinitions.black,
   sidebarText: colorsDefinitions.white,
   loopNode: colorsDefinitions.primaryDark,
+  specialNode: '#ffcb00',
 };

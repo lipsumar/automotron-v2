@@ -11,6 +11,8 @@ import AgreementEdgeUi from './AgreementEdgeUi';
 import findBoundaries from '../utils/findBoundaries';
 import GraphNodeUi from './GraphNodeUi';
 import LoopNodeUi from './LoopNodeUi';
+import NumberGeneratorNodeUi from './NumberGeneratorNodeUi';
+import ParagraphNodeUi from './ParagraphNodeUi';
 // import PuppeteerRecorder from '../test/PuppeteerRecorder/PuppeteerRecorder';
 
 const UiNodeByType = {
@@ -18,6 +20,8 @@ const UiNodeByType = {
   text: TextNodeUi,
   graph: GraphNodeUi,
   loop: LoopNodeUi,
+  number: NumberGeneratorNodeUi,
+  paragraph: ParagraphNodeUi,
 };
 
 const UiEdgeByType = {

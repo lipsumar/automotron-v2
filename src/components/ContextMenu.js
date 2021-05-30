@@ -8,7 +8,7 @@ function MenuItems(props) {
     // edge
     return (
       <>
-        {props.subject.edge.type === 'default' && (
+        {props.subject.edge.type === 'flow' && (
           <>
             <MenuItem onClick={props.onInsertNode}>
               {t('editor.contextMenu.insertNode')}

@@ -15,7 +15,7 @@ class RemoveEdgeCommand extends Command {
 
     ui.removeEdge(edge);
     graph.removeEdge(edge);
-    ui.refreshNode(ui.getNode(from.id));
+    ui.refreshNode(ui.getNode(from.node.id));
 
     this.edge = edge;
   }
@@ -23,13 +23,13 @@ class RemoveEdgeCommand extends Command {
   undo() {
     const { graph, ui } = this;
 
-    const edge = graph[methods[this.edge.type || 'default']](
-      graph.getNode(this.edge.from.id),
-      graph.getNode(this.edge.to.id),
+    const edge = graph.createEdge(
+      graph.getNode(this.edge.from.node.id).getConnector(this.edge.from.key),
+      graph.getNode(this.edge.to.node.id).getConnector(this.edge.to.key),
       this.edge.id,
     );
     ui.createEdge(edge);
-    ui.refreshNode(ui.getNode(this.edge.from.id));
+    ui.refreshNode(ui.getNode(this.edge.from.node.id));
   }
 }
 

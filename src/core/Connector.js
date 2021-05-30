@@ -1,9 +1,10 @@
 class Connector {
-  constructor(type, direction, node, key) {
+  constructor(type, direction, node, key, input = null) {
     this.type = type;
     this.direction = direction;
     this.node = node;
     this.key = key;
+    this.input = input;
   }
 
   toJSON() {

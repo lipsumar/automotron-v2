@@ -32,6 +32,12 @@ class Edge {
     );
   }
 
+  isToConnector(connector) {
+    return (
+      this.to.node.id === connector.node.id && this.to.key === connector.key
+    );
+  }
+
   isToNode(node) {
     return this.to.node.id === node.id;
   }

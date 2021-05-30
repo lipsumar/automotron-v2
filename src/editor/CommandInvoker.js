@@ -6,10 +6,11 @@ import LinkNodeCommand from './commands/LinkNode';
 import RemoveNodeCommand from './commands/RemoveNode';
 import RemoveEdgeCommand from './commands/RemoveEdge';
 import InsertNodeCommand from './commands/InsertNode';
-import SetNodeTitleCommand from './commands/SetNodeTitle';
+import SetNodeOptionCommand from './commands/SetNodeOption';
 import FreezeNodeCommand from './commands/FreezeNode';
 import UnfreezeNodeCommand from './commands/UnfreezeNode';
 import ToggleEdgeSpaceCommand from './commands/ToggleEdgeSpace';
+import ResizeParagraphCommand from './commands/ResizeParagraph';
 
 const commands = {
   createNode: CreateNodeCommand,
@@ -19,10 +20,11 @@ const commands = {
   removeNode: RemoveNodeCommand,
   removeEdge: RemoveEdgeCommand,
   insertNode: InsertNodeCommand,
-  setNodeTitle: SetNodeTitleCommand,
+  setNodeOption: SetNodeOptionCommand,
   freezeNode: FreezeNodeCommand,
   unfreezeNode: UnfreezeNodeCommand,
   toggleEdgeSpace: ToggleEdgeSpaceCommand,
+  resizeParagraph: ResizeParagraphCommand,
 };
 
 class CommandInvoker extends EventEmitter {
